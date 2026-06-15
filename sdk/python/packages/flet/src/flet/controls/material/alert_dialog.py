@@ -224,9 +224,6 @@ class AlertDialog(DialogControl):
     """
     The semantic label of this dialog used by accessibility frameworks to announce \
     screen transitions when this dialog is opened and closed.
-
-    On iOS, if this label is not provided, a semantic label will be inferred from the
-    :attr:`title` if it is not `None`.
     """
 
     barrier_color: Optional[ColorValue] = None

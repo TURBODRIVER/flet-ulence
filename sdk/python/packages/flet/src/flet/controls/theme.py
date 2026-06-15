@@ -105,20 +105,6 @@ class PageTransitionsTheme:
     override how Material routes animate on each target platform.
     """
 
-    android: Optional[PageTransitionTheme] = None
-    """
-    Transition preset for Android routes.
-
-    If `None`, defaults to :attr:`flet.PageTransitionTheme.FADE_UPWARDS`.
-    """
-
-    ios: Optional[PageTransitionTheme] = None
-    """
-    Transition preset for iOS routes.
-
-    If `None`, defaults to :attr:`flet.PageTransitionTheme.CUPERTINO`.
-    """
-
     linux: Optional[PageTransitionTheme] = None
     """
     Transition preset for Linux desktop routes.
@@ -685,56 +671,6 @@ class TabBarTheme:
     unselected_label_text_style: Optional[TextStyle] = None
     """
     Overrides the default value for :attr:`flet.TabBar.unselected_label_text_style`.
-    """
-
-
-@value
-class SystemOverlayStyle:
-    """
-    Allows the customization of the mobile's system overlay (which consists of the \
-    system status and navigation bars) appearance.
-    """
-
-    status_bar_color: Optional[ColorValue] = None
-    """
-    The color of the status bar.
-    """
-
-    system_navigation_bar_color: Optional[ColorValue] = None
-    """
-    The color of the system navigation bar.
-    """
-
-    system_navigation_bar_divider_color: Optional[ColorValue] = None
-    """
-    The color of the divider between the system navigation bar and the app content.
-    """
-
-    enforce_system_navigation_bar_contrast: Optional[bool] = None
-    """
-    Indicates whether the system should enforce contrast for the status bar when \
-    setting a transparent status bar.
-    """
-
-    enforce_system_status_bar_contrast: Optional[bool] = None
-    """
-    Indicates whether the system should enforce contrast for the navigation bar when \
-    setting a transparent navigation bar.
-    """
-
-    system_navigation_bar_icon_brightness: Optional[Brightness] = None
-    """
-    The brightness of the system navigation bar icons.
-    """
-
-    status_bar_brightness: Optional[Brightness] = None
-    """
-    The brightness of the status bar.
-    """
-
-    status_bar_icon_brightness: Optional[Brightness] = None
-    """
-    The brightness of the status bar icons.
     """
 
 
@@ -3419,7 +3355,6 @@ class Theme:
     slider_theme: Optional[SliderTheme] = None
     snackbar_theme: Optional[SnackBarTheme] = None
     switch_theme: Optional[SwitchTheme] = None
-    system_overlay_style: Optional[SystemOverlayStyle] = None
     tab_bar_theme: Optional[TabBarTheme] = None
     text_theme: Optional[TextTheme] = None
     time_picker_theme: Optional[TimePickerTheme] = None

@@ -117,11 +117,6 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     The total extent, which the viewport will try to cover with children, is
     `cache_extent` before the leading edge + extent of the main axis + `cache_extent`
     after the trailing edge.
-
-    The cache area is also used to implement implicit accessibility scrolling on iOS:
-    When the accessibility focus moves from an item in the visible viewport to an
-    invisible item in the cache area, the framework will bring that item into view
-    with an (implicit) scroll action.
     """
 
     build_controls_on_demand: bool = True

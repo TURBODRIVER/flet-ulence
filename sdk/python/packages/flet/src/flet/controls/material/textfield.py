@@ -32,8 +32,6 @@ __all__ = [
 class KeyboardType(Enum):
     """
     The type of information for which to optimize the text input control.
-
-    On Android, behavior may vary across device and keyboard provider.
     """
 
     NONE = "none"
@@ -74,10 +72,6 @@ class KeyboardType(Enum):
     DATETIME = "datetime"
     """
     Optimized for date and time information.
-
-    - On iOS, requests the default keyboard.
-    - On Android, requests a keyboard with ready
-        access to the number keys, `":"`, and `"-"`.
     """
 
     EMAIL = "email"
@@ -104,21 +98,11 @@ class KeyboardType(Enum):
     NAME = "name"
     """
     Optimized for a person's name.
-
-    - On iOS, requests the [UIKeyboardType.namePhonePad](https://developer.apple.com/documentation/uikit/uikeyboardtype/namephonepad)
-        keyboard, a keyboard optimized for entering a person’s name or phone number.
-        Does not support auto-capitalization.
-    - On Android, requests a keyboard optimized for
-        [TYPE_TEXT_VARIATION_PERSON_NAME](https://developer.android.com/reference/android/text/InputType#TYPE_TEXT_VARIATION_PERSON_NAME).
     """  # noqa: E501
 
     STREET_ADDRESS = "streetAddress"
     """
     Optimized for postal mailing addresses.
-
-    - On iOS, requests the default keyboard.
-    - On Android, requests a keyboard optimized for
-        [TYPE_TEXT_VARIATION_POSTAL_ADDRESS](https://developer.android.com/reference/android/text/InputType#TYPE_TEXT_VARIATION_POSTAL_ADDRESS).
     """  # noqa: E501
 
     WEB_SEARCH = "webSearch"
@@ -126,11 +110,6 @@ class KeyboardType(Enum):
     Optimized for web searches.
 
     Requests a keyboard that includes keys useful for web searches as well as URLs.
-
-    - On iOS, requests a default keyboard with ready access to the `"."` key.
-        In contrast to :attr:`URL`, a space bar is available.
-    - On Android this is remapped to the :attr:`URL` keyboard type as it always
-        shows a space bar.
     """
 
     TWITTER = "twitter"
@@ -138,10 +117,6 @@ class KeyboardType(Enum):
     Optimized for social media.
 
     Requests a keyboard that includes keys useful for handles and tags.
-
-    - On iOS, requests a default keyboard with ready access to the `"@"` and `"#"` keys.
-    - On Android this is remapped to the :attr:`EMAIL` keyboard type as it
-        always shows the `"@"` key.
     """
 
 
@@ -158,27 +133,17 @@ class TextCapitalization(Enum):
     """
     Uppercase keyboard for each character.
 
-    Info:
-        Corresponds to `InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS` on Android, and
-        `UITextAutocapitalizationTypeAllCharacters` on iOS.
     """
 
     WORDS = "words"
     """
     Uppercase keyboard for the first letter of each word.
-
-    Info:
-        Corresponds to `InputType.TYPE_TEXT_FLAG_CAP_WORDS` on Android, and
-        `UITextAutocapitalizationTypeWords` on iOS.
     """
 
     SENTENCES = "sentences"
     """
     Uppercase keyboard for the first letter of each sentence.
 
-    Info:
-        Corresponds to `InputType.TYPE_TEXT_FLAG_CAP_SENTENCES` on Android, and
-        `UITextAutocapitalizationTypeSentences` on iOS.
     """
 
     NONE = "none"
@@ -430,28 +395,16 @@ class TextField(FormFieldControl, AdaptiveControl):
     enable_suggestions: bool = True
     """
     Whether to show input suggestions as the user types.
-
-    This flag only affects Android. On iOS, suggestions are tied directly to
-    `autocorrect`, so that suggestions are only shown when `autocorrect` is `True`.
-    On Android autocorrection and suggestion are controlled separately.
     """
 
     smart_dashes_type: bool = True
     """
     Whether to allow the platform to automatically format dashes.
-
-    This flag only affects iOS versions 11 and above. As an example of what this does,
-    two consecutive hyphen characters will be automatically replaced with one en dash,
-    and three consecutive hyphens will become one em dash.
     """
 
     smart_quotes_type: bool = True
     """
     Whether to allow the platform to automatically format quotes.
-
-    This flag only affects iOS. As an example of what this does, a standard vertical
-    double quote character will be automatically replaced by a left or right double
-    quote depending on its position in a word.
     """
 
     show_cursor: bool = True

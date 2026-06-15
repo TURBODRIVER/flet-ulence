@@ -79,9 +79,6 @@ class Tooltip:
     enable_feedback: Optional[bool] = None
     """
     When `True` (default) the tooltip should provide acoustic and/or haptic feedback.
-
-    For example, on Android a tap will produce a clicking sound and a long-press
-    will produce a short vibration, when feedback is enabled.
     """
 
     vertical_offset: Optional[Number] = None
@@ -110,7 +107,6 @@ class Tooltip:
 
     It has the following default values based on the current platform:
 
-    - On mobile platforms: `Padding.symmetric(horizontal=16.0, vertical=4.0)`
     - On desktop platforms: `Padding.symmetric(horizontal=8.0, vertical=4.0)`
     """
 
@@ -205,7 +201,6 @@ class Tooltip:
     based on the current platform:
 
     - on desktop platforms: `BoxConstraints(min_height=24.0)`
-    - on mobile platforms: `BoxConstraints(min_height=32.0)`
     """
 
 

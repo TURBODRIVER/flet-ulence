@@ -11,7 +11,6 @@ import '../utils/edge_insets.dart';
 import '../utils/events.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
-import '../utils/launch_url.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../widgets/flet_store_mixin.dart';
@@ -34,7 +33,6 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var ink = control.getBool("ink", false)!;
     var onClick = control.getBool("on_click", false)!;
     var onTapDown = control.getBool("on_tap_down", false)!;
-    var url = control.getUrl("url");
     var onLongPress = control.getBool("on_long_press", false)!;
     var onHover = control.getBool("on_hover", false)!;
     var ignoreInteractions = control.getBool("ignore_interactions", false)!;
@@ -68,7 +66,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var onAnimationEnd = control.getBool("on_animation_end", false)!
         ? () => control.triggerEvent("animation_end", "container")
         : null;
-    if ((onClick || url != null || onLongPress || onHover || onTapDown) &&
+    if ((onClick || onLongPress || onHover || onTapDown) &&
         ink &&
         !control.disabled) {
       var ink = Material(
@@ -78,11 +76,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
             // Dummy callback to enable widget
             // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
             // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
-            onTap: onClick || url != null || onTapDown
+            onTap: onClick || onTapDown
                 ? () {
-                    if (url != null) {
-                      openWebBrowser(url);
-                    }
                     if (onClick) {
                       control.triggerEvent("click");
                     }
@@ -157,10 +152,10 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               onEnd: onAnimationEnd,
               child: content);
 
-      if ((onClick || onLongPress || onHover || onTapDown || url != null) &&
+      if ((onClick || onLongPress || onHover || onTapDown) &&
           !control.disabled) {
         container = MouseRegion(
-          cursor: onClick || onTapDown || url != null
+          cursor: onClick || onTapDown
               ? SystemMouseCursors.click
               : MouseCursor.defer,
           onEnter: onHover
@@ -174,11 +169,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 }
               : null,
           child: GestureDetector(
-            onTap: onClick || url != null
+            onTap: onClick
                 ? () {
-                    if (url != null) {
-                      openWebBrowser(url);
-                    }
                     if (onClick) {
                       control.triggerEvent("click");
                     }

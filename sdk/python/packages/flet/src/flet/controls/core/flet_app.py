@@ -10,7 +10,7 @@ __all__ = ["FletApp", "FletAppOutputEvent"]
 
 @dataclass
 class FletAppOutputEvent(Event["FletApp"]):
-    """One stdout/stderr line from the embedded Pyodide app."""
+    """One stdout/stderr line from the embedded app."""
 
     text: str
     """The line of text. Pyodide line-buffers stdout/stderr by default,
@@ -39,14 +39,8 @@ class FletApp(LayoutControl):
 
     assets_dir: Optional[str] = None
     """
-    Base location for assets referenced by the embedded app. On web this
-    is a URL prefix joined with relative `src` values (e.g. on
-    `Image`/`Lottie`/`Markdown`); on desktop it is a filesystem path.
-    """
-
-    force_pyodide: bool = False
-    """
-    Whether to force the use of Pyodide.
+    Base location for assets referenced by the embedded app.
+    On desktop it is a filesystem path.
     """
 
     reconnect_interval_ms: Optional[int] = None
@@ -57,16 +51,6 @@ class FletApp(LayoutControl):
     reconnect_timeout_ms: Optional[int] = None
     """
     Total time to try reconnecting.
-    """
-
-    show_app_startup_screen: bool = False
-    """
-    Whether to show the app startup screen.
-    """
-
-    app_startup_screen_message: Optional[str] = None
-    """
-    Message to display on the app startup screen.
     """
 
     app_error_message: Optional[str] = None

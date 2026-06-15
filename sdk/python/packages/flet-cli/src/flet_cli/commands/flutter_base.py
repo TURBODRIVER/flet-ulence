@@ -49,7 +49,6 @@ class BaseFlutterCommand(BaseCommand):
         self.flutter_exe = None
         self.required_flutter_version: Optional[version.Version] = None
         self.verbose = False
-        self.require_android_sdk = False
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
         self.no_rich_output = no_rich_output
         self.current_platform = platform.system()
@@ -58,13 +57,10 @@ class BaseFlutterCommand(BaseCommand):
             "windows": "Windows",
             "macos": "macOS",
             "linux": "Linux",
-            "web": "Web",
-            "ios": "iOS",
-            "android": "Android",
-            None: "iOS/Android",
+            None: "Windows",
         }
+        self.status = None
         self.assume_yes = False
-        self._android_install_confirmed = False
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         """
@@ -112,11 +108,10 @@ class BaseFlutterCommand(BaseCommand):
 
     def initialize_command(self):
         """
-        Validate prerequisites and prepare Flutter/Android toolchain.
+        Validate prerequisites and prepare Flutter toolchain.
 
         This method resolves required Flutter version, locates or installs SDK
-        binaries, and optionally provisions JDK/Android SDK when the command
-        requires mobile tooling.
+        binaries.
         """
 
         assert self.options
@@ -170,17 +165,6 @@ class BaseFlutterCommand(BaseCommand):
         if self.verbose > 0:
             console.log("Flutter executable:", self.flutter_exe, style=verbose2_style)
             console.log("Dart executable:", self.dart_exe, style=verbose2_style)
-
-        if self.require_android_sdk:
-            if not self._confirm_android_sdk_installation():
-                self.skip_flutter_doctor = True
-                self.cleanup(
-                    1,
-                    "Android SDK installation is required. "
-                    "Re-run with --yes to install automatically.",
-                )
-            self.install_jdk()
-            self.install_android_sdk()
 
     def flutter_version_valid(self):
         """
@@ -310,50 +294,6 @@ class BaseFlutterCommand(BaseCommand):
 
         if self.verbose > 0:
             console.log(f"JDK installed {self.emojis['checkmark']}")
-
-    def install_android_sdk(self):
-        """
-        Install Android SDK command-line tools and required baseline packages.
-        """
-
-        from flet_cli.utils.android_sdk import AndroidSDK
-
-        self.update_status("[bold blue]Installing Android SDK...")
-        self.env["ANDROID_HOME"] = AndroidSDK(
-            self.env["JAVA_HOME"], self.log_stdout, progress=self.progress
-        ).install()
-
-        if self.verbose > 0:
-            console.log(f"Android SDK installed {self.emojis['checkmark']}")
-
-    def _confirm_android_sdk_installation(self) -> bool:
-        """
-        Confirm Android SDK installation when it is missing or incomplete.
-
-        Returns:
-            `True` when installation is confirmed or not needed, otherwise `False`.
-        """
-
-        from flet_cli.utils.android_sdk import AndroidSDK
-
-        if AndroidSDK.has_minimal_packages_installed():
-            self._android_install_confirmed = True
-            return True
-        if self._android_install_confirmed:
-            return True
-        if self.assume_yes:
-            self._android_install_confirmed = True
-            return True
-
-        prompt = (
-            "\nAndroid SDK is required. If it's missing or incomplete, "
-            "it will be installed now. Proceed? [y/n] "
-        )
-
-        if self._prompt_input(prompt):
-            self._android_install_confirmed = True
-            return True
-        return False
 
     def _prompt_input(self, prompt: str) -> bool:
         """

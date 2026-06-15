@@ -88,9 +88,6 @@ class Image(LayoutControl):
     semantics_label: Optional[str] = None
     """
     A semantic description of this image.
-
-    Used to provide a description of the image to TalkBack on Android, and VoiceOver
-    on iOS.
     """
 
     exclude_from_semantics: bool = False

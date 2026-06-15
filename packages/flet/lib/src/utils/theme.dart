@@ -401,10 +401,6 @@ PageTransitionsTheme? parsePageTransitions(Map<dynamic, dynamic>? value,
     return defaultValue;
   }
   return PageTransitionsTheme(builders: {
-    TargetPlatform.android: parseTransitionsBuilder(
-        value["android"], const FadeUpwardsPageTransitionsBuilder())!,
-    TargetPlatform.iOS: parseTransitionsBuilder(
-        value["ios"], const CupertinoPageTransitionsBuilder())!,
     TargetPlatform.linux: parseTransitionsBuilder(
         value["linux"], const ZoomPageTransitionsBuilder())!,
     TargetPlatform.macOS: parseTransitionsBuilder(

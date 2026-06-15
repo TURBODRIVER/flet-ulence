@@ -5,9 +5,7 @@ enum MessageAction {
   updateControl(4),
   invokeControlMethod(5),
   sessionCrashed(6),
-  // Worker → dart: one line of stdout/stderr from the embedded
-  // Pyodide runtime (only emitted when running inside a FletApp host
-  // that wired stdout/stderr at loadPyodide time).
+  // Worker → dart: one line of stdout/stderr.
   pythonOutput(7);
 
   final int value;

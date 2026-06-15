@@ -9,7 +9,6 @@ from typing import Optional, cast
 
 import yaml
 from packaging.requirements import Requirement
-from rich.panel import Panel
 from rich.table import Column, Table
 
 import flet.version
@@ -21,9 +20,7 @@ from flet_cli.commands.flutter_base import (
     error_style,
     verbose1_style,
     verbose2_style,
-    warning_style,
 )
-from flet_cli.utils.cli import parse_cli_bool_value
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
 from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
@@ -60,6 +57,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.python_module_filename = None
         self.out_dir = None
         self.python_module_name = None
+        self.python_asset_path = None
         self.get_pyproject = None
         self.python_app_path = None
         self.build_dir = None
@@ -94,121 +92,36 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "dist": "linux",
                 "can_be_run_on": ["Linux"],
             },
-            "web": {
-                "package_platform": "Pyodide",
-                "config_platform": "web",
-                "flutter_build_command": "web",
-                "status_text": "web app",
-                "outputs": ["build/web/*"],
-                "dist": "web",
-                "can_be_run_on": ["Darwin", "Windows", "Linux"],
-            },
-            "apk": {
-                "package_platform": "Android",
-                "config_platform": "android",
-                "flutter_build_command": "apk",
-                "status_text": ".apk for Android",
-                "outputs": ["build/app/outputs/flutter-apk/*"],
-                "dist": "apk",
-                "can_be_run_on": ["Darwin", "Windows", "Linux"],
-            },
-            "aab": {
-                "package_platform": "Android",
-                "config_platform": "android",
-                "flutter_build_command": "appbundle",
-                "status_text": ".aab bundle for Android",
-                "outputs": ["build/app/outputs/bundle/release/*"],
-                "dist": "aab",
-                "can_be_run_on": ["Darwin", "Windows", "Linux"],
-            },
-            "ipa": {
-                "package_platform": "iOS",
-                "config_platform": "ios",
-                "flutter_build_command": "ipa",
-                "status_text": ".ipa bundle for iOS",
-                "outputs": ["build/ios/archive/*", "build/ios/ipa/*"],
-                "dist": "ipa",
-                "can_be_run_on": ["Darwin"],
-            },
-            "ios-simulator": {
-                "package_platform": "iOS",
-                "config_platform": "ios",
-                "flutter_build_command": "ios",
-                "status_text": ".app bundle for iOS Simulator",
-                "outputs": ["build/ios/iphonesimulator/*"],
-                "dist": "ios-simulator",
-                "can_be_run_on": ["Darwin"],
-            },
         }
 
         self.cross_platform_permissions = {
             "location": {
-                "ios_info_plist": {
-                    "NSLocationWhenInUseUsageDescription": "This app uses location service when in use.",  # noqa: E501
-                    "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location service.",  # noqa: E501
-                },
                 "macos_info_plist": {
                     "NSLocationUsageDescription": "This app needs access to your location.",  # noqa: E501
                 },
                 "macos_entitlements": {
                     "com.apple.security.personal-information.location": True
                 },
-                "android_permissions": {
-                    "android.permission.ACCESS_FINE_LOCATION": True,
-                    "android.permission.ACCESS_COARSE_LOCATION": True,
-                    "android.permission.ACCESS_BACKGROUND_LOCATION": True,
-                },
-                "android_features": {
-                    "android.hardware.location.network": False,
-                    "android.hardware.location.gps": False,
-                },
             },
             "camera": {
-                "ios_info_plist": {
-                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
-                },
                 "macos_info_plist": {
                     "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
                 },
                 "macos_entitlements": {"com.apple.security.device.camera": True},
-                "android_permissions": {"android.permission.CAMERA": True},
-                "android_features": {
-                    "android.hardware.camera": False,
-                    "android.hardware.camera.any": False,
-                    "android.hardware.camera.front": False,
-                    "android.hardware.camera.external": False,
-                    "android.hardware.camera.autofocus": False,
-                },
             },
             "microphone": {
-                "ios_info_plist": {
-                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
-                },
                 "macos_info_plist": {
                     "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
                 },
                 "macos_entitlements": {"com.apple.security.device.audio-input": True},
-                "android_permissions": {
-                    "android.permission.RECORD_AUDIO": True,
-                    "android.permission.WRITE_EXTERNAL_STORAGE": True,
-                    "android.permission.READ_EXTERNAL_STORAGE": True,
-                },
-                "android_features": {},
             },
             "photo_library": {
-                "ios_info_plist": {
-                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
-                },
                 "macos_info_plist": {
                     "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
                 },
                 "macos_entitlements": {
                     "com.apple.security.personal-information.photos-library": True
                 },
-                "android_permissions": {
-                    "android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True
-                },
-                "android_features": {},
             },
         }
 
@@ -247,7 +160,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="Build for specific CPU architectures "
-            "(used in macOS and Android builds only). Example: `--arch arm64 x64`",
+            "(used in macOS builds only). Example: `--arch arm64 x64`",
         )
         parser.add_argument(
             "--exclude",
@@ -304,7 +217,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="bundle_id",
             required=False,
             help="Bundle ID for the application, e.g. `com.mycompany.app-name`. "
-            "It is used as an iOS, Android, macOS and Linux bundle ID",
+            "It is used as a macOS and Linux bundle ID",
         )
         parser.add_argument(
             "--company",
@@ -319,131 +232,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             help="Copyright text to display in about app dialogs",
         )
         parser.add_argument(
-            "--android-adaptive-icon-background",
-            dest="android_adaptive_icon_background",
+            "--window_size_width",
+            dest="window_size_width",
             required=False,
-            help="The color to be used to fill out the background of "
-            "Android adaptive icons",
+            help="Desktop window width",
         )
         parser.add_argument(
-            "--splash-color",
-            dest="splash_color",
+            "--window_size_height",
+            dest="window_size_height",
             required=False,
-            help="Background color of app splash screen on iOS, Android and web",
-        )
-        parser.add_argument(
-            "--splash-dark-color",
-            dest="splash_dark_color",
-            required=False,
-            help="Background color in dark mode of app splash screen on "
-            "iOS, Android and web",
-        )
-        parser.add_argument(
-            "--no-web-splash",
-            dest="no_web_splash",
-            action="store_true",
-            default=None,
-            help="Disable splash screen on web platform",
-        )
-        parser.add_argument(
-            "--no-ios-splash",
-            dest="no_ios_splash",
-            action="store_true",
-            default=None,
-            help="Disable splash screen on iOS platform",
-        )
-        parser.add_argument(
-            "--no-android-splash",
-            dest="no_android_splash",
-            action="store_true",
-            default=None,
-            help="Disable splash screen on Android platform",
-        )
-        parser.add_argument(
-            "--ios-team-id",
-            dest="ios_team_id",
-            type=str,
-            help="Apple developer team ID for signing iOS app bundle (ipa only)",
-            required=False,
-        )
-        parser.add_argument(
-            "--ios-export-method",
-            dest="ios_export_method",
-            type=str,
-            required=False,
-            help="Export method for iOS app bundle (default: debugging)",
-        )
-        parser.add_argument(
-            "--ios-provisioning-profile",
-            dest="ios_provisioning_profile",
-            type=str,
-            required=False,
-            help="Provisioning profile name or UUID that should be used to sign and "
-            "export iOS app bundle",
-        )
-        parser.add_argument(
-            "--ios-signing-certificate",
-            dest="ios_signing_certificate",
-            type=str,
-            required=False,
-            help="Signing certificate name, SHA-1 hash, or automatic selector to use "
-            "for signing iOS app bundle",
-        )
-        parser.add_argument(
-            "--base-url",
-            dest="base_url",
-            type=str,
-            help="Base URL from which the app is served (web only)",
-        )
-        parser.add_argument(
-            "--web-renderer",
-            dest="web_renderer",
-            type=str.lower,
-            choices=["auto", "canvaskit", "skwasm"],
-            help="Flutter web renderer to use (web only) [env: FLET_WEB_RENDERER=]",
-        )
-        parser.add_argument(
-            "--route-url-strategy",
-            dest="route_url_strategy",
-            type=str.lower,
-            choices=["path", "hash"],
-            help="Base URL path to serve the app from. "
-            "Useful if the app is hosted in a subdirectory (web only) "
-            "[env: FLET_WEB_ROUTE_URL_STRATEGY=]",
-        )
-        parser.add_argument(
-            "--pwa-background-color",
-            dest="pwa_background_color",
-            required=False,
-            help="Initial background color for your web app (web only)",
-        )
-        parser.add_argument(
-            "--pwa-theme-color",
-            dest="pwa_theme_color",
-            required=False,
-            help="Default color for your web app's user interface (web only)",
-        )
-        parser.add_argument(
-            "--no-wasm",
-            dest="no_wasm",
-            action="store_true",
-            default=False,
-            help="Disable WASM target for web build (web only)",
-        )
-        parser.add_argument(
-            "--no-cdn",
-            dest="no_cdn",
-            action="store_true",
-            default=False,
-            help="Disable loading of CanvasKit, Pyodide and fonts from CDN "
-            "[env: FLET_WEB_NO_CDN=]",
-        )
-        parser.add_argument(
-            "--split-per-abi",
-            dest="split_per_abi",
-            action="store_true",
-            default=None,
-            help="Split the APKs per ABIs (Android only)",
+            help="Dektop window height",
         )
         parser.add_argument(
             "--compile-app",
@@ -509,7 +307,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             default=[],
             help="The list of `<key>=<value>` pairs to add to Info.plist. Values can "
             "be booleans, strings, numbers, TOML arrays, or TOML inline tables "
-            "(macos, ipa and ios-simulator only); can be used multiple times",
+            "(macos only); can be used multiple times",
         )
         parser.add_argument(
             "--macos-entitlements",
@@ -522,76 +320,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             "(macos only); can be used multiple times",
         )
         parser.add_argument(
-            "--android-features",
-            dest="android_features",
-            action="extend",
-            nargs="+",
-            default=[],
-            help="The list of `<feature_name>=true|false` features to add to "
-            "AndroidManifest.xml (android only); can be used multiple times",
-        )
-        parser.add_argument(
-            "--android-permissions",
-            dest="android_permissions",
-            action="extend",
-            nargs="+",
-            default=[],
-            help="The list of `<permission_name>=true|false` permissions to add to "
-            "AndroidManifest.xml (android only); can be used multiple times",
-        )
-        parser.add_argument(
-            "--android-meta-data",
-            dest="android_meta_data",
-            action="extend",
-            nargs="+",
-            default=[],
-            help="The list of `<name>=<value>` app meta-data entries to add to "
-            "AndroidManifest.xml (android only); can be used multiple times",
-        )
-        parser.add_argument(
             "--permissions",
             dest="permissions",
             type=str.lower,
             nargs="+",
             default=[],
             choices=["location", "camera", "microphone", "photo_library"],
-            help="The list of pre-defined cross-platform permissions for iOS, Android "
-            "and macOS builds",
-        )
-        parser.add_argument(
-            "--deep-linking-scheme",
-            dest="deep_linking_scheme",
-            help="Deep linking URL scheme to configure for iOS and Android builds, "
-            "i.g. `https` or `myapp`",
-        )
-        parser.add_argument(
-            "--deep-linking-host",
-            dest="deep_linking_host",
-            help="Deep linking URL host for iOS and Android builds",
-        )
-        parser.add_argument(
-            "--android-signing-key-store",
-            dest="android_signing_key_store",
-            help="path to an upload keystore `.jks` file for Android apps "
-            "[env: FLET_ANDROID_SIGNING_KEY_STORE=]",
-        )
-        parser.add_argument(
-            "--android-signing-key-store-password",
-            dest="android_signing_key_store_password",
-            help="Android signing store password "
-            "[env: FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD=]",
-        )
-        parser.add_argument(
-            "--android-signing-key-password",
-            dest="android_signing_key_password",
-            help="Android signing key password "
-            "[env: FLET_ANDROID_SIGNING_KEY_PASSWORD=]",
-        )
-        parser.add_argument(
-            "--android-signing-key-alias",
-            dest="android_signing_key_alias",
-            default=None,
-            help="Android signing key alias [env: FLET_ANDROID_SIGNING_KEY_ALIAS=]",
+            help="The list of pre-defined permissions macOS builds",
         )
         parser.add_argument(
             "--build-number",
@@ -660,7 +395,6 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         self.package_platform = self.platforms[self.target_platform]["package_platform"]
         self.config_platform = self.platforms[self.target_platform]["config_platform"]
-        self.require_android_sdk = self.package_platform == "Android"
 
         super().initialize_command()
 
@@ -770,15 +504,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.python_app_path
         assert self.get_pyproject
 
-        base_url = (
-            (
-                self.options.base_url
-                or cast(str, self.get_pyproject("tool.flet.web.base_url"))
-                or "/"
-            )
-            .strip("/")
-            .strip()
-        )
         project_name_raw = (
             self.options.project_name
             or self.get_pyproject("project.name")
@@ -802,16 +527,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.python_app_path.name
         )
 
-        split_per_abi = (
-            self.options.split_per_abi
-            if self.options.split_per_abi is not None
-            else (
-                self.get_pyproject("tool.flet.android.split_per_abi")
-                if self.get_pyproject("tool.flet.android.split_per_abi") is not None
-                else False
-            )
-        )
-
         info_plist = {}
         macos_entitlements = {
             "com.apple.security.app-sandbox": False,
@@ -820,12 +535,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             "com.apple.security.network.server": True,
             "com.apple.security.files.user-selected.read-write": True,
         }
-        android_permissions = {"android.permission.INTERNET": True}
-        android_features = {
-            "android.software.leanback": False,
-            "android.hardware.touchscreen": False,
-        }
-        android_meta_data = {}
 
         # merge values from "--permissions" arg:
         for p in (
@@ -842,19 +551,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 macos_entitlements.update(
                     self.cross_platform_permissions[p]["macos_entitlements"]
                 )
-                android_permissions.update(
-                    self.cross_platform_permissions[p]["android_permissions"]
-                )
-                android_features.update(
-                    self.cross_platform_permissions[p]["android_features"]
-                )
 
         info_plist = merge_dict(
             info_plist,
             (
                 self.get_pyproject("tool.flet.macos.info")
-                if self.package_platform == "Darwin"
-                else self.get_pyproject("tool.flet.ios.info")
             )
             or {},
         )
@@ -902,171 +603,18 @@ class BaseBuildCommand(BaseFlutterCommand):
                     "containing those values.",
                 )
 
-        android_permissions = merge_dict(
-            android_permissions,
-            self.get_pyproject("tool.flet.android.permission") or {},
-        )
-
-        # parse --android-permissions
-        for p in self.options.android_permissions:
-            i = p.find("=")
-            if i > -1:
-                try:
-                    android_permissions[p[:i]] = parse_cli_bool_value(p[i + 1 :])
-                except ValueError:
-                    self.cleanup(
-                        1,
-                        f"Invalid Android permission option value for {p[:i]}: "
-                        f"{p[i + 1 :]}. Expected true or false.",
-                    )
-            else:
-                self.cleanup(1, f"Invalid Android permission option: {p}")
-
-        android_features = merge_dict(
-            android_features,
-            self.get_pyproject("tool.flet.android.feature") or {},
-        )
-
-        # parse --android-features
-        for p in self.options.android_features:
-            i = p.find("=")
-            if i > -1:
-                try:
-                    android_features[p[:i]] = parse_cli_bool_value(p[i + 1 :])
-                except ValueError:
-                    self.cleanup(
-                        1,
-                        f"Invalid Android feature option value for {p[:i]}: "
-                        f"{p[i + 1 :]}. Expected true or false.",
-                    )
-            else:
-                self.cleanup(1, f"Invalid Android feature option: {p}")
-
-        android_meta_data = merge_dict(
-            android_meta_data,
-            self.get_pyproject("tool.flet.android.meta_data") or {},
-        )
-
-        # parse --android-meta-data
-        for p in self.options.android_meta_data:
-            i = p.find("=")
-            if i > -1:
-                android_meta_data[p[:i]] = p[i + 1 :]
-            else:
-                self.cleanup(1, f"Invalid Android meta-data option: {p}")
-
-        deep_linking_scheme = (
-            self.get_pyproject("tool.flet.ios.deep_linking.scheme")
-            if self.package_platform == "iOS"
-            else (
-                self.get_pyproject("tool.flet.android.deep_linking.scheme")
-                if self.package_platform == "Android"
-                else self.get_pyproject("tool.flet.deep_linking.scheme")
-            )
-        )
-
-        deep_linking_host = (
-            self.get_pyproject("tool.flet.ios.deep_linking.host")
-            if self.package_platform == "iOS"
-            else (
-                self.get_pyproject("tool.flet.android.deep_linking.host")
-                if self.package_platform == "Android"
-                else self.get_pyproject("tool.flet.deep_linking.host")
-            )
-        )
-
-        if self.options.deep_linking_scheme and self.options.deep_linking_host:
-            deep_linking_scheme = self.options.deep_linking_scheme
-            deep_linking_host = self.options.deep_linking_host
-
         target_arch = (
             self.options.target_arch
             or self.get_pyproject(f"tool.flet.{self.config_platform}.target_arch")
             or self.get_pyproject("tool.flet.target_arch")
         )
 
-        ios_export_method = (
-            self.options.ios_export_method
-            or self.get_pyproject("tool.flet.ios.export_method")
-            or "debugging"
-        )
-
-        ios_export_method_opts = (
-            self.get_pyproject("tool.flet.ios.export_methods").get(ios_export_method)
-            if self.get_pyproject("tool.flet.ios.export_methods")
-            else {}
-        ) or {}
-
-        ios_provisioning_profile = (
-            self.options.ios_provisioning_profile
-            or self.get_pyproject("tool.flet.ios.provisioning_profile")
-            or ios_export_method_opts.get("provisioning_profile")
-        )
-
-        ios_signing_certificate = (
-            self.options.ios_signing_certificate
-            or self.get_pyproject("tool.flet.ios.signing_certificate")
-            or ios_export_method_opts.get("signing_certificate")
-        )
-
-        ios_export_options = (
-            self.get_pyproject("tool.flet.ios.export_options")
-            or ios_export_method_opts.get("export_options")
-            or {}
-        )
-
-        ios_team_id = (
-            self.options.ios_team_id
-            or self.get_pyproject("tool.flet.ios.team_id")
-            or ios_export_method_opts.get("team_id")
-        )
-
-        if (
-            self.target_platform in ["ipa"]
-            and not ios_provisioning_profile
-            and not self.debug_platform
-        ):
-            console.print(
-                Panel(
-                    "This build will generate an .xcarchive (Xcode Archive). "
-                    "To produce an .ipa (iOS App Package), please specify "
-                    "a Provisioning Profile.",
-                    style=warning_style,
-                )
-            )
-
         assert self.flutter_dir
         self.template_data = {
             "out_dir": self.flutter_dir.name,
             "sep": os.sep,
             "python_module_name": self.python_module_name,
-            "route_url_strategy": (
-                self.options.route_url_strategy
-                or self.get_pyproject("tool.flet.web.route_url_strategy")
-                or "path"
-            ),
-            "web_renderer": (
-                self.options.web_renderer
-                or self.get_pyproject("tool.flet.web.renderer")
-                or "auto"
-            ),
-            "pwa_background_color": (
-                self.options.pwa_background_color
-                or self.get_pyproject("tool.flet.web.pwa_background_color")
-            ),
-            "pwa_theme_color": (
-                self.options.pwa_theme_color
-                or self.get_pyproject("tool.flet.web.pwa_theme_color")
-            ),
-            "no_wasm": (
-                self.options.no_wasm
-                or self.get_pyproject("tool.flet.web.wasm") == False  # noqa: E712
-            ),
-            "no_cdn": (
-                self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
-            ),
-            "base_url": f"/{base_url}/" if base_url else "/",
-            "split_per_abi": split_per_abi,
+            "python_asset_path": self.python_asset_path,
             "project_name": project_name,
             "project_name_slug": project_name_slug,
             "artifact_name": artifact_name,
@@ -1087,11 +635,12 @@ class BaseBuildCommand(BaseFlutterCommand):
             ),
             "copyright": self.options.copyright
             or self.get_pyproject("tool.flet.copyright"),
-            "ios_export_method": ios_export_method,
-            "ios_provisioning_profile": ios_provisioning_profile,
-            "ios_signing_certificate": ios_signing_certificate,
-            "ios_export_options": ios_export_options,
-            "ios_team_id": ios_team_id,
+            "window_size_width": self.options.window_size_width
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.desktop.window_size_width")
+            or self.get_pyproject("tool.flet.desktop.window_size_width"),
+            "window_size_height": self.options.window_size_height
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.desktop.window_size_height")
+            or self.get_pyproject("tool.flet.desktop.window_size_height"),
             "options": {
                 "package_platform": self.package_platform,
                 "config_platform": self.config_platform,
@@ -1104,18 +653,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                 ),
                 "info_plist": info_plist,
                 "macos_entitlements": macos_entitlements,
-                "android_permissions": android_permissions,
-                "android_features": android_features,
-                "android_meta_data": android_meta_data,
-                "deep_linking": {
-                    "scheme": deep_linking_scheme,
-                    "host": deep_linking_host,
-                },
-                "android_signing": bool(
-                    self.options.android_signing_key_store
-                    or self.get_pyproject("tool.flet.android.signing.key_store")
-                    or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
-                ),
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
             "pyproject": self.get_pyproject(),
@@ -1353,15 +890,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             default_icon = self.find_platform_image(
                 self.assets_path, images_path, "icon", copy_ops, hash
             )
-            ios_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon_ios", copy_ops, hash
-            )
-            android_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon_android", copy_ops, hash
-            )
-            web_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon_web", copy_ops, hash
-            )
             windows_icon = self.find_platform_image(
                 self.assets_path, images_path, "icon_windows", copy_ops, hash
             )
@@ -1374,30 +902,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
             self.fallback_image(
                 pubspec,
-                "flutter_launcher_icons.image_path_ios",
-                [ios_icon, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_launcher_icons.image_path_android",
-                [android_icon, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_launcher_icons.adaptive_icon_foreground",
-                [android_icon, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_launcher_icons.web.image_path",
-                [web_icon, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
                 "flutter_launcher_icons.windows.image_path",
                 [windows_icon, default_icon],
                 images_dir,
@@ -1407,15 +911,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "flutter_launcher_icons.macos.image_path",
                 [macos_icon, default_icon],
                 images_dir,
-            )
-
-        adaptive_icon_background = (
-            self.options.android_adaptive_icon_background
-            or self.get_pyproject("tool.flet.android.adaptive_icon_background")
-        )
-        if adaptive_icon_background:
-            pubspec["flutter_launcher_icons"]["adaptive_icon_background"] = (
-                adaptive_icon_background
             )
 
         # check if pubspec changed
@@ -1460,260 +955,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                     console.log(icons_result.stderr, style=error_style)
                 self.cleanup(icons_result.returncode)
             console.log(f"Generated app icons {self.emojis['checkmark']}")
-
-        hash.commit()
-
-    def customize_splash_images(self):
-        """
-        Resolve splash assets/colors, patch splash config, and generate splash files.
-        """
-
-        assert self.package_app_path
-        assert self.flutter_dir
-        assert self.options
-        assert self.get_pyproject
-        assert self.pubspec_path
-        assert self.build_dir
-        assert self.target_platform
-
-        if self.target_platform not in ["web", "ipa", "ios-simulator", "apk", "aab"]:
-            return
-
-        hash = HashStamp(self.build_dir / ".hash" / "splashes")
-
-        pubspec_origin_path = f"{self.pubspec_path}.orig"
-
-        pubspec = self.load_yaml(pubspec_origin_path)
-
-        copy_ops = []
-        self.assets_path = self.package_app_path.joinpath("assets")
-        if self.assets_path.exists():
-            images_dir = "images"
-            images_path = self.flutter_dir.joinpath(images_dir)
-            images_path.mkdir(exist_ok=True)
-
-            # copy icons
-            default_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon", copy_ops, hash
-            )
-
-            # copy splash images
-            default_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash", copy_ops, hash
-            )
-            default_dark_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_dark", copy_ops, hash
-            )
-            ios_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_ios", copy_ops, hash
-            )
-            ios_dark_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_dark_ios", copy_ops, hash
-            )
-            android_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_android", copy_ops, hash
-            )
-            android_dark_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_dark_android", copy_ops, hash
-            )
-            web_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_web", copy_ops, hash
-            )
-            web_dark_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_dark_web", copy_ops, hash
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image",
-                [default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_dark",
-                [default_dark_splash, default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_ios",
-                [ios_splash, default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_dark_ios",
-                [
-                    ios_dark_splash,
-                    default_dark_splash,
-                    ios_splash,
-                    default_splash,
-                    default_icon,
-                ],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_android",
-                [android_splash, default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.android_12.image",
-                [android_splash, default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_dark_android",
-                [
-                    android_dark_splash,
-                    default_dark_splash,
-                    android_splash,
-                    default_splash,
-                    default_icon,
-                ],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.android_12.image_dark",
-                [
-                    android_dark_splash,
-                    default_dark_splash,
-                    android_splash,
-                    default_splash,
-                    default_icon,
-                ],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_web",
-                [web_splash, default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_dark_web",
-                [
-                    web_dark_splash,
-                    default_dark_splash,
-                    web_splash,
-                    default_splash,
-                    default_icon,
-                ],
-                images_dir,
-            )
-
-        # splash colors
-        splash_color = (
-            self.options.splash_color
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.splash.color")
-            or self.get_pyproject("tool.flet.splash.color")
-        )
-        if splash_color:
-            pubspec["flutter_native_splash"]["color"] = splash_color
-            pubspec["flutter_native_splash"]["android_12"]["color"] = splash_color
-
-        splash_dark_color = (
-            self.options.splash_dark_color
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.splash.dark_color")
-            or self.get_pyproject("tool.flet.splash.dark_color")
-        )
-        if splash_dark_color:
-            pubspec["flutter_native_splash"]["color_dark"] = splash_dark_color
-            pubspec["flutter_native_splash"]["android_12"]["color_dark"] = (
-                splash_dark_color
-            )
-
-        splash_icon_bgcolor = self.get_pyproject(
-            f"tool.flet.{self.config_platform}.splash.icon_bgcolor"
-        ) or self.get_pyproject("tool.flet.splash.icon_bgcolor")
-
-        if splash_icon_bgcolor:
-            pubspec["flutter_native_splash"]["android_12"]["icon_background_color"] = (
-                splash_icon_bgcolor
-            )
-
-        splash_icon_dark_bgcolor = self.get_pyproject(
-            f"tool.flet.{self.config_platform}.splash.icon_dark_bgcolor"
-        ) or self.get_pyproject("tool.flet.splash.icon_dark_bgcolor")
-
-        if splash_icon_dark_bgcolor:
-            pubspec["flutter_native_splash"]["android_12"][
-                "icon_background_color_dark"
-            ] = splash_icon_dark_bgcolor
-
-        # enable/disable splashes
-        pubspec["flutter_native_splash"]["web"] = (
-            not self.options.no_web_splash
-            if self.options.no_web_splash is not None
-            else (
-                self.get_pyproject("tool.flet.splash.web")
-                if self.get_pyproject("tool.flet.splash.web") is not None
-                else True
-            )
-        )
-        pubspec["flutter_native_splash"]["ios"] = (
-            not self.options.no_ios_splash
-            if self.options.no_ios_splash is not None
-            else (
-                self.get_pyproject("tool.flet.splash.ios")
-                if self.get_pyproject("tool.flet.splash.ios") is not None
-                else True
-            )
-        )
-        pubspec["flutter_native_splash"]["android"] = (
-            not self.options.no_android_splash
-            if self.options.no_android_splash is not None
-            else (
-                self.get_pyproject("tool.flet.splash.android")
-                if self.get_pyproject("tool.flet.splash.android") is not None
-                else True
-            )
-        )
-
-        # check if pubspec changed
-        hash.update(Path(pubspec_origin_path).stat().st_mtime)
-        hash.update(pubspec["flutter_native_splash"])
-
-        # save pubspec.yaml
-        if hash.has_changed():
-            if copy_ops:
-                self.update_status("[bold blue]Customizing app splash images...")
-                for op in copy_ops:
-                    if self.verbose > 0:
-                        console.log(
-                            f"Copying image {op[0]} to {op[1]}", style=verbose1_style
-                        )
-                    shutil.copy(op[0], op[1])
-                console.log(f"Customized app splash images {self.emojis['checkmark']}")
-
-            updated_pubspec = self.load_yaml(self.pubspec_path)
-            updated_pubspec["flutter_native_splash"] = pubspec["flutter_native_splash"]
-            self.save_yaml(self.pubspec_path, updated_pubspec)
-
-            # splash screens
-            self.update_status("[bold blue]Generating splash screens...")
-            splash_result = self.run(
-                [
-                    self.dart_exe,
-                    "run",
-                    "--suppress-analytics",
-                    "flutter_native_splash:create",
-                ],
-                cwd=str(self.flutter_dir),
-                capture_output=self.verbose < 1,
-            )
-            if splash_result.returncode != 0:
-                if isinstance(splash_result.stdout, str):
-                    console.log(splash_result.stdout, style=verbose1_style)
-                if isinstance(splash_result.stderr, str):
-                    console.log(splash_result.stderr, style=error_style)
-                self.cleanup(splash_result.returncode)
-            console.log(f"Generated splash screens {self.emojis['checkmark']}")
 
         hash.commit()
 
@@ -1833,10 +1074,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             package_args.extend(["-r", f"flet=={flet.version.flet_version}"])
 
         # site-packages variable
-        if self.package_platform != "Pyodide":
-            package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-                self.build_dir / "site-packages"
-            )
+        package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
+            self.build_dir / "site-packages"
+        )
 
         # flutter-packages variable
         if self.flutter_packages_temp_dir.exists():
@@ -1857,8 +1097,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         if app_exclude:
             exclude_list.extend(app_exclude)
 
-        if self.target_platform == "web":
-            exclude_list.append("assets")
         package_args.extend(["--exclude", ",".join(exclude_list)])
 
         # source-packages
@@ -2043,45 +1281,9 @@ class BaseBuildCommand(BaseFlutterCommand):
         build_env = {}
 
         # site-packages variable
-        if self.package_platform != "Pyodide":
-            build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-                self.build_dir / "site-packages"
-            )
-
-        if self.package_platform == "Pyodide" and not self.template_data["no_wasm"]:
-            build_args.append("--wasm")
-
-        android_signing_key_store = (
-            self.options.android_signing_key_store
-            or self.get_pyproject("tool.flet.android.signing.key_store")
-            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
+        build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
+            self.build_dir / "site-packages"
         )
-        if android_signing_key_store:
-            build_env["FLET_ANDROID_SIGNING_KEY_STORE"] = android_signing_key_store
-
-        key_store_password = (
-            self.options.android_signing_key_store_password
-            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD")
-        )
-        key_password = self.options.android_signing_key_password or os.getenv(
-            "FLET_ANDROID_SIGNING_KEY_PASSWORD"
-        )
-        if key_store_password or key_password:
-            build_env["FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD"] = (
-                key_store_password if key_store_password else key_password
-            )
-            build_env["FLET_ANDROID_SIGNING_KEY_PASSWORD"] = (
-                key_password if key_password else key_store_password
-            )
-
-        if android_signing_key_store:
-            android_signing_key_alias = (
-                self.options.android_signing_key_alias
-                or self.get_pyproject("tool.flet.android.signing.key_alias")
-                or os.getenv("FLET_ANDROID_SIGNING_KEY_ALIAS")
-                or "upload"
-            )
-            build_env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = android_signing_key_alias
 
         flutter_build_args = (
             self.options.flutter_build_args
@@ -2188,80 +1390,10 @@ class BaseBuildCommand(BaseFlutterCommand):
                 ignore=make_ignore_fn(build_output_dir, build_output_glob),
             )
 
-        if self.target_platform == "web" and self.assets_path.exists():
-            # copy `assets` directory contents to the output directory
-            copy_tree(str(self.assets_path), str(self.out_dir))
-        elif self.target_platform in {"apk", "aab"}:
-            self.rename_android_build_outputs()
-
         console.log(
             f"Copied build to [cyan]{self.rel_out_dir}[/cyan] "
             f"directory {self.emojis['checkmark']}"
         )
-
-    def rename_android_build_outputs(self):
-        """
-        Rename copied Android release artifacts so they honor user-configured
-        artifact names.
-
-        Flutter outputs APK/AAB release files with an `app` prefix
-        (`app-release.*`, `app-<abi>-release.*`), plus optional `.sha1` files.
-        This method removes the `-release` segment and replaces only the
-        leading `app` token with the resolved Flet artifact name.
-        """
-        assert self.target_platform
-        assert self.out_dir
-        assert self.template_data
-
-        artifact_name = str(self.template_data["artifact_name"])
-        output_ext = "apk" if self.target_platform == "apk" else "aab"
-        release_suffix = f"-release.{output_ext}"
-        release_hash_suffix = f"{release_suffix}.sha1"
-        final_suffix = f".{output_ext}"
-        final_hash_suffix = f"{final_suffix}.sha1"
-
-        for output_file in self.out_dir.iterdir():
-            if not output_file.is_file():
-                continue
-
-            name = output_file.name
-            suffix = None
-            final_file_suffix = None
-            if name.endswith(release_hash_suffix):
-                suffix = release_hash_suffix
-                final_file_suffix = final_hash_suffix
-            elif name.endswith(release_suffix):
-                suffix = release_suffix
-                final_file_suffix = final_suffix
-            if suffix is None or final_file_suffix is None:
-                continue
-
-            prefix = name[: -len(suffix)]
-            # Only rewrite Flutter default release outputs that start with `app`.
-            if prefix != "app" and not prefix.startswith("app-"):
-                continue
-
-            # Keep ABI and hash suffixes, but drop `-release`.
-            renamed = f"{artifact_name}{prefix[len('app') :]}{final_file_suffix}"
-            if renamed == name:
-                continue
-
-            renamed_path = output_file.with_name(renamed)
-            if renamed_path.exists():
-                console.log(
-                    f"Skipping rename of [cyan]{name}[/cyan] because "
-                    f"[cyan]{renamed}[/cyan] already exists.",
-                    style=warning_style,
-                )
-                continue
-
-            output_file.rename(renamed_path)
-            if self.verbose > 0:
-                console.log(
-                    f"Renamed build output from [cyan]{name}[/cyan] to "
-                    f"[cyan]{renamed}[/cyan].",
-                    style=verbose1_style,
-                )
 
     def find_platform_image(
         self,

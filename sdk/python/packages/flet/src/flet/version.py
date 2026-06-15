@@ -6,18 +6,17 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from flet.utils import is_mobile, is_windows, which
+from flet.utils import is_windows, which
 
 __all__ = [
     "find_repo_root",
     "flet_version",
     "flutter_version",
     "from_git",
-    "pyodide_version",
 ]
 
 # set by CI
-flet_version = ""
+flet_version = "0.85.2"
 """
 The Flet version in use.
 
@@ -35,12 +34,6 @@ apps with [`flet build`](https://flet.dev/docs/cli/flet-build/).
 This value is set explicitly in CI for released packages. When running from
 source and no version is provided, it is resolved from the repository's
 `.fvmrc` file when available.
-"""
-
-PYODIDE_VERSION = "0.27.7"
-"""
-The Pyodide version being used when packaging
-with [`flet build web`](https://flet.dev/docs/cli/flet-build/).
 """
 
 
@@ -97,10 +90,9 @@ def get_flet_version() -> str:
 
     # Only try to get the version from Git if the pre-set version is empty.
     # This is more likely to happen in a development/source environment.
-    if not is_mobile():
-        git_version = from_git()
-        if git_version:
-            return git_version  # Use Git version if available
+    git_version = from_git()
+    if git_version:
+        return git_version  # Use Git version if available
 
     # If 'flet_version' is still empty after the above (e.g., in a built package
     # where CI didn't replace it), fall back to the default version.
@@ -120,19 +112,18 @@ def get_flutter_version() -> str:
     if flutter_version:
         return flutter_version
 
-    if not is_mobile():
-        repo_root = find_repo_root(Path(__file__).resolve().parent)
-        if repo_root:
-            fvmrc_path = repo_root / ".fvmrc"
-            try:
-                v = json.loads(fvmrc_path.read_text(encoding="utf-8"))[
-                    "flutter"
-                ].strip()
-                if not v:
-                    raise ValueError("Empty or missing 'flutter' value")
-                return v
-            except Exception as e:
-                print(f"Error parsing {fvmrc_path!r}: {e}", file=sys.stderr)
+    repo_root = find_repo_root(Path(__file__).resolve().parent)
+    if repo_root:
+        fvmrc_path = repo_root / ".fvmrc"
+        try:
+            v = json.loads(fvmrc_path.read_text(encoding="utf-8"))[
+                "flutter"
+            ].strip()
+            if not v:
+                raise ValueError("Empty or missing 'flutter' value")
+            return v
+        except Exception as e:
+            print(f"Error parsing {fvmrc_path!r}: {e}", file=sys.stderr)
 
     # If 'flutter_version' is still empty after the above (e.g., in a built package
     # where CI didn't replace it), fall back to the below default.
@@ -141,6 +132,5 @@ def get_flutter_version() -> str:
 
 
 flutter_version = get_flutter_version()
-pyodide_version = PYODIDE_VERSION
 flet_version = get_flet_version()
 __version__ = flet_version

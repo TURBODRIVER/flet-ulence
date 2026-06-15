@@ -1,4 +1,3 @@
-from flet.utils.browser import open_in_browser
 from flet.utils.classproperty import classproperty
 from flet.utils.deprecated import deprecated, deprecated_class, deprecated_warning
 from flet.utils.deprecated_enum import DeprecatedEnumMeta
@@ -21,15 +20,10 @@ from flet.utils.platform_utils import (
     get_arch,
     get_bool_env_var,
     get_platform,
-    is_android,
     is_asyncio,
-    is_embedded,
-    is_ios,
     is_linux,
     is_linux_server,
     is_macos,
-    is_mobile,
-    is_pyodide,
     is_windows,
 )
 from flet.utils.slugify import slugify
@@ -55,18 +49,12 @@ __all__ = [
     "get_local_ip",
     "get_param_count",
     "get_platform",
-    "is_android",
     "is_asyncio",
-    "is_embedded",
-    "is_ios",
     "is_linux",
     "is_linux_server",
     "is_macos",
-    "is_mobile",
-    "is_pyodide",
     "is_windows",
     "is_within_directory",
-    "open_in_browser",
     "patch_dataclass",
     "random_string",
     "safe_tar_extractall",

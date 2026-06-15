@@ -15,7 +15,6 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../models/keyboard_event.dart';
-import '../models/multi_view.dart';
 import '../models/page_design.dart';
 import '../routing/deep_linking_bootstrap.dart';
 import '../routing/route_information_provider.dart';
@@ -25,14 +24,8 @@ import '../routing/router_delegate.dart';
 import '../services/service_binding.dart';
 import '../services/service_registry.dart';
 import '../utils/animations.dart';
-import '../utils/device_info.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
-import '../utils/platform.dart';
-import '../utils/platform_utils_web.dart'
-    if (dart.library.io) "../utils/platform_utils_non_web.dart";
-import '../utils/session_store_web.dart'
-    if (dart.library.io) "../utils/session_store_non_web.dart";
 import '../utils/theme.dart';
 import '../utils/time.dart';
 import '../utils/user_fonts.dart';
@@ -71,16 +64,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   final Set<String> _pendingPoppedViewRoutes = <String>{};
   final Set<String> _sentViewPopEventsForRoutes = <String>{};
 
-  final Map<int, MultiView> _multiViews = <int, MultiView>{};
-  bool _registeredFromMultiViews = false;
-
   @override
   void initState() {
     debugPrint("Page.initState: ${widget.control.id}");
     super.initState();
 
     WidgetsBinding.instance.addObserver(this);
-    _updateMultiViews();
 
     _routeParser = RouteParser();
     final backend = FletBackend.of(context);
@@ -142,7 +131,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   void didUpdateWidget(covariant PageControl oldWidget) {
     debugPrint("Page.didUpdateWidget: ${widget.control.id}");
     super.didUpdateWidget(oldWidget);
-    _updateMultiViews();
     _ensureServiceRegistries();
     _attachKeyboardListenerIfNeeded();
     _loadFontsIfNeeded(FletBackend.of(context));
@@ -150,7 +138,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   @override
   void didChangeMetrics() {
-    _updateMultiViews();
   }
 
   @override
@@ -297,70 +284,9 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       case "push_route":
         _routeState.route = args["route"];
         break;
-      case "get_device_info":
-        return await getDeviceInfo();
-      case "set_allowed_device_orientations":
-        if (isMobilePlatform()) {
-          var orientations = args["orientations"]
-                  ?.map((o) => parseDeviceOrientation(o))
-                  .whereType<DeviceOrientation>()
-                  .toList() ??
-              List<DeviceOrientation>.from(DeviceOrientation.values);
-          await SystemChrome.setPreferredOrientations(orientations);
-        }
-        break;
 
       default:
         throw Exception("Unknown Page method: $name");
-    }
-  }
-
-  void _updateMultiViews() {
-    if (!widget.control.backend.multiView) {
-      return;
-    }
-    bool changed = false;
-
-    bool triggerAddViewEvent =
-        SessionStore.get("triggerAddViewEvent") == null || isPyodideMode();
-    for (final FlutterView view
-        in WidgetsBinding.instance.platformDispatcher.views) {
-      if (!_multiViews.containsKey(view.viewId)) {
-        var initialData = getViewInitialData(view.viewId);
-        debugPrint("View initial data ${view.viewId}: $initialData");
-        _multiViews[view.viewId] = MultiView(
-            viewId: view.viewId, flutterView: view, initialData: initialData);
-        if (triggerAddViewEvent) {
-          widget.control.triggerEventWithoutSubscribers("multi_view_add",
-              {"view_id": view.viewId, "initial_data": initialData});
-        }
-        changed = true;
-      }
-    }
-    for (var viewId in _multiViews.keys.toList()) {
-      if (!WidgetsBinding.instance.platformDispatcher.views
-          .any((view) => view.viewId == viewId)) {
-        _multiViews.remove(viewId);
-        if (triggerAddViewEvent) {
-          widget.control
-              .triggerEventWithoutSubscribers("multi_view_remove", viewId);
-        }
-        changed = true;
-      }
-    }
-    if (!isPyodideMode()) {
-      SessionStore.set("triggerAddViewEvent", "true");
-    }
-    if (changed && !_registeredFromMultiViews) {
-      _registeredFromMultiViews = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        widget.control.backend.onRouteUpdated("/");
-      });
-    } else {
-      // re-draw
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {});
-      });
     }
   }
 
@@ -475,47 +401,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var backend = FletBackend.of(context);
     backend.globalKeys.clear();
 
-    if (!widget.control.backend.multiView) {
-      // single page mode
-      return _buildApp(widget.control, null);
-    } else {
-      // multi-view mode
-      var appStatus = context
-          .select<FletBackend, ({bool isLoading, String error})>((backend) =>
-              (isLoading: backend.isLoading, error: backend.error));
-      var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
-      var formattedErrorMessage =
-          backend.formatAppErrorMessage(appStatus.error);
-
-      List<Widget> views = [];
-      for (var view in _multiViews.entries) {
-        var multiViewControl = widget.control
-            .children("multi_views")
-            .firstWhereOrNull((v) => v.get("view_id") == view.key);
-
-        var viewControl = multiViewControl?.children("views").firstOrNull;
-
-        Widget viewChild = SizedBox(
-          width: 100,
-          height: 100,
-          child: viewControl != null
-              ? ControlWidget(control: viewControl)
-              : Stack(children: [
-                  PageMedia(view: multiViewControl),
-                  LoadingPage(
-                    isLoading: appStatus.isLoading,
-                    message: appStatus.isLoading
-                        ? appStartupScreenMessage
-                        : formattedErrorMessage,
-                  )
-                ]),
-        );
-
-        viewChild = _buildApp(multiViewControl ?? widget.control, viewChild);
-        views.add(View(view: view.value.flutterView, child: viewChild));
-      }
-      return ViewCollection(views: views);
-    }
+    return _buildApp(widget.control, null);
   }
 
   Widget _buildApp(Control control, Widget? home) {
@@ -526,7 +412,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         orElse: () => defaultTargetPlatform);
 
     var widgetsDesign = control.adaptive == true &&
-            (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS)
+            (platform == TargetPlatform.macOS)
         ? PageDesign.cupertino
         : PageDesign.material;
 

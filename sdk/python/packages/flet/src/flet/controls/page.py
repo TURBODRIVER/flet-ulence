@@ -4,7 +4,7 @@ import logging
 import sys
 import threading
 import weakref
-from collections.abc import Awaitable, Coroutine
+from collections.abc import Awaitable
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
 from dataclasses import InitVar, dataclass, field
 from functools import partial
@@ -14,12 +14,8 @@ from typing import (
     Callable,
     Optional,
     TypeVar,
-    Union,
 )
-from urllib.parse import urlparse
 
-from flet.auth.authorization import Authorization
-from flet.auth.oauth_provider import OAuthProvider
 from flet.components.component import Renderer
 from flet.components.public_utils import unwrap_component
 from flet.controls.base_control import BaseControl, control
@@ -34,46 +30,19 @@ from flet.controls.control_event import (
 )
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
-from flet.controls.device_info import (
-    AndroidDeviceInfo,
-    DeviceInfo,
-    IosDeviceInfo,
-    LinuxDeviceInfo,
-    MacOsDeviceInfo,
-    WebDeviceInfo,
-    WindowsDeviceInfo,
-)
-from flet.controls.exceptions import FletUnsupportedPlatformException
-from flet.controls.multi_view import MultiView
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
-from flet.controls.services.browser_context_menu import BrowserContextMenu
-from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.service import Service
-from flet.controls.services.shared_preferences import SharedPreferences
 from flet.controls.services.storage_paths import StoragePaths
-from flet.controls.services.url_launcher import UrlLauncher
 from flet.controls.types import (
     AppLifecycleState,
     Brightness,
-    DeviceOrientation,
     Locale,
     PagePlatform,
-    Url,
-    UrlTarget,
     Wrapper,
 )
-from flet.utils import is_pyodide
 from flet.utils.deprecated import deprecated
-from flet.utils.from_dict import from_dict
 from flet.utils.strings import random_string
-
-if not is_pyodide():
-    from flet.auth.authorization_service import AuthorizationService
-
-    AuthorizationImpl = AuthorizationService
-else:
-    AuthorizationImpl = Authorization
 
 if TYPE_CHECKING:
     from flet.messaging.session import Session
@@ -88,7 +57,6 @@ except ImportError:
 logger = logging.getLogger("flet")
 
 
-AT = TypeVar("AT", bound=Authorization)
 InputT = ParamSpec("InputT")
 RetT = TypeVar("RetT")
 
@@ -347,39 +315,6 @@ class AppLifecycleStateChangeEvent(Event["Page"]):
     """
 
 
-@dataclass
-class MultiViewAddEvent(Event["Page"]):
-    """
-    Event payload emitted when a new multi-view is created.
-
-    Delivered to :attr:`flet.Page.on_multi_view_add`.
-    """
-
-    view_id: int
-    """
-    Unique identifier of the newly created view.
-    """
-
-    initial_data: Any
-    """
-    Optional initial payload provided when the view was opened.
-    """
-
-
-@dataclass
-class MultiViewRemoveEvent(Event["Page"]):
-    """
-    Event payload emitted when a multi-view is removed.
-
-    Delivered to :attr:`flet.Page.on_multi_view_remove`.
-    """
-
-    view_id: int
-    """
-    Unique identifier of the removed view.
-    """
-
-
 @control("Page", isolated=True, post_init_args=2)
 class Page(BasePage):
     """
@@ -392,11 +327,6 @@ class Page(BasePage):
     sess: InitVar["Session"]
     """
     The session that this page belongs to.
-    """
-
-    multi_views: list[MultiView] = field(default_factory=list)
-    """
-    The list of multi-views associated with this page.
     """
 
     window: Window = field(default_factory=lambda: Window())
@@ -413,21 +343,6 @@ class Page(BasePage):
         This property is read-only.
     """
 
-    web: bool = False
-    """
-    `True` if the application is running in the web browser.
-
-    Note:
-        This property is read-only.
-    """
-
-    pwa: bool = False
-    """
-    `True` if the application is running as Progressive Web App (PWA).
-
-    Note:
-        This property is read-only.
-    """
     debug: bool = False
     """
     `True` if Flutter client of Flet app is running in debug mode.
@@ -436,33 +351,9 @@ class Page(BasePage):
         This property is read-only.
     """
 
-    wasm: bool = False
-    """
-    `True` if the application is running in WebAssembly (WASM) mode.
-
-    Note:
-        This property is read-only.
-    """
-
     test: bool = False
     """
     `True` if the application is running with test mode.
-
-    Note:
-        This property is read-only.
-    """
-
-    multi_view: bool = False
-    """
-    `True` if the application is running with multi-view support.
-
-    Note:
-        This property is read-only.
-    """
-
-    pyodide: bool = False
-    """
-    `True` if the application is running in Pyodide (WebAssembly) mode.
 
     Note:
         This property is read-only.
@@ -597,15 +488,6 @@ class Page(BasePage):
     Called when unhandled exception occurs.
     """
 
-    on_multi_view_add: Optional[EventHandler[MultiViewAddEvent]] = None
-    """
-    TBD
-    """
-
-    on_multi_view_remove: Optional[EventHandler[MultiViewRemoveEvent]] = None
-    """
-    TBD
-    """
     _services: ServiceRegistry = field(default_factory=ServiceRegistry)
 
     def __post_init__(
@@ -618,7 +500,6 @@ class Page(BasePage):
         self.__session = weakref.ref(sess)
         self.__last_route = None
         self.__query: QueryString = QueryString(self)
-        self.__authorization: Optional[Authorization] = None
 
     def get_control(self, id: int) -> Optional[BaseControl]:
         """
@@ -835,15 +716,12 @@ class Page(BasePage):
         current page.
         """
         handler_with_context = self.__context_wrapper(handler)
-        if is_pyodide():
-            handler_with_context(*args, **kwargs)
-        else:
-            loop = self.session.connection.loop
-            loop.call_soon_threadsafe(
-                loop.run_in_executor,
-                self.executor,
-                partial(handler_with_context, *args, **kwargs),
-            )
+        loop = self.session.connection.loop
+        loop.call_soon_threadsafe(
+            loop.run_in_executor,
+            self.executor,
+            partial(handler_with_context, *args, **kwargs),
+        )
 
     @deprecated(
         "Use push_route() instead.",
@@ -947,8 +825,8 @@ class Page(BasePage):
         """
         Navigate to a new route (sync convenience wrapper).
 
-        Equivalent to ``asyncio.create_task(page.push_route(route, **kwargs))``.
-        Use this in synchronous callbacks (e.g. ``on_click``) where awaiting
+        Equivalent to `asyncio.create_task(page.push_route(route, **kwargs))`.
+        Use this in synchronous callbacks (e.g. `on_click`) where awaiting
         is not possible.
 
         Args:
@@ -1043,191 +921,6 @@ class Page(BasePage):
         """
         return self.session.connection.get_upload_url(file_name, expires)
 
-    async def login(
-        self,
-        provider: OAuthProvider,
-        fetch_user: bool = True,
-        fetch_groups: bool = False,
-        scope: Optional[list[str]] = None,
-        saved_token: Optional[str] = None,
-        on_open_authorization_url: Optional[
-            Callable[[str], Coroutine[Any, Any, None]]
-        ] = None,
-        complete_page_html: Optional[str] = None,
-        redirect_to_page: Optional[bool] = False,
-        authorization: type[AT] = AuthorizationImpl,
-    ) -> AT:
-        """
-        Starts OAuth flow.
-
-        See [Authentication](https://flet.dev/docs/cookbook/authentication)
-        guide for more information and examples.
-        """
-        self.__authorization = authorization(
-            provider,
-            fetch_user=fetch_user,
-            fetch_groups=fetch_groups,
-            scope=scope,
-        )
-        if saved_token is None:
-            authorization_url, state = self.__authorization.get_authorization_data()
-            auth_attrs = {"state": state}
-            if complete_page_html:
-                auth_attrs["completePageHtml"] = complete_page_html
-            if redirect_to_page:
-                up = urlparse(provider.redirect_url)
-                auth_attrs["completePageUrl"] = up._replace(
-                    path=f"{self.session.connection.page_name}{self.route}"
-                ).geturl()
-            self.session.connection.oauth_authorize(auth_attrs)
-            if on_open_authorization_url:
-                await on_open_authorization_url(authorization_url)
-            else:
-                if self.web:
-                    await UrlLauncher().open_window(
-                        authorization_url, title="flet_oauth_signin"
-                    )
-                else:
-                    await UrlLauncher().launch_url(authorization_url)
-        else:
-            await self.__authorization.dehydrate_token(saved_token)
-
-            e = LoginEvent(name="login", control=self, error="", error_description="")
-            if self.on_login:
-                asyncio.create_task(self._trigger_event("login", event_data=None, e=e))
-
-        return self.__authorization
-
-    async def _authorize_callback(self, data: dict[str, Optional[str]]) -> None:
-        """
-        Complete OAuth flow using callback payload returned by provider.
-
-        Validates state token, optionally closes/foregrounds app UI, exchanges
-        authorization code for access token, and raises `login` event with
-        success or failure details.
-
-        Args:
-            data: OAuth callback query payload (e.g. `state`, `code`,
-                `error`, `error_description`).
-        """
-
-        assert self.__authorization
-        state = data.get("state")
-        assert state == self.__authorization.state
-
-        if not self.web:
-            if self.platform in ["ios", "android"]:
-                # close web view on mobile
-                await self.close_in_app_web_view()
-            else:
-                # activate desktop window
-                await self.window.to_front()
-        e = LoginEvent(
-            error=data.get("error"),
-            error_description=data.get("error_description"),
-            control=self,
-            name="login",
-        )
-        if not e.error:
-            # perform token request
-
-            code = data.get("code")
-            assert code not in [None, ""]
-            try:
-                await self.__authorization.request_token(code)
-            except Exception as ex:
-                e.error = str(ex)
-        if self.on_login:
-            asyncio.create_task(self._trigger_event("login", event_data=None, e=e))
-
-    def logout(self) -> None:
-        """
-        Clears current authentication context. See \
-        [Authentication](https://flet.dev/docs/cookbook/authentication#signing-out) \
-        guide for more information and examples.
-        """  # noqa: E501
-        self.__authorization = None
-        e = ControlEvent(name="logout", control=self)
-        if self.on_logout:
-            asyncio.create_task(self._trigger_event("logout", event_data=None, e=e))
-
-    @deprecated(
-        "Use UrlLauncher().launch_url() instead.",
-        version="0.90.0",
-        show_parentheses=True,
-    )
-    async def launch_url(
-        self,
-        url: Union[str, Url],
-        *,
-        web_popup_window_name: Optional[Union[str, UrlTarget]] = None,
-        web_popup_window: bool = False,
-        web_popup_window_width: Optional[int] = None,
-        web_popup_window_height: Optional[int] = None,
-    ) -> None:
-        """
-        Opens a web browser or popup window to a given `url`.
-
-        Args:
-            url: The URL to open.
-            web_popup_window_name: Window tab/name to open URL in. Use
-                :attr:`flet.UrlTarget.SELF` for the same browser tab,
-                :attr:`flet.UrlTarget.BLANK` for a new browser tab (or in external
-                application on a mobile device), or a custom name for a named tab.
-            web_popup_window: Display the URL in a browser popup window.
-            web_popup_window_width: Popup window width.
-            web_popup_window_height: Popup window height.
-        """
-        if web_popup_window:
-            await UrlLauncher().open_window(
-                url,
-                title=web_popup_window_name,
-                width=web_popup_window_width,
-                height=web_popup_window_height,
-            )
-        else:
-            await UrlLauncher().launch_url(url)
-
-    @deprecated(
-        "Use UrlLauncher().can_launch_url() instead.",
-        version="0.90.0",
-        show_parentheses=True,
-    )
-    async def can_launch_url(self, url: str) -> bool:
-        """
-        Checks whether the specified URL can be handled by some app installed on the \
-        device.
-
-        Args:
-            url: The URL to check.
-
-        Returns:
-            `True` if it is possible to verify that there is a handler available.
-                `False` if there is no handler available, or the application does not
-                have permission to check. For example:
-
-                - On recent versions of Android and iOS, this will always return `False`
-                    unless the application has been configuration to allow querying the
-                    system for launch support.
-                - In web mode, this will always return `False` except for a few specific
-                    schemes that are always assumed to be supported (such as http(s)),
-                    as web pages are never allowed to query installed applications.
-        """
-        return await UrlLauncher().can_launch_url(url)
-
-    @deprecated(
-        "Use UrlLauncher().close_in_app_web_view() instead.",
-        version="0.90.0",
-        show_parentheses=True,
-    )
-    async def close_in_app_web_view(self) -> None:
-        """
-        Closes in-app web view opened with `launch_url()`.
-
-        📱 Mobile only.
-        """
-        await UrlLauncher().close_in_app_web_view()
-
     @property
     def session(self) -> "Session":
         """
@@ -1273,73 +966,11 @@ class Page(BasePage):
         return self.session.connection.executor
 
     @property
-    def auth(self) -> Optional[Authorization]:
-        """
-        The current authorization context, or `None` if the user is not authorized.
-        """
-        return self.__authorization
-
-    @property
     def pubsub(self) -> "PubSubClient":
         """
         The PubSub client for the current page.
         """
         return self.session.pubsub_client
-
-    @property
-    @deprecated(
-        reason="Use UrlLauncher() instead.",
-        docs_reason="Use :class:`~flet.UrlLauncher` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def url_launcher(self) -> UrlLauncher:
-        """
-        The UrlLauncher service for the current page.
-        """
-        return UrlLauncher()
-
-    @property
-    @deprecated(
-        reason="Use BrowserContextMenu() instead.",
-        docs_reason="Use :class:`~flet.BrowserContextMenu` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def browser_context_menu(self):
-        """
-        The BrowserContextMenu service for the current page.
-        """
-
-        return BrowserContextMenu()
-
-    @property
-    @deprecated(
-        reason="Use SharedPreferences() instead.",
-        docs_reason="Use :class:`~flet.SharedPreferences` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def shared_preferences(self):
-        """
-        The SharedPreferences service for the current page.
-        """
-
-        return SharedPreferences()
-
-    @property
-    @deprecated(
-        reason="Use Clipboard() instead.",
-        docs_reason="Use :class:`~flet.Clipboard` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def clipboard(self):
-        """
-        The Clipboard service for the current page.
-        """
-
-        return Clipboard()
 
     @property
     @deprecated(
@@ -1354,76 +985,3 @@ class Page(BasePage):
         """
 
         return StoragePaths()
-
-    async def get_device_info(self) -> Optional[DeviceInfo]:
-        """
-        Returns device information.
-
-        Returns:
-            The device information object for the current platform,
-                or `None` if unavailable.
-        """
-        info = await self._invoke_method("get_device_info")
-
-        if self.web:
-            return from_dict(WebDeviceInfo, info)
-        elif self.platform == PagePlatform.ANDROID:
-            return from_dict(AndroidDeviceInfo, info)
-        elif self.platform == PagePlatform.IOS:
-            return from_dict(IosDeviceInfo, info)
-        elif self.platform == PagePlatform.MACOS:
-            return from_dict(MacOsDeviceInfo, info)
-        elif self.platform == PagePlatform.LINUX:
-            return from_dict(LinuxDeviceInfo, info)
-        elif self.platform == PagePlatform.WINDOWS:
-            return from_dict(WindowsDeviceInfo, info)
-        else:
-            return None
-
-    async def set_allowed_device_orientations(
-        self, orientations: list[DeviceOrientation]
-    ) -> None:
-        """
-        Constrains the allowed orientations for the app when running on a mobile \
-        device.
-
-        Args:
-            orientations: A list of allowed device orientations.
-                Set to an empty list to use the system default behavior.
-
-        Raises:
-            FletUnsupportedPlatformException: If the method is called
-                on a non-mobile platform.
-
-        Limitations:
-            - **Android**: On Android 16 (API 36) or later, this method won't be able to
-                change the orientation of **devices with a display width ≥ 600 dp**
-                cannot change orientation. For more details see Android 16 docs
-                [here](https://developer.android.com/about/versions/16/behavior-changes-16#ignore-orientation).
-                Also, Android limits the [orientations](https://developer.android.com/reference/android/R.attr#screenOrientation) to the following combinations:
-                    - `[]` → `unspecified`
-                    - `[PORTRAIT_UP]` → `portrait`
-                    - `[LANDSCAPE_LEFT]` → `landscape`
-                    - `[PORTRAIT_DOWN]` → `reversePortrait`
-                    - `[PORTRAIT_UP, PORTRAIT_DOWN]` → `userPortrait`
-                    - `[LANDSCAPE_RIGHT]` → `reverseLandscape`
-                    - `[LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `userLandscape`
-                    - `[PORTRAIT_UP, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `user`
-                    - `[PORTRAIT_UP, PORTRAIT_DOWN, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` →
-                    `fullUser`
-
-            - **iOS**: This setting will only be respected on iPad if multitasking is
-            disabled.
-                You can decide to opt out of multitasking on iPad, then this will work
-                but your app will not support Slide Over and Split View multitasking
-                anymore. Should you decide to opt out of multitasking you can do this by
-                setting "Requires full screen" to true in the Xcode Deployment Info.
-        """  # noqa: E501
-        if not self.platform.is_mobile():
-            raise FletUnsupportedPlatformException(
-                "set_allowed_device_orientations is only supported on mobile platforms"
-            )
-        await self._invoke_method(
-            "set_allowed_device_orientations",
-            arguments={"orientations": orientations},
-        )

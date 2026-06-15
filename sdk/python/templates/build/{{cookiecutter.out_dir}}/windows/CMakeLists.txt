@@ -57,6 +57,18 @@ add_subdirectory("runner")
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+# Rename plugin DLLs
+if(TARGET serious_python_windows_plugin)
+  set_target_properties(serious_python_windows_plugin PROPERTIES OUTPUT_NAME "python_lib")
+endif()
+
+if(TARGET screen_retriever_windows_plugin)
+  set_target_properties(screen_retriever_windows_plugin PROPERTIES OUTPUT_NAME "screen_lib")
+endif()
+
+if(TARGET window_manager_plugin)
+  set_target_properties(window_manager_plugin PROPERTIES OUTPUT_NAME "windowmgr_lib")
+endif()
 
 # === Installation ===
 # Support files are copied into place next to the executable, so that it can

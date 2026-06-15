@@ -382,7 +382,7 @@ class WindowService extends FletService with WindowListener {
         await waitUntilReadyToShow();
         break;
       case "to_front":
-        windowToFront();
+        // windowToFront();
         break;
       case "center":
         await _pendingWindowUpdate;

@@ -6,9 +6,6 @@ from collections.abc import Awaitable, Iterable
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Callable, Optional, Union
 
-from flet.utils import is_pyodide
-from flet.utils.locks import NopeLock
-
 logger = logging.getLogger("flet")
 
 
@@ -33,7 +30,7 @@ class PubSubHub:
         logger.debug("Creating new PubSubHub instance")
         self.__loop = loop
         self.__executor = executor
-        self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
+        self.__lock = threading.Lock()
         self.__subscribers: dict[
             str, set[Union[Callable, Callable[..., Awaitable[Any]]]]
         ] = {}  # key: session_id, value: handler

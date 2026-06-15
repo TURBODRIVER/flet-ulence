@@ -16,8 +16,7 @@ class AdaptiveTextFieldControl extends StatelessWidget with FletStoreMixin {
 
     return withPagePlatform((context, platform) {
       if (control.adaptive == true &&
-          (platform == TargetPlatform.iOS ||
-              platform == TargetPlatform.macOS)) {
+          (platform == TargetPlatform.macOS)) {
         return CupertinoTextFieldControl(control: control);
       } else {
         return TextFieldControl(control: control);

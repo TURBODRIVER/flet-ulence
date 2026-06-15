@@ -5,54 +5,29 @@ import '../models/control.dart';
 
 /// Checks if the current platform is a desktop platform.
 bool isDesktopPlatform() {
-  return !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.windows ||
+  return defaultTargetPlatform == TargetPlatform.windows ||
           defaultTargetPlatform == TargetPlatform.macOS ||
-          defaultTargetPlatform == TargetPlatform.linux);
+          defaultTargetPlatform == TargetPlatform.linux;
 }
 
 /// Checks if the current platform is Windows desktop.
 bool isWindowsDesktop() {
-  return !kIsWeb && (defaultTargetPlatform == TargetPlatform.windows);
+  return defaultTargetPlatform == TargetPlatform.windows;
 }
 
 /// Checks if the current platform is macOS desktop.
 bool isMacOSDesktop() {
-  return !kIsWeb && (defaultTargetPlatform == TargetPlatform.macOS);
+  return defaultTargetPlatform == TargetPlatform.macOS;
 }
 
 /// Checks if the current platform is Linux desktop.
 bool isLinuxDesktop() {
-  return !kIsWeb && (defaultTargetPlatform == TargetPlatform.linux);
+  return defaultTargetPlatform == TargetPlatform.linux;
 }
 
-/// Checks if the current platform is a mobile (iOS or Android) platform.
-bool isMobilePlatform() {
-  return !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android);
-}
-
-/// Checks if the current platform is iOS mobile.
-bool isIOSMobile() {
-  return !kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS);
-}
-
-/// Checks if the current platform is Android mobile.
-bool isAndroidMobile() {
-  return !kIsWeb && (defaultTargetPlatform == TargetPlatform.android);
-}
-
-/// Checks if the current platform is an Apple platform (iOS or macOS).
+/// Checks if the current platform is an Apple platform (macOS).
 bool isApplePlatform() {
-  return !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.macOS);
-}
-
-/// Checks if the current platform is a web platform.
-bool isWebPlatform() {
-  return kIsWeb == true;
+  return defaultTargetPlatform == TargetPlatform.macOS;
 }
 
 TargetPlatform? parseTargetPlatform(String? value,

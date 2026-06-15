@@ -4,7 +4,6 @@ from typing import Any, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import Event, EventHandler
-from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.services.service import Service
 
 __all__ = [
@@ -126,7 +125,6 @@ class FilePickerFile:
     Absolute path to the selected file, when available.
 
     Note:
-        - Web mode always returns `None`.
         - On native platforms, this can still be `None` if the platform picker
             does not expose a filesystem path.
     """
@@ -227,14 +225,7 @@ class FilePicker(Service):
         Returns:
             The selected directory path or `None` if the dialog was cancelled.
 
-        Raises:
-            FletUnsupportedPlatformException: If called in web mode.
         """
-        if self.page.web:
-            raise FletUnsupportedPlatformException(
-                "get_directory_path is not supported in web mode"
-            )
-
         return await self._invoke_method(
             "get_directory_path",
             {
@@ -267,25 +258,11 @@ class FilePicker(Service):
             file_name: The default file name.
             initial_directory: The initial directory where the dialog should open.
             file_type: The file types allowed to be selected.
-            src_bytes: The contents of a file. Must be provided in web,
-                iOS or Android modes.
+            src_bytes: The contents of a file.
             allowed_extensions: The allowed file extensions. Has effect only if
                 `file_type` is
                 :attr:`flet.FilePickerFileType.CUSTOM`.
-
-        Raises:
-            ValueError: If `src_bytes` is not provided, when called in web mode,
-                on iOS or Android.
-            ValueError: If `file_name` is not provided in web mode.
         """
-
-        if (self.page.web or self.page.platform.is_mobile()) and not src_bytes:
-            raise ValueError(
-                '"src_bytes" is required when saving a file in web mode,'
-                "or on mobile (Android & iOS)."
-            )
-        if self.page.web and not file_name:
-            raise ValueError('"file_name" is required when saving a file in web mode.')
 
         return await self._invoke_method(
             "save_file",

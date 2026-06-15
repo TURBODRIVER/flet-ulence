@@ -288,7 +288,4 @@ class Semantics(Control):
     """
     Called when a user wants to replace the current text in the text field with a new \
     text.
-
-    Voice access users can trigger this handler by speaking type `<text>` to their
-    Android devices.
     """

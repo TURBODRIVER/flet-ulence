@@ -15,7 +15,6 @@ import '../utils/images.dart';
 import '../utils/layout.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
-import '../utils/platform.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import '../utils/theme.dart';
@@ -341,7 +340,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         obscuringCharacter:
             widget.control.getString("obscuring_character", '•')!,
         cursorOpacityAnimates:
-            widget.control.getBool("animate_cursor_opacity", isIOSMobile())!,
+            widget.control.getBool("animate_cursor_opacity", false)!,
         expands: fitParentSize,
         enableIMEPersonalizedLearning:
             widget.control.getBool("enable_ime_personalized_learning", true)!,

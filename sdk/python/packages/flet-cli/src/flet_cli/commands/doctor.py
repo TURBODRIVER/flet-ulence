@@ -18,8 +18,6 @@ class Command(BaseCommand):
 
     def handle(self, options: argparse.Namespace) -> None:
         """Handle the 'doctor' command."""
-        verbose = options.verbose
-
         os_name = platform.system()
         if os_name == "Darwin":
             os_name = "macOS"

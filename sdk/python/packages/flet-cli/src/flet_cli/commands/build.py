@@ -9,9 +9,9 @@ from flet_cli.commands.build_base import BaseBuildCommand, console
 class Command(BaseBuildCommand):
     """
     Build a Flet Python app into a platform-specific executable or
-    installable bundle. It supports building for desktop (macOS, Linux, Windows), web,
-    Android (APK/AAB), and iOS (IPA and simulator .app), with a wide range of
-    customization options for metadata, assets, splash screens, and signing.
+    installable bundle. It supports building for desktop (macOS, Linux, Windows),
+    with a wide range of customization options for metadata, assets, splash screens,
+    and signing.
 
     Detailed guide with usage examples: https://flet.dev/docs/publish
     """
@@ -34,11 +34,6 @@ class Command(BaseBuildCommand):
                 "macos",
                 "linux",
                 "windows",
-                "web",
-                "apk",
-                "aab",
-                "ipa",
-                "ios-simulator",
             ],
             help="The target platform or type of package to build",
         )
@@ -77,7 +72,6 @@ class Command(BaseBuildCommand):
             if self.create_flutter_project(second_pass=True):
                 self.update_flutter_dependencies()
             self.customize_icons()
-            self.customize_splash_images()
             self.run_flutter()
             self.copy_build_output()
 
@@ -89,12 +83,6 @@ class Command(BaseBuildCommand):
                     f"[/cyan]! {self.emojis['success']} "
                     f"Find it in [cyan]{self.rel_out_dir}[/cyan] directory. "
                     f"{self.emojis['directory']}"
-                    + (
-                        "\nRun [cyan]flet serve[/cyan] command to "
-                        "start a web server with your app. "
-                        if self.target_platform == "web"
-                        else ""
-                    )
                 ),
             )
 
@@ -115,22 +103,6 @@ class Command(BaseBuildCommand):
         args.extend(
             ["build", self.platforms[self.target_platform]["flutter_build_command"]]
         )
-
-        if self.target_platform in "apk" and self.template_data["split_per_abi"]:
-            args.append("--split-per-abi")
-
-        if self.target_platform in ["ipa"]:
-            if self.template_data["ios_provisioning_profile"]:
-                args.extend(
-                    [
-                        "--export-options-plist",
-                        "ios/exportOptions.plist",
-                    ]
-                )
-            else:
-                args.append("--no-codesign")
-        elif self.target_platform == "ios-simulator":
-            args.append("--simulator")
 
         build_number = self.options.build_number or self.get_pyproject(
             "tool.flet.build_number"

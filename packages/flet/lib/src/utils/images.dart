@@ -19,7 +19,7 @@ import 'gradient.dart';
 import 'images.dart';
 import 'numbers.dart';
 
-export "images_web.dart" if (dart.library.io) 'images_io.dart';
+export 'images_io.dart';
 
 ImageRepeat? parseImageRepeat(String? value, [ImageRepeat? defaultValue]) {
   return parseEnum(ImageRepeat.values, value, defaultValue);

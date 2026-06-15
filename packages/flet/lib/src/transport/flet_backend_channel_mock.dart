@@ -36,8 +36,6 @@ class FletMockBackendChannel implements FletBackendChannel {
       "patch": {
         "show_semantics_debugger": false,
         "theme_mode": "system",
-        // "platform": "ios",
-        // "adaptive": true,
         "fonts": {
           "Kanit":
               "https://raw.githubusercontent.com/google/fonts/master/ofl/kanit/Kanit-Bold.ttf",

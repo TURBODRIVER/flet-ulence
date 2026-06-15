@@ -65,7 +65,7 @@ class AppBar(AdaptiveControl):
 
     Note:
         If :attr:`flet.AdaptiveControl.adaptive`
-        and this app is opened on an iOS or macOS device,
+        and this app is opened on a macOS device,
         this :attr:`title` control will be
         automatically centered, independent of the value of :attr:`center_title`.
     """
@@ -176,7 +176,7 @@ class AppBar(AdaptiveControl):
 
     Info:
         If :attr:`flet.AdaptiveControl.adaptive` is `True`
-        and this app is opened on an iOS or macOS device,
+        and this app is opened on a macOS device,
         these `actions` will be automatically placed in a
         :class:`~flet.Row`.
         This is because :attr:`flet.CupertinoAppBar.trailing`

@@ -42,16 +42,11 @@ class AccessibilityFeatures:
     """
     Whether there is a running accessibility service which is changing the interaction \
     model of the device.
-
-    For example, TalkBack on Android and VoiceOver on iOS enable this flag.
     """
 
     bold_text: bool
     """
     The platform is requesting that text be rendered at a bold font weight.
-
-    Note:
-        Only supported on iOS and Android API 31+.
     """
 
     disable_animations: bool
@@ -62,9 +57,6 @@ class AccessibilityFeatures:
     high_contrast: bool
     """
     The platform is requesting that UI be rendered with darker colors.
-
-    Note:
-        Only supported on iOS.
     """
 
     invert_colors: bool
@@ -76,17 +68,11 @@ class AccessibilityFeatures:
     """
     The platform is requesting that certain animations be simplified and parallax \
     effects removed.
-
-    Note:
-        Only supported on iOS.
     """
 
     on_off_switch_labels: bool
     """
     The platform is requesting to show on/off labels inside switches.
-
-    Note:
-        Only supported on iOS.
     """
 
     supports_announcements: bool
@@ -96,16 +82,13 @@ class AccessibilityFeatures:
 
     Will be `False` on platforms where announcements are deprecated or
     unsupported by the underlying platform and `True` on platforms where such
-    announcements are generally supported without discouragement (ex: iOS, web).
+    announcements are generally supported without discouragement.
 
     Note:
         Some platforms do not support or discourage the use of
         announcement. Using `SemanticsService.announce_message()` on those platforms
         may be ignored. Consider using other way to convey message to the
-        user. For example, Android discourages the uses of direct message
-        announcement, and rather encourages using other semantic
-        properties such as :attr:`flet.Semantics.live_region` to convey
-        message to the user.
+        user.
     """
 
 
@@ -118,9 +101,6 @@ class SemanticsService(Service):
     async def announce_tooltip(self, message: str):
         """
         Sends a semantic announcement of a tooltip.
-
-        Note:
-            Only supported on Android.
         """
         await self._invoke_method("announce_tooltip", arguments={"message": message})
 
@@ -137,7 +117,6 @@ class SemanticsService(Service):
             message: The message to be announced.
             rtl: Indicates if the message text direction is right-to-left.
             assertiveness: The assertiveness level of the announcement.
-                Only supported on web.
 
         Notes:
             This method should be used for announcements that are not automatically

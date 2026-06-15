@@ -8,7 +8,6 @@ import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/geometry.dart';
-import '../utils/launch_url.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
@@ -136,12 +135,8 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
               .copyWith(color: color),
           child: child);
     }
-    var url = widget.control.getUrl("url");
     Function()? onPressed = !widget.control.disabled
         ? () {
-            if (url != null) {
-              openWebBrowser(url);
-            }
             widget.control.triggerEvent("click");
           }
         : null;

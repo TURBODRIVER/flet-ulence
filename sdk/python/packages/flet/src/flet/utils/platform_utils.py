@@ -1,6 +1,5 @@
 import asyncio
 import os
-import sys
 
 from flet.controls.exceptions import FletUnsupportedPlatformException
 
@@ -24,91 +23,36 @@ def is_asyncio():
     """
     Indicates whether execution is inside an active asyncio task.
 
-    This function also returns `True` on Pyodide, where the default execution model
-    is asynchronous even when no current task is available.
-
     Returns:
-        `True` when an asyncio task is active or when running on Pyodide, otherwise
-        `False`.
+        `True` when an asyncio task is active, otherwise `False`.
     """
     try:
-        return asyncio.current_task() is not None or sys.platform == "emscripten"
+        return asyncio.current_task() is not None
     except RuntimeError:
         return False
 
 
-def is_pyodide():
-    """
-    Indicates whether Python is running in a Pyodide environment.
-
-    Returns:
-        `True` when `sys.platform` is `emscripten`, otherwise `False`.
-    """
-    return sys.platform == "emscripten"
-
-
-def is_ios():
-    """
-    Indicates whether the target platform is iOS.
-
-    Returns:
-        `True` when `FLET_PLATFORM=ios`, otherwise `False`.
-    """
-    return os.getenv("FLET_PLATFORM") == "ios"
-
-
-def is_android():
-    """
-    Indicates whether the target platform is Android.
-
-    Returns:
-        `True` when `FLET_PLATFORM=android`, otherwise `False`.
-    """
-    return os.getenv("FLET_PLATFORM") == "android"
-
-
-def is_embedded():
-    """
-    Indicates whether a platform is explicitly provided by the embedding runtime.
-
-    Returns:
-        `True` when `FLET_PLATFORM` is set, otherwise `False`.
-    """
-    return os.getenv("FLET_PLATFORM") is not None
-
-
-def is_mobile():
-    """
-    Indicates whether the target platform is mobile.
-
-    Returns:
-        `True` when targeting iOS or Android, otherwise `False`.
-    """
-    return is_ios() or is_android()
-
-
-if not is_mobile():
-    import platform
+import platform
 
 
 def is_windows():
     """
-    Indicates whether the current non-mobile host platform is Windows.
+    Indicates whether the current platform is Windows.
 
     Returns:
-        `True` on Windows hosts when not targeting mobile, otherwise `False`.
+        `True` on Windows hosts, otherwise `False`.
     """
-    return not is_mobile() and platform.system() == "Windows"
+    return platform.system() == "Windows"
 
 
 def is_linux():
     """
-    Indicates whether the current non-mobile host platform is Linux.
+    Indicates whether the current platform is Linux.
 
     Returns:
-        `True` on Linux hosts when not targeting mobile, otherwise `False`.
+        `True` on Linux hosts, otherwise `False`.
     """
-    return not is_mobile() and platform.system() == "Linux"
+    return platform.system() == "Linux"
 
 
 def is_linux_server():
@@ -116,14 +60,14 @@ def is_linux_server():
     Indicates whether the current environment is a headless Linux server.
 
     The environment is considered a Linux server when:
-    - the host platform is Linux and not mobile;
+    - the host platform is Linux;
     - it is not Windows Subsystem for Linux (WSL);
     - the `DISPLAY` environment variable is not set.
 
     Returns:
         `True` for headless Linux server environments, otherwise `False`.
     """
-    if not is_mobile() and platform.system() == "Linux":
+    if platform.system() == "Linux":
         # check if it's WSL
         p = "/proc/version"
         if os.path.exists(p):
@@ -136,12 +80,12 @@ def is_linux_server():
 
 def is_macos():
     """
-    Indicates whether the current non-mobile host platform is macOS.
+    Indicates whether the current platform is macOS.
 
     Returns:
-        `True` on macOS hosts when not targeting mobile, otherwise `False`.
+        `True` on macOS hosts, otherwise `False`.
     """
-    return not is_mobile() and platform.system() == "Darwin"
+    return platform.system() == "Darwin"
 
 
 def get_platform():
@@ -155,7 +99,7 @@ def get_platform():
         :class:`~flet.FletUnsupportedPlatformException`: If the current platform is
             unsupported.
     """
-    p = platform.system() if not is_mobile() else ""
+    p = platform.system()
     if is_windows():
         return "windows"
     elif p == "Linux":
@@ -177,7 +121,7 @@ def get_arch():
         :class:`~flet.FletUnsupportedPlatformException`: If the current architecture is
             unsupported.
     """
-    a = platform.machine().lower() if not is_mobile() else ""
+    a = platform.machine().lower()
     if a == "x86_64" or a == "amd64":
         return "amd64"
     elif a == "arm64" or a == "aarch64":

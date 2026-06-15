@@ -24,29 +24,8 @@ class AppView(Enum):
     TBD
     """
 
-    WEB_BROWSER = "web_browser"
     FLET_APP = "flet_app"
-    FLET_APP_WEB = "flet_app_web"
     FLET_APP_HIDDEN = "flet_app_hidden"
-
-
-class WebRenderer(Enum):
-    """
-    TBD
-    """
-
-    AUTO = "auto"
-    CANVAS_KIT = "canvaskit"
-    SKWASM = "skwasm"
-
-
-class RouteUrlStrategy(Enum):
-    """
-    TBD
-    """
-
-    PATH = "path"
-    HASH = "hash"
 
 
 class UrlTarget(Enum):
@@ -88,7 +67,7 @@ class Url:
 
     target: Optional[Union[UrlTarget, str]] = None
     """
-    Where to open URL in the web mode.
+    Where to open URL.
     """
 
 
@@ -453,22 +432,21 @@ class ScrollMode(Enum):
 
     ```python
     ft.Scrollbar(
-        thickness=4.0 if page.platform.is_mobile() and not page.web else None,
+        thickness=None,
     )
     ```
     """
 
     ADAPTIVE = "adaptive"
     """
-    Scrolling is enabled and scroll bar is always shown when running app as web or \
-    desktop.
+    Scrolling is enabled and scroll bar is always shown when running app as desktop.
 
     :class:`~flet.Scrollbar` equivalent:
 
     ```python
     ft.Scrollbar(
-        thumb_visibility=page.web or not page.platform.is_mobile(),
-        thickness=4.0 if page.platform.is_mobile() and not page.web else None,
+        thumb_visibility=False,
+        thickness=None,
     )
     ```
     """
@@ -482,7 +460,7 @@ class ScrollMode(Enum):
     ```python
     ft.Scrollbar(
         thumb_visibility=True,
-        thickness=4.0 if page.platform.is_mobile() and not page.web else None,
+        thickness=None,
     )
     ```
     """
@@ -559,24 +537,17 @@ class ImageRepeat(Enum):
 
 class PagePlatform(Enum):
     """
-    Supported platforms for a page, including mobile and desktop systems. Each \
-    platform corresponds to a specific operating system or environment.
+    Supported platforms for a page. Each platform corresponds to a specific 
+    operating system or environment.
     """
 
-    IOS = "ios"
-    ANDROID = "android"
-    ANDROID_TV = "android_tv"
     MACOS = "macos"
     WINDOWS = "windows"
     LINUX = "linux"
 
     def is_apple(self) -> bool:
-        """Whether this PagePlatform instance is an Apple (iOS or macOS) platform."""
-        return self in {PagePlatform.IOS, PagePlatform.MACOS}
-
-    def is_mobile(self) -> bool:
-        """Whether this PagePlatform instance is a mobile (iOS or Android) platform."""
-        return self in {PagePlatform.IOS, PagePlatform.ANDROID}
+        """Whether this PagePlatform instance is an Apple (macOS) platform."""
+        return self in {PagePlatform.MACOS,}
 
     def is_desktop(self) -> bool:
         """
@@ -630,48 +601,6 @@ class Brightness(Enum):
     """
 
 
-class Orientation(Enum):
-    """
-    Represents the layout orientation.
-    """
-
-    PORTRAIT = "portrait"
-    """
-    Orientation with greater height than width.
-    """
-
-    LANDSCAPE = "landscape"
-    """
-    Orientation with greater width than height.
-    """
-
-
-class DeviceOrientation(Enum):
-    """
-    Supported physical orientations for mobile devices.
-    """
-
-    PORTRAIT_UP = "portraitUp"
-    """
-    Device held upright in portrait mode.
-    """
-
-    PORTRAIT_DOWN = "portraitDown"
-    """
-    Device held upside-down in portrait mode.
-    """
-
-    LANDSCAPE_LEFT = "landscapeLeft"
-    """
-    Device rotated 90° counter-clockwise (home button or primary edge on the right).
-    """
-
-    LANDSCAPE_RIGHT = "landscapeRight"
-    """
-    Device rotated 90° clockwise (home button or primary edge on the left).
-    """
-
-
 class FloatingActionButtonLocation(Enum):
     """
     Defines a position for the :class:`~flet.FloatingActionButton`.
@@ -710,13 +639,8 @@ class AppLifecycleState(Enum):
     """
     The application is shown.
 
-    On mobile platforms, this is usually just before the application replaces another
-    application in the foreground.
-
     On desktop platforms, this is just before the application is shown after being
     minimized or otherwise made to show at least one view of the application.
-
-    On the web, this is just before a window (or tab) is shown.
     """
 
     RESUME = "resume"
@@ -729,53 +653,33 @@ class AppLifecycleState(Enum):
     """
     The application is hidden.
 
-    On mobile platforms, this is usually just before the application is replaced by
-    another application in the foreground.
-
     On desktop platforms, this is just before the application is hidden by being
     minimized or otherwise hiding all views of the application.
-
-    On the web, this is just before a window (or tab) is hidden.
     """
 
     INACTIVE = "inactive"
     """
     The application loses input focus.
 
-    On mobile platforms, this can be during a phone call or when a system dialog is
-    visible.
-
     On desktop platforms, this is when all views in an application have lost input
     focus but at least one view of the application is still visible.
-
-    On the web, this is when the window (or tab) has lost input focus.
     """
 
     PAUSE = "pause"
     """
     The application is paused.
-
-    On mobile platforms, this happens right before the application is replaced by
-    another application.
-
-    On desktop platforms and the web, this function is not called.
     """
 
     DETACH = "detach"
     """
     The application has exited, and detached all host views from the engine.
-
-    This callback is only called on iOS and Android.
     """
 
     RESTART = "restart"
     """
     The application is resumed after being paused.
 
-    On mobile platforms, this happens just before this application takes over as the
-    active application.
-
-    On desktop platforms and the web, this function is not called.
+    On desktop platforms, this function is not called.
     """
 
 
@@ -1307,7 +1211,7 @@ Represents a color and can be:
 - a material color from the :class:`~flet.Colors` enum,
 - or a Cupertino color from the :class:`~flet.CupertinoColors` enum.
 
-More information [here](https://flet.dev/docs/cookbook/cookbook/cookbook/colors).
+More information [here](https://flet.dev/docs/cookbook/colors).
 """
 
 # Icons

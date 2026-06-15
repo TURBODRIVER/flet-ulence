@@ -141,11 +141,7 @@ class Scrollbar:
     Controls the cross-axis size of the scrollbar in logical pixels.
     The thickness of the scrollbar in the cross axis of the scrollable.
 
-    If `None`, the default value is platform dependent:
-    `4.0` pixels on Android
-    (:attr:`flet.Page.platform` == :attr:`flet.PagePlatform.ANDROID`) and iOS
-    (:attr:`flet.Page.platform` == :attr:`flet.PagePlatform.IOS`);
-    :attr:`flet.ScrollbarTheme.thickness` on the remaining platforms.
+    If `None`, the default value :attr:`flet.ScrollbarTheme.thickness`.
     """
 
     radius: Optional[Number] = None
@@ -155,11 +151,7 @@ class Scrollbar:
 
     The radius of the scrollbar thumb's rounded rectangle corners.
 
-    If `None`, the default value is platform dependent:
-    no radius is applied on Android
-    (:attr:`flet.Page.platform` == :attr:`flet.PagePlatform.ANDROID`);
-    `1.5` pixels on iOS (:attr:`flet.Page.platform` == :attr:`flet.PagePlatform.IOS`);
-    `8.0` pixels on the remaining platforms.
+    If `None`, the default value is `8.0` pixels.
     """
 
     interactive: Optional[bool] = None
@@ -170,7 +162,7 @@ class Scrollbar:
     When `False`, the scrollbar will not respond to gesture or hover events, and will
     allow to click through it.
 
-    If `None`, defaults to `True`, unless on Android, where it defaults to `False`.
+    If `None`, defaults to `True`.
     """
 
     orientation: Optional[ScrollbarOrientation] = None

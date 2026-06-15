@@ -16,8 +16,7 @@ class AdaptiveAlertDialogControl extends StatelessWidget with FletStoreMixin {
 
     return withPagePlatform((context, platform) {
       if (control.adaptive == true &&
-          (platform == TargetPlatform.iOS ||
-              platform == TargetPlatform.macOS)) {
+          (platform == TargetPlatform.macOS)) {
         return CupertinoAlertDialogControl(control: control);
       } else {
         return AlertDialogControl(control: control);

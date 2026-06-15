@@ -158,9 +158,7 @@ class DropdownM2(FormFieldControl):
 
     enable_feedback: Optional[bool] = None
     """
-    Whether detected gestures should provide acoustic and/or haptic feedback. On \
-    Android, for example, setting this to `True` produce a click sound and a \
-    long-press will produce a short vibration.
+    Whether detected gestures should provide acoustic and/or haptic feedback.
     """
 
     padding: Optional[PaddingValue] = None

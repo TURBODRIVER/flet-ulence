@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import '../flet_service.dart';
 import '../utils/file_picker.dart';
 import '../utils/numbers.dart';
-import '../utils/platform.dart';
 
 class FilePickerService extends FletService {
   FilePickerService({required super.control});
@@ -63,36 +62,22 @@ class FilePickerService extends FletService {
                 return FilePickerFile(
                         id: file.key, // use entry's index as id
                         name: file.value.name,
-                        path: kIsWeb ? null : file.value.path,
+                        path: file.value.path,
                         size: file.value.size,
                         bytes: withData ? file.value.bytes : null)
                     .toMap();
               }).toList()
             : [];
       case "save_file":
-        if ((kIsWeb || isAndroidMobile() || isIOSMobile()) &&
-            srcBytes == null) {
-          throw Exception(
-              "\"src_bytes\" is required when saving a file on Web, Android and iOS.");
-        }
-        if (kIsWeb && args["file_name"] == null) {
-          throw Exception(
-              "\"file_name\" is required when saving a file on Web.");
-        }
         return await FilePicker.platform.saveFile(
             dialogTitle: dialogTitle,
-            fileName: args["file_name"] != null || !isIOSMobile()
-                ? args["file_name"]
-                : "new-file",
+            fileName: args["file_name"] ?? "new-file",
             initialDirectory: initialDirectory,
             lockParentWindow: true,
             type: fileType,
             allowedExtensions: allowedExtensions,
             bytes: srcBytes);
       case "get_directory_path":
-        if (kIsWeb) {
-          throw Exception("Get Directory Path dialog is not supported on web.");
-        }
         return await FilePicker.platform.getDirectoryPath(
           dialogTitle: dialogTitle,
           initialDirectory: initialDirectory,

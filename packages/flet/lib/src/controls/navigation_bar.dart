@@ -39,8 +39,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
 
     return withPagePlatform((context, platform) {
       if (widget.control.adaptive == true &&
-          (platform == TargetPlatform.iOS ||
-              platform == TargetPlatform.macOS)) {
+          (platform == TargetPlatform.macOS)) {
         return CupertinoNavigationBarControl(control: widget.control);
       }
 

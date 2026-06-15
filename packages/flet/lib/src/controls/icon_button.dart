@@ -9,7 +9,6 @@ import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
-import '../utils/launch_url.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
@@ -68,8 +67,7 @@ class _IconButtonControlState extends State<IconButtonControl>
 
     return withPagePlatform((context, platform) {
       if (widget.control.adaptive == true &&
-          (platform == TargetPlatform.iOS ||
-              platform == TargetPlatform.macOS)) {
+          (platform == TargetPlatform.macOS)) {
         return CupertinoButtonControl(
           control: widget.control,
         );
@@ -96,13 +94,9 @@ class _IconButtonControlState extends State<IconButtonControl>
       var enableFeedback = widget.control.getBool("enable_feedback", true)!;
       var selected = widget.control.getBool("selected");
       var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
-      var url = widget.control.getUrl("url");
 
       Function()? onPressed = !widget.control.disabled
           ? () {
-              if (url != null) {
-                openWebBrowser(url);
-              }
               widget.control.triggerEvent("click");
             }
           : null;

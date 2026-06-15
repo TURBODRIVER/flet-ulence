@@ -1,0 +1,54 @@
+[project]
+name = "Name of App"
+authors = [
+    { name = "Author Name" }
+]
+version = "1.0.0"
+dependencies = [
+    "flet",
+]
+
+[tool.flet]
+product = "Name of App"
+artifact = "Name of App"
+org = "org.of.app"
+bundle_id = "bundle.id.of.app"
+company = "Company"
+copyright = "Copyright © 2026 Author Name"
+permissions = []
+
+[tool.flet.compile]
+app = true
+packages = true
+cleanup = true
+
+[tool.flet.flutter]
+build_args = [
+    "--release",
+    "--obfuscate",
+    "--split-debug-info=./symbols",
+]
+
+[tool.flet.app]
+product = "Name of App"
+module = "app"
+path = "app_package"
+exclude = ["*.toml", "*.bat", "*.txt", ".venv", ".idea", "assets"]
+asset_path = "app/app.zip"
+hide_window_on_start = false
+boot_screen.message = "Preparing the App..."
+
+[tool.flet.desktop]
+window_width = 1100
+window_height = 800
+
+[tool.flet.cleanup]
+app = true
+packages = true
+package_files = [
+    "*.dist-info*",
+    "*/flet.exe",
+    "flet/cli.**",
+    "msgpack/_cmsgpack.*",
+    "typing_extensions*",
+]

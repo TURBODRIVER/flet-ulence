@@ -4,9 +4,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../protocol/message.dart';
 import '../utils/networking.dart';
-import '../utils/platform_utils_web.dart'
-    if (dart.library.io) "../utils/platform_utils_non_web.dart";
-import '../utils/uri.dart';
+import '../utils/strings.dart';
 import 'flet_backend_channel.dart';
 import 'flet_msgpack_decoder.dart';
 import 'flet_msgpack_encoder.dart';
@@ -37,12 +35,8 @@ class FletWebSocketBackendChannel implements FletBackendChannel {
     try {
       // todo
       var uri = Uri.parse(_wsUrl);
-      if (kIsWeb) {
-        _isLocalConnection = isLocalhost(uri);
-      } else {
-        _isLocalConnection = await isPrivateHost(uri.host);
-      }
 
+      _isLocalConnection = await isPrivateHost(uri.host);
       _channel = WebSocketChannel.connect(Uri.parse(_wsUrl));
     } catch (e) {
       throw Exception('WebSocket connect error: $e');
@@ -79,5 +73,13 @@ class FletWebSocketBackendChannel implements FletBackendChannel {
       throw Exception("WebSocket endpoint path cannot be empty.");
     }
     return "$wsScheme://${uri.authority}/$wsPath";
+  }
+
+  String getWebsocketEndpointPath(String uriPath) {
+    var pagePath = uriPath.trimSymbol("/");
+    if (pagePath != "") {
+      pagePath = "$pagePath/";
+    }
+    return "${pagePath}ws";
   }
 }

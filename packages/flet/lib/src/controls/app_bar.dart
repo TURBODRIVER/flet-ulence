@@ -8,7 +8,6 @@ import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
-import '../utils/theme.dart';
 import 'base_controls.dart';
 
 class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
@@ -32,9 +31,6 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: control.getColor("bgcolor", context),
       elevation: control.getDouble("elevation"),
       actions: control.buildWidgets("actions"),
-      systemOverlayStyle: Theme.of(context)
-          .extension<SystemUiOverlayStyleTheme>()
-          ?.systemUiOverlayStyle,
       shadowColor: control.getColor("shadow_color", context),
       scrolledUnderElevation: control.getDouble("elevation_on_scroll"),
       forceMaterialTransparency:

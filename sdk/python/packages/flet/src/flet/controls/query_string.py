@@ -11,6 +11,9 @@ class UrlComponents:
     external use
     """
 
+    def __init__(self):
+        self.url = None
+
     def _encode_url_component(self, url: str) -> str:
         """
         Function encodes querystring part of URL\n Ex. q=dom & dogs -> q=dom+%26+dogs
@@ -35,6 +38,8 @@ class UrlComponents:
                 )
                 != self.url[q_result.start() + 1 : q_result.end()]
             )
+
+        return False
 
     def _querystring_part(self, url_string: bool = False):
         """
@@ -68,8 +73,8 @@ class QueryString(UrlComponents):
     """
 
     def __init__(self, page):
+        super().__init__()
         self.__page = weakref.ref(page)
-        self.url = None
 
     def get(self, key: str) -> str:
         """

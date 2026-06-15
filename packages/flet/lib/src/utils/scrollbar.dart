@@ -4,7 +4,6 @@ import '../models/control.dart';
 import 'borders.dart';
 import 'enums.dart';
 import 'numbers.dart';
-import 'platform.dart';
 
 enum ScrollMode { auto, adaptive, always, hidden }
 
@@ -30,14 +29,14 @@ class ScrollbarConfiguration {
   });
 
   factory ScrollbarConfiguration.fromScrollMode(ScrollMode mode) {
-    final defaultThickness = isMobilePlatform() ? 4.0 : null;
+    final defaultThickness = null;
 
     switch (mode) {
       case ScrollMode.auto:
         return ScrollbarConfiguration(thickness: defaultThickness);
       case ScrollMode.adaptive:
         return ScrollbarConfiguration(
-            thumbVisibility: !isMobilePlatform(), thickness: defaultThickness);
+            thumbVisibility: false, thickness: defaultThickness);
       case ScrollMode.always:
         return ScrollbarConfiguration(
             thumbVisibility: true, thickness: defaultThickness);

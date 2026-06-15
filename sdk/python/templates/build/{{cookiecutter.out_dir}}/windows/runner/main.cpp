@@ -1,6 +1,7 @@
 #include <flutter/dart_project.h>
 #include <flutter/flutter_view_controller.h>
 #include <windows.h>
+#include <shellscalingapi.h>
 
 #include "flutter_window.h"
 #include "utils.h"
@@ -25,8 +26,29 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
 
   FlutterWindow window(project);
-  Win32Window::Point origin(10, 10);
-  Win32Window::Size size(1280, 720);
+  Win32Window::Size size({{ cookiecutter.window_size_width }}, {{ cookiecutter.window_size_height }});
+
+  POINT cursor_pos;
+  ::GetCursorPos(&cursor_pos);
+  HMONITOR monitor = ::MonitorFromPoint(cursor_pos, MONITOR_DEFAULTTOPRIMARY);
+
+  MONITORINFO mi;
+  mi.cbSize = sizeof(MONITORINFO);
+  ::GetMonitorInfo(monitor, &mi);
+
+  UINT dpi_x, dpi_y;
+  ::GetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, &dpi_x, &dpi_y);
+  float scale = dpi_x / 96.0f;
+
+  int work_left   = static_cast<int>(mi.rcWork.left   / scale);
+  int work_top    = static_cast<int>(mi.rcWork.top    / scale);
+  int work_width  = static_cast<int>((mi.rcWork.right  - mi.rcWork.left) / scale);
+  int work_height = static_cast<int>((mi.rcWork.bottom - mi.rcWork.top)  / scale);
+
+  int origin_x = work_left + (work_width  - size.width)  / 2;
+  int origin_y = work_top  + (work_height - size.height) / 2;
+  Win32Window::Point origin(origin_x, origin_y);
+
   if (!window.Create(L"{{ cookiecutter.product_name }}", origin, size)) {
     return EXIT_FAILURE;
   }

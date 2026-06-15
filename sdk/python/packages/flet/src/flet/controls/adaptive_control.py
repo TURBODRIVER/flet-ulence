@@ -11,7 +11,7 @@ class AdaptiveControl(Control):
     """
     Base class for controls that support adaptive behavior, which allows them to \
     adjust their appearance and behavior based on the target platform (ex: Material \
-    design on Android/Windows/Linux, Cupertino design on iOS/macOS).
+    design on Windows/Linux, Cupertino design on macOS).
 
     The :attr:`adaptive` property is applicable in two common scenarios:
 

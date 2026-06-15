@@ -136,7 +136,7 @@ class Switch(LayoutControl, AdaptiveControl):
     """
     Whether an adaptive Switch should be created based on the target platform.
 
-    On iOS and macOS, a :class:`~flet.CupertinoSwitch` is created,
+    On macOS, a :class:`~flet.CupertinoSwitch` is created,
     which has matching functionality and presentation as `Switch`,
     and the graphics as expected on iOS. On other platforms,
     a Material Switch is created.

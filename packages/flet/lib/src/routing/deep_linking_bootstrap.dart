@@ -56,8 +56,6 @@ class _FletDeepLinkObserver with WidgetsBindingObserver {
   Future<bool> didPushRouteInformation(
     RouteInformation routeInformation,
   ) async {
-    // Returning true prevents iOS from logging:
-    // "Failed to handle route information in Flutter."
     return FletDeepLinkingBootstrap._capture(routeInformation);
   }
 

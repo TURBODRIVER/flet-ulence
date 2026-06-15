@@ -11,7 +11,7 @@ from flet_cli.commands.build_base import BaseBuildCommand, console, verbose2_sty
 
 class Command(BaseBuildCommand):
     """
-    Run a Flet Python app in debug mode on a specified platform (desktop, web, mobile).
+    Run a Flet Python app in debug mode.
     """
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
@@ -20,9 +20,6 @@ class Command(BaseBuildCommand):
             "windows": {"target_platform": "windows", "device_id": "windows"},
             "macos": {"target_platform": "macos", "device_id": "macos"},
             "linux": {"target_platform": "linux", "device_id": "linux"},
-            "web": {"target_platform": "web", "device_id": "chrome"},
-            "ios": {"target_platform": "ipa", "device_id": None},
-            "android": {"target_platform": "apk", "device_id": None},
         }
         self.debug_platform = None
         self.device_id = None
@@ -39,22 +36,8 @@ class Command(BaseBuildCommand):
             "platform",
             type=str.lower,
             nargs="?",
-            choices=["macos", "linux", "windows", "web", "ios", "android"],
+            choices=["macos", "linux", "windows"],
             help="The target platform to run the app on",
-        )
-        parser.add_argument(
-            "--device-id",
-            "-d",
-            type=str,
-            dest="device_id",
-            help="Device ID to run the app on for iOS and Android builds.",
-        )
-        parser.add_argument(
-            "--show-devices",
-            dest="show_devices",
-            action="store_true",
-            default=False,
-            help="Show connected devices for iOS and Android builds.",
         )
         parser.add_argument(
             "--release",
@@ -62,12 +45,6 @@ class Command(BaseBuildCommand):
             action="store_true",
             default=False,
             help="Build the app in release mode.",
-        )
-        parser.add_argument(
-            "--route",
-            type=str,
-            dest="route",
-            help="Route to open the app on for web, iOS and Android builds.",
         )
         super().add_arguments(parser)
 
@@ -101,7 +78,6 @@ class Command(BaseBuildCommand):
             spinner="bouncingBall",
         )
         with Live(Group(self.status, self.progress), console=console) as self.live:
-            self.check_device_id()
             self.initialize_command()
             if self.options.show_devices:
                 self.run_flutter_devices()
@@ -116,26 +92,8 @@ class Command(BaseBuildCommand):
             if self.create_flutter_project(second_pass=True):
                 self.update_flutter_dependencies()
             self.customize_icons()
-            self.customize_splash_images()
             self.run_flutter()
             self.cleanup(0, message="Debug session ended.")
-
-    def check_device_id(self):
-        """
-        Validate that a device ID is available for mobile debug targets.
-        """
-
-        if self.device_id is None and self.debug_platform in [
-            "ios",
-            "android",
-        ]:
-            self.skip_flutter_doctor = True
-            self.cleanup(
-                1,
-                "Device ID must be specified for iOS and Android debug builds.\n"
-                "Use --device-id option to specify it.\n"
-                "Use --show-devices option to list connected devices.",
-            )
 
     def add_flutter_command_args(self, args: list[str]):
         """
@@ -151,12 +109,6 @@ class Command(BaseBuildCommand):
         if self.options:
             if self.options.release:
                 args.append("--release")
-            if self.options.route and self.debug_platform in [
-                "web",
-                "ios",
-                "android",
-            ]:
-                args.extend(["--route", self.options.route])
 
     def run_flutter(self):
         """

@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:window_to_front/window_to_front.dart';
 
 import '../models/window_state.dart';
 import 'platform.dart';
@@ -238,12 +237,6 @@ Future focusWindow() async {
       !await windowManager.isMinimized()) {
     debugPrint("focusWindow()");
     await windowManager.focus();
-  }
-}
-
-Future windowToFront() async {
-  if (isDesktopPlatform()) {
-    await WindowToFront.activate();
   }
 }
 

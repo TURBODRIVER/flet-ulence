@@ -103,12 +103,10 @@ class ReorderableListView(ListView):
     Whether to show default drag handles for each :attr:`controls` item.
 
     If `True`: on desktop platforms, a drag handle is stacked over the
-    center of each item's trailing edge; on mobile platforms, a long
-    press anywhere on the item starts a drag.
+    center of each item's trailing edge.
 
     The default desktop drag handle is just an `Icons.DRAG_HANDLE`
-    wrapped by a :class:`~flet.ReorderableDragHandle`. On mobile platforms, the
-    entire item is wrapped with a :class:`~flet.ReorderableDragHandle`.
+    wrapped by a :class:`~flet.ReorderableDragHandle`.
 
     To customize the appearance or layout of drag handles, wrap each
     :attr:`controls` item, or a control within each of them, with a

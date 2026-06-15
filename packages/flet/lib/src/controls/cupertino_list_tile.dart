@@ -4,7 +4,6 @@ import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/launch_url.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
@@ -38,16 +37,12 @@ class CupertinoListTileControl extends StatelessWidget {
         control.getDouble("leading_to_title", notched ? 12.0 : 16.0)!;
     var onclick = control.getBool("on_click", false)!;
     var toggleInputs = control.getBool("toggle_inputs", false)!;
-    var url = control.getUrl("url");
 
     Function()? onPressed =
-        (onclick || toggleInputs || url != null) && !control.disabled
+        (onclick || toggleInputs) && !control.disabled
             ? () {
                 if (toggleInputs) {
                   _clickNotifier.onClick();
-                }
-                if (url != null) {
-                  openWebBrowser(url);
                 }
                 if (onclick) {
                   control.triggerEvent("click");

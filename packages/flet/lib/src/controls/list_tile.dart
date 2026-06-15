@@ -5,7 +5,6 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/launch_url.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
@@ -47,16 +46,12 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
     var trailing = control.buildIconOrWidget("trailing");
     var onClick = control.getBool("on_click", false)!;
     var toggleInputs = control.getBool("toggle_inputs", false)!;
-    var url = control.getUrl("url");
 
     Function()? onPressed =
-        (onClick || toggleInputs || url != null) && !control.disabled
+        (onClick || toggleInputs) && !control.disabled
             ? () {
                 if (toggleInputs) {
                   _clickNotifier.onClick();
-                }
-                if (url != null) {
-                  openWebBrowser(url);
                 }
                 if (onClick) {
                   control.triggerEvent("click");

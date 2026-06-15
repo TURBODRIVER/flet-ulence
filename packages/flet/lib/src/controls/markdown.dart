@@ -6,7 +6,6 @@ import 'package:markdown/markdown.dart' as md;
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/images.dart';
-import '../utils/launch_url.dart';
 import '../utils/markdown.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
@@ -28,8 +27,6 @@ class MarkdownControl extends StatelessWidget {
     var extensionSet =
         control.getMarkdownExtensionSet("extension_set", md.ExtensionSet.none)!;
 
-    var autoFollowLinks = control.getBool("auto_follow_links", false)!;
-    var autoFollowLinksTarget = control.getString("auto_follow_links_target");
     var selectable = control.getBool("selectable", false)!;
 
     var codeStyleSheet = control.getMarkdownStyleSheet(
@@ -89,9 +86,6 @@ class MarkdownControl extends StatelessWidget {
         },
         onTapText: () => control.triggerEvent("tap_text"),
         onTapLink: (String text, String? href, String title) {
-          if (autoFollowLinks && href != null) {
-            openWebBrowser(Url(href, autoFollowLinksTarget));
-          }
           control.triggerEvent("tap_link", href);
         });
 

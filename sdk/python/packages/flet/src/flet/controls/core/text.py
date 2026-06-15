@@ -182,7 +182,7 @@ class TextSelectionChangeCause(Enum):
     The user used the keyboard to change the selection or the location of the cursor.
 
     Keyboard-triggered selection changes may be caused by the IME as well as by
-    accessibility tools (e.g. TalkBack on Android).
+    accessibility tools.
     """
 
     TOOLBAR = "toolbar"

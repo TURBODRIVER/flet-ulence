@@ -16,8 +16,7 @@ class AdaptiveCheckboxControl extends StatelessWidget with FletStoreMixin {
 
     return withPagePlatform((context, platform) {
       if (control.adaptive == true &&
-          (platform == TargetPlatform.iOS ||
-              platform == TargetPlatform.macOS)) {
+          (platform == TargetPlatform.macOS)) {
         return CupertinoCheckboxControl(control: control);
       } else {
         return CheckboxControl(control: control);

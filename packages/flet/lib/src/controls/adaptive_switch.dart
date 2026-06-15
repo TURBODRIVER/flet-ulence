@@ -16,8 +16,7 @@ class AdaptiveSwitchControl extends StatelessWidget with FletStoreMixin {
 
     return withPagePlatform((context, platform) {
       if (control.adaptive == true &&
-          (platform == TargetPlatform.iOS ||
-              platform == TargetPlatform.macOS)) {
+          (platform == TargetPlatform.macOS)) {
         return CupertinoSwitchControl(control: control);
       } else {
         return SwitchControl(control: control);

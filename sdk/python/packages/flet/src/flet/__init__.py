@@ -217,18 +217,6 @@ from flet.controls.cupertino.cupertino_timer_picker import (
     CupertinoTimerPickerMode,
 )
 from flet.controls.cupertino.cupertino_tinted_button import CupertinoTintedButton
-from flet.controls.device_info import (
-    AndroidBuildVersion,
-    AndroidDeviceInfo,
-    DeviceInfo,
-    IosDeviceInfo,
-    IosUtsname,
-    LinuxDeviceInfo,
-    MacOsDeviceInfo,
-    WebBrowserName,
-    WebDeviceInfo,
-    WindowsDeviceInfo,
-)
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import (
     DateTimeValue,
@@ -412,15 +400,12 @@ from flet.controls.material.time_picker import (
 )
 from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode, TooltipValue
 from flet.controls.material.vertical_divider import VerticalDivider
-from flet.controls.multi_view import MultiView
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.page import (
     AppLifecycleStateChangeEvent,
     KeyboardEvent,
     LocaleChangeEvent,
     LoginEvent,
-    MultiViewAddEvent,
-    MultiViewRemoveEvent,
     Page,
     PlatformBrightnessChangeEvent,
     RouteChangeEvent,
@@ -445,23 +430,6 @@ from flet.controls.scrollable_control import (
     ScrollDirection,
     ScrollType,
 )
-from flet.controls.services.accelerometer import (
-    Accelerometer,
-    AccelerometerReadingEvent,
-)
-from flet.controls.services.barometer import Barometer, BarometerReadingEvent
-from flet.controls.services.battery import (
-    Battery,
-    BatteryState,
-    BatteryStateChangeEvent,
-)
-from flet.controls.services.browser_context_menu import BrowserContextMenu
-from flet.controls.services.clipboard import Clipboard
-from flet.controls.services.connectivity import (
-    Connectivity,
-    ConnectivityChangeEvent,
-    ConnectivityType,
-)
 from flet.controls.services.file_picker import (
     FilePicker,
     FilePickerFile,
@@ -469,37 +437,9 @@ from flet.controls.services.file_picker import (
     FilePickerUploadEvent,
     FilePickerUploadFile,
 )
-from flet.controls.services.gyroscope import Gyroscope, GyroscopeReadingEvent
-from flet.controls.services.haptic_feedback import HapticFeedback
-from flet.controls.services.magnetometer import Magnetometer, MagnetometerReadingEvent
-from flet.controls.services.screen_brightness import (
-    ScreenBrightness,
-    ScreenBrightnessChangeEvent,
-)
 from flet.controls.services.semantics_service import Assertiveness, SemanticsService
-from flet.controls.services.sensor_error_event import SensorErrorEvent
 from flet.controls.services.service import Service
-from flet.controls.services.shake_detector import ShakeDetector
-from flet.controls.services.share import (
-    Share,
-    ShareCupertinoActivityType,
-    ShareFile,
-    ShareResult,
-    ShareResultStatus,
-)
-from flet.controls.services.shared_preferences import SharedPreferences
 from flet.controls.services.storage_paths import StoragePaths
-from flet.controls.services.url_launcher import (
-    BrowserConfiguration,
-    LaunchMode,
-    UrlLauncher,
-    WebViewConfiguration,
-)
-from flet.controls.services.user_accelerometer import (
-    UserAccelerometer,
-    UserAccelerometerReadingEvent,
-)
-from flet.controls.services.wakelock import Wakelock
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
     StrutStyle,
@@ -531,7 +471,6 @@ from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     CrossAxisAlignment,
-    DeviceOrientation,
     FloatingActionButtonLocation,
     FontWeight,
     IconDataOrControl,
@@ -543,12 +482,10 @@ from flet.controls.types import (
     MouseCursor,
     NotchShape,
     Number,
-    Orientation,
     PagePlatform,
     PointerDeviceType,
     ResponsiveNumber,
     ResponsiveRowBreakpoint,
-    RouteUrlStrategy,
     ScrollMode,
     StrokeCap,
     StrokeJoin,
@@ -560,7 +497,6 @@ from flet.controls.types import (
     UrlTarget,
     VerticalAlignment,
     VisualDensity,
-    WebRenderer,
 )
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub
@@ -609,7 +545,6 @@ if TYPE_CHECKING:
         SliderTheme,
         SnackBarTheme,
         SwitchTheme,
-        SystemOverlayStyle,
         TabBarTheme,
         TextButtonTheme,
         TextTheme,
@@ -619,13 +554,9 @@ if TYPE_CHECKING:
     )
 
 __all__ = [
-    "Accelerometer",
-    "AccelerometerReadingEvent",
     "AdaptiveControl",
     "AlertDialog",
     "Alignment",
-    "AndroidBuildVersion",
-    "AndroidDeviceInfo",
     "AnimatedSwitcher",
     "AnimatedSwitcherTransition",
     "Animation",
@@ -652,13 +583,8 @@ __all__ = [
     "BadgeValue",
     "Banner",
     "BannerTheme",
-    "Barometer",
-    "BarometerReadingEvent",
     "BaseControl",
     "BasePage",
-    "Battery",
-    "BatteryState",
-    "BatteryStateChangeEvent",
     "BeveledRectangleBorder",
     "BlendMode",
     "Blur",
@@ -683,8 +609,6 @@ __all__ = [
     "BoxShadowValue",
     "BoxShape",
     "Brightness",
-    "BrowserConfiguration",
-    "BrowserContextMenu",
     "Button",
     "ButtonStyle",
     "ButtonTheme",
@@ -699,16 +623,12 @@ __all__ = [
     "CircleBorder",
     "CircularRectangleNotchShape",
     "ClipBehavior",
-    "Clipboard",
     "ColorFilter",
     "ColorScheme",
     "ColorValue",
     "Colors",
     "Column",
     "Component",
-    "Connectivity",
-    "ConnectivityChangeEvent",
-    "ConnectivityType",
     "ConstrainedControl",
     "Container",
     "Context",
@@ -768,8 +688,6 @@ __all__ = [
     "DateRangePicker",
     "DateTimeValue",
     "DecorationImage",
-    "DeviceInfo",
-    "DeviceOrientation",
     "DialogControl",
     "DialogTheme",
     "DismissDirection",
@@ -830,9 +748,6 @@ __all__ = [
     "Gradient",
     "GradientTileMode",
     "GridView",
-    "Gyroscope",
-    "GyroscopeReadingEvent",
-    "HapticFeedback",
     "Hero",
     "HoverEvent",
     "Icon",
@@ -848,8 +763,6 @@ __all__ = [
     "InputBorder",
     "InputFilter",
     "InteractiveViewer",
-    "IosDeviceInfo",
-    "IosUtsname",
     "Key",
     "KeyDownEvent",
     "KeyRepeatEvent",
@@ -859,11 +772,9 @@ __all__ = [
     "KeyboardListener",
     "KeyboardType",
     "LabelPosition",
-    "LaunchMode",
     "LayoutControl",
     "LayoutSizeChangeEvent",
     "LinearGradient",
-    "LinuxDeviceInfo",
     "ListTile",
     "ListTileStyle",
     "ListTileTheme",
@@ -878,9 +789,6 @@ __all__ = [
     "LongPressEndEvent",
     "LongPressMoveUpdateEvent",
     "LongPressStartEvent",
-    "MacOsDeviceInfo",
-    "Magnetometer",
-    "MagnetometerReadingEvent",
     "MainAxisAlignment",
     "Margin",
     "MarginValue",
@@ -896,9 +804,6 @@ __all__ = [
     "MergeSemantics",
     "MouseCursor",
     "MultiTapEvent",
-    "MultiView",
-    "MultiViewAddEvent",
-    "MultiViewRemoveEvent",
     "NavigationBar",
     "NavigationBarDestination",
     "NavigationBarLabelBehavior",
@@ -918,7 +823,6 @@ __all__ = [
     "OffsetValue",
     "OnReorderEvent",
     "OnScrollEvent",
-    "Orientation",
     "OutlinedBorder",
     "OutlinedButton",
     "OutlinedButtonTheme",
@@ -972,7 +876,6 @@ __all__ = [
     "RoundedRectangleBorder",
     "Route",
     "RouteChangeEvent",
-    "RouteUrlStrategy",
     "Router",
     "Row",
     "SafeArea",
@@ -981,8 +884,6 @@ __all__ = [
     "ScaleStartEvent",
     "ScaleUpdateEvent",
     "ScaleValue",
-    "ScreenBrightness",
-    "ScreenBrightnessChangeEvent",
     "Screenshot",
     "ScrollDirection",
     "ScrollEvent",
@@ -1002,17 +903,9 @@ __all__ = [
     "SelectionArea",
     "Semantics",
     "SemanticsService",
-    "SensorErrorEvent",
     "Service",
     "ShaderMask",
-    "ShakeDetector",
     "ShapeBorder",
-    "Share",
-    "ShareCupertinoActivityType",
-    "ShareFile",
-    "ShareResult",
-    "ShareResultStatus",
-    "SharedPreferences",
     "Shimmer",
     "ShimmerDirection",
     "Size",
@@ -1036,7 +929,6 @@ __all__ = [
     "SweepGradient",
     "Switch",
     "SwitchTheme",
-    "SystemOverlayStyle",
     "Tab",
     "TabAlignment",
     "TabBar",
@@ -1084,10 +976,7 @@ __all__ = [
     "TransparentPointer",
     "UnderlineTabIndicator",
     "Url",
-    "UrlLauncher",
     "UrlTarget",
-    "UserAccelerometer",
-    "UserAccelerometerReadingEvent",
     "Value",
     "ValueKey",
     "VerticalAlignment",
@@ -1096,17 +985,11 @@ __all__ = [
     "ViewPopEvent",
     "ViewsPopUntilEvent",
     "VisualDensity",
-    "Wakelock",
-    "WebBrowserName",
-    "WebDeviceInfo",
-    "WebRenderer",
-    "WebViewConfiguration",
     "Window",
     "WindowDragArea",
     "WindowEvent",
     "WindowEventType",
     "WindowResizeEdge",
-    "WindowsDeviceInfo",
     "__version__",
     "alignment",
     "app",
@@ -1186,7 +1069,6 @@ _THEME_EXPORTS = {
     "SliderTheme",
     "SnackBarTheme",
     "SwitchTheme",
-    "SystemOverlayStyle",
     "TabBarTheme",
     "TextButtonTheme",
     "TextTheme",

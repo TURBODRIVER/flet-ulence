@@ -2,9 +2,6 @@ import itertools
 import threading
 from typing import Optional
 
-from flet.utils.locks import NopeLock
-from flet.utils.platform_utils import is_pyodide
-
 
 class IdCounter:
     """
@@ -15,7 +12,7 @@ class IdCounter:
         self, start: int = 1, step: int = 1, lock: Optional[threading.Lock] = None
     ):
         self._counter = itertools.count(start, step)
-        self._lock = lock or (NopeLock() if is_pyodide() else threading.Lock())
+        self._lock = lock or threading.Lock()
 
     def next(self) -> int:
         """

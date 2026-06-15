@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,10 +28,7 @@ import 'utils/desktop.dart';
 import 'utils/images.dart';
 import 'utils/numbers.dart';
 import 'utils/platform.dart';
-import 'utils/platform_utils_web.dart'
-    if (dart.library.io) "utils/platform_utils_non_web.dart";
-import 'utils/session_store_web.dart'
-    if (dart.library.io) "utils/session_store_non_web.dart";
+import 'utils/session_store_non_web.dart';
 import 'utils/uri.dart';
 import 'utils/weak_value_map.dart';
 
@@ -40,7 +36,6 @@ import 'utils/weak_value_map.dart';
 class FletBackend extends ChangeNotifier {
   static const String defaultAppErrorMessageTemplate =
       "The application encountered an error: {message}\n\n{details}";
-  bool multiView = false;
   bool _disposed = false;
   final WeakReference<FletBackend>? _parentFletBackend;
   final Uri pageUri;
@@ -52,7 +47,6 @@ class FletBackend extends ChangeNotifier {
   final FletAppErrorsHandler? errorsHandler;
   late final List<FletExtension> extensions;
   final Map<String, dynamic>? args;
-  final bool? forcePyodide;
   final Tester? tester;
   final Map<String, GlobalKey> globalKeys = {};
 
@@ -82,7 +76,6 @@ class FletBackend extends ChangeNotifier {
     viewPadding: PaddingData(EdgeInsets.zero),
     viewInsets: PaddingData(EdgeInsets.zero),
     devicePixelRatio: 0,
-    orientation: Orientation.portrait,
     alwaysUse24HourFormat: false,
   );
   TargetPlatform platform = defaultTargetPlatform;
@@ -92,7 +85,6 @@ class FletBackend extends ChangeNotifier {
   FletBackend(
       {required this.pageUri,
       required this.assetsDir,
-      required this.multiView,
       int? reconnectIntervalMs,
       int? reconnectTimeoutMs,
       this.errorsHandler,
@@ -101,7 +93,6 @@ class FletBackend extends ChangeNotifier {
       this.appErrorMessage,
       this.controlId,
       this.args,
-      this.forcePyodide,
       this.tester,
       required extensions,
       FletBackend? parentFletBackend})
@@ -116,13 +107,8 @@ class FletBackend extends ChangeNotifier {
     _page = Control.fromMap({
       "_c": "Page",
       "_i": 1,
-      "pwa": isProgressiveWebApp(),
-      "web": kIsWeb,
       "debug": kDebugMode,
-      "wasm": const bool.fromEnvironment('dart.tool.dart2wasm'),
       "test": tester != null,
-      "multi_view": multiView,
-      "pyodide": isPyodideMode(),
       "window": {
         "_c": "Window",
         "_i": 2,
@@ -180,7 +166,6 @@ class FletBackend extends ChangeNotifier {
       _backendChannel = FletBackendChannel(
           address: pageUri.toString(),
           args: args ?? {},
-          forcePyodide: forcePyodide == true,
           onDisconnect: _onDisconnect,
           onMessage: _onMessage);
       await _backendChannel!.connect();
@@ -199,16 +184,11 @@ class FletBackend extends ChangeNotifier {
             action: MessageAction.registerClient,
             payload: RegisterClientRequestBody(
                 sessionId: SessionStore.getSessionId(),
-                pageName: getWebPageName(pageUri),
+                pageName: "",
                 page: {
                   "route": page.get("route"),
-                  "pwa": page.get("pwa"),
-                  "web": page.get("web"),
                   "debug": page.get("debug"),
-                  "wasm": page.get("wasm"),
                   "test": page.get("test"),
-                  "multi_view": page.get("multi_view"),
-                  "pyodide": page.get("pyodide"),
                   "platform_brightness": page.get("platform_brightness"),
                   "width": page.get("width"),
                   "height": page.get("height"),
@@ -256,18 +236,6 @@ class FletBackend extends ChangeNotifier {
         await pageSizeUpdated.future;
         debugPrint("Registering web client with route: $newRoute");
         String platform = defaultTargetPlatform.name.toLowerCase();
-        if (platform == "android" && !kIsWeb) {
-          try {
-            DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-            AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-            if (androidInfo.systemFeatures
-                .contains('android.software.leanback')) {
-              platform = "android_tv";
-            }
-          } on Exception catch (e) {
-            debugPrint(e.toString());
-          }
-        }
 
         // update page details
         page.update({"route": newRoute, "platform": platform},
@@ -444,8 +412,7 @@ class FletBackend extends ChangeNotifier {
     // Nested FletApp: bubble the line to the outer backend so the
     // host page can render it (same shape as errorsHandler bubbling
     // at lines 135-148). Root FletApp: nothing to bubble to, so fall
-    // back to the browser console — preserves Pyodide's default
-    // visibility now that we've taken over its stdout/stderr hooks.
+    // back to the browser console.
     if (controlId != null && _parentFletBackend != null) {
       _parentFletBackend?.target?.triggerControlEventById(
         controlId!,

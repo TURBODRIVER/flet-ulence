@@ -57,7 +57,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     When a user moves a pointer a lot of events are being generated to do precise
     tracking. `drag_interval` allows sending drag update events to a Flet program every
-    X milliseconds, thus preserving the bandwidth (web and mobile apps).
+    X milliseconds, thus preserving the bandwidth.
 
     `0` means no throttling: all events are sent to a Flet program,
     resulting in very smooth tracking.

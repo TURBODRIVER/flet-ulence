@@ -166,8 +166,6 @@ class IconButton(LayoutControl, AdaptiveControl):
     enable_feedback: Optional[bool] = None
     """
     Whether detected gestures should provide acoustic and/or haptic feedback.
-    On Android, for example, setting this to `True` produce a click sound and a
-    long-press will produce a short vibration.
     """
 
     url: Optional[Union[str, Url]] = None

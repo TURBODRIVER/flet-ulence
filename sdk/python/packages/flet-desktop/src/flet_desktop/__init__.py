@@ -204,7 +204,7 @@ def ensure_client_cached():
     Ensure the desktop client is extracted in the local cache directory.
 
     If the cache directory does not exist, looks for a bundled archive in
-    the package (for PyInstaller bundles) and falls back to downloading
+    the package and falls back to downloading
     from GitHub Releases.
 
     Returns:

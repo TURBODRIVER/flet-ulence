@@ -9,7 +9,6 @@ import '../utils/drawing.dart';
 import '../utils/numbers.dart';
 import 'colors.dart';
 import 'enums.dart';
-import 'launch_url.dart';
 import 'widget_state.dart';
 
 TextStyle? parseTextThemeStyle(String? styleName, BuildContext context) {
@@ -64,7 +63,6 @@ TextSpan? parseInlineSpan(Control span, ThemeData theme,
     [void Function(Control, String, [dynamic eventData])? sendControlEvent]) {
   span.notifyParent = true;
   var onClick = span.getBool("on_click", false)!;
-  var url = span.getUrl("url");
 
   return TextSpan(
     text: span.getString("text"),
@@ -76,10 +74,9 @@ TextSpan? parseInlineSpan(Control span, ThemeData theme,
         ? SystemMouseCursors.click
         : null,
     recognizer:
-        (onClick || url != null) && !span.disabled && sendControlEvent != null
+        (onClick) && !span.disabled && sendControlEvent != null
             ? (TapGestureRecognizer()
               ..onTap = () {
-                if (url != null) openWebBrowser(url);
                 if (onClick) sendControlEvent(span, "click");
               })
             : null,

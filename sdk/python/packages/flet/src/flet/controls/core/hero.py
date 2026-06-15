@@ -42,5 +42,5 @@ class Hero(LayoutControl):
     transition_on_user_gestures: bool = False
     """
     Whether to animate when the route is transitioned by a \
-    user gesture (for example, iOS back swipe).
+    user gesture.
     """

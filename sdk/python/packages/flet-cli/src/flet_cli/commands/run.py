@@ -8,17 +8,13 @@ import tempfile
 import threading
 import time
 from pathlib import Path
-from urllib.parse import quote, urlparse, urlunparse
 
-import qrcode
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 from flet.utils import (
     get_free_tcp_port,
-    get_local_ip,
     is_windows,
-    open_in_browser,
     random_string,
 )
 from flet_cli.commands.base import BaseCommand
@@ -44,22 +40,6 @@ class Command(BaseCommand):
             nargs="?",
             default=".",
             help="Path to the Python script that starts your Flet app",
-        )
-        parser.add_argument(
-            "-p",
-            "--port",
-            dest="port",
-            type=int,
-            default=None,
-            help="Custom TCP or HTTP (if `--web` option is used) port to run the Flet "
-            "app on. If not specified, a random port will be chosen",
-        )
-        parser.add_argument(
-            "--host",
-            dest="host",
-            type=str,
-            default=None,
-            help='The host to run Flet web app on. Use "*" to listen on all IPs',
         )
         parser.add_argument(
             "--name",
@@ -105,29 +85,6 @@ class Command(BaseCommand):
             help="Start the application with the window hidden",
         )
         parser.add_argument(
-            "-w",
-            "--web",
-            dest="web",
-            action="store_true",
-            default=False,
-            help="Launch the Flet app as a dynamic website and automatically "
-            "open it in your web browser after startup",
-        )
-        parser.add_argument(
-            "--ios",
-            dest="ios",
-            action="store_true",
-            default=False,
-            help="Launch the app on an iOS device",
-        )
-        parser.add_argument(
-            "--android",
-            dest="android",
-            action="store_true",
-            default=False,
-            help="Launch the app on an Android device",
-        )
-        parser.add_argument(
             "-a",
             "--assets",
             dest="assets_dir",
@@ -158,17 +115,10 @@ class Command(BaseCommand):
             options: Parsed command options produced by :meth:`add_arguments`.
         """
 
-        from flet.utils.pip import (
-            ensure_flet_desktop_package_installed,
-            ensure_flet_web_package_installed,
-        )
+        from flet.utils.pip import ensure_flet_desktop_package_installed
+        ensure_flet_desktop_package_installed()
 
-        if options.web:
-            ensure_flet_web_package_installed()
-        else:
-            ensure_flet_desktop_package_installed()
         from flet_desktop import close_flet_view
-
         if options.module:
             script_path = Path(options.script.replace(".", "/"))
             if script_path.is_dir():
@@ -198,9 +148,7 @@ class Command(BaseCommand):
             sys.exit(1)
 
         port = options.port
-        if port is None and (options.ios or options.android):
-            port = 8551
-        elif port is None and (is_windows() or options.web):
+        if port is None and is_windows():
             port = get_free_tcp_port()
 
         uds_path = None
@@ -233,9 +181,6 @@ class Command(BaseCommand):
             host=options.host,
             page_name=options.app_name,
             uds_path=uds_path,
-            web=options.web,
-            ios=options.ios,
-            android=options.android,
             hidden=options.hidden,
             assets_dir=assets_dir,
             ignore_dirs=ignore_dirs,
@@ -277,9 +222,6 @@ class Handler(FileSystemEventHandler):
         host,
         page_name,
         uds_path,
-        web,
-        ios,
-        android,
         hidden,
         assets_dir,
         ignore_dirs,
@@ -294,9 +236,6 @@ class Handler(FileSystemEventHandler):
         self.host = host
         self.page_name = page_name
         self.uds_path = uds_path
-        self.web = web
-        self.ios = ios
-        self.android = android
         self.hidden = hidden
         self.assets_dir = assets_dir
         self.ignore_dirs = ignore_dirs
@@ -320,18 +259,6 @@ class Handler(FileSystemEventHandler):
         """
 
         p_env = {**os.environ}
-        if self.web or self.ios or self.android:
-            p_env["FLET_FORCE_WEB_SERVER"] = "true"
-
-            # force page name for ios
-            if self.ios or self.android:
-                p_env["FLET_WEB_APP_PATH"] = "/".join(Path(self.script_path).parts[-2:])
-        if self.port is not None:
-            p_env["FLET_SERVER_PORT"] = str(self.port)
-        if self.host is not None:
-            p_env["FLET_SERVER_IP"] = str(self.host)
-        if self.page_name:
-            p_env["FLET_WEB_APP_PATH"] = self.page_name
         if self.uds_path is not None:
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
         if self.assets_dir is not None:
@@ -383,8 +310,7 @@ class Handler(FileSystemEventHandler):
         Stream subprocess output and react to initial app display URL signal.
 
         When a display URL line is detected, this method either prints/open it,
-        renders a QR code for mobile mode, or opens desktop view and waits for
-        that process to finish.
+        or opens desktop view and waits for that process to finish.
 
         Args:
             p: Running child process whose stdout is consumed.
@@ -401,16 +327,8 @@ class Handler(FileSystemEventHandler):
                     self.page_url = parts[0]
                     if len(parts) > 1 and parts[1] == "flet_app_hidden":
                         self.hidden = True
-                    if (
-                        self.page_url.startswith("http")
-                        and not self.ios
-                        and not self.android
-                    ):
+                    if self.page_url.startswith("http"):
                         print(self.page_url)
-                    if self.ios or self.android:
-                        self.print_qr_code(self.page_url, self.android)
-                    elif self.web:
-                        open_in_browser(self.page_url)
                     else:
                         th = threading.Thread(
                             target=self.open_flet_view_and_wait, args=(), daemon=True
@@ -452,47 +370,6 @@ class Handler(FileSystemEventHandler):
         self.p.send_signal(signal.SIGTERM)
         self.p.wait()
         self.start_process()
-
-    def print_qr_code(self, orig_url: str, android: bool):
-        """
-        Print a LAN URL and terminal QR code for connecting from a mobile device.
-
-        Args:
-            orig_url: URL emitted by the running app process.
-            android: Whether to generate an Android launcher URL format.
-        """
-
-        u = urlparse(orig_url)
-        ip_addr = get_local_ip()
-        lan_url = urlunparse(
-            (u.scheme, f"{ip_addr}:{u.port}", u.path, None, None, None)
-        )
-        # self.clear_console()
-        print("App is running on:", lan_url)
-        print("")
-        qr_url = (
-            urlunparse(
-                (
-                    "https",
-                    "android.flet.dev",
-                    quote(f"{ip_addr}:{u.port}{u.path}", safe="/"),
-                    None,
-                    None,
-                    None,
-                )
-            )
-            if android
-            else urlunparse(
-                ("flet", "flet-host", quote(lan_url, safe=""), None, None, None)
-            )
-        )
-        # print(qr_url)
-        qr = qrcode.QRCode()
-        qr.add_data(qr_url)
-        qr.print_ascii(invert=True)
-        # qr.print_tty()
-        print("")
-        print("Scan QR code above with Camera app.")
 
     def clear_console(self):
         """

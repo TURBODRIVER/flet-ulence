@@ -8,9 +8,6 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "flet-cli; extra == 'cli'",
-    "flet-web; extra == 'web'",
-    "oauthlib >=3.2.2; platform_system != 'Pyodide'",
-    "httpx >=0.28.1; platform_system != 'Pyodide'",
     "repath >=0.9.0",
     "msgpack >=1.1.0",
     "typing-extensions; python_version < '3.11'"
@@ -24,74 +21,28 @@ Documentation = "https://flet.dev/docs/"
 [project.optional-dependencies]
 all = [
     "flet-cli",
-    "flet-web",
     "flet-desktop",
 ]
 cli = ["flet-cli"]
 desktop = [
     "flet-desktop",
 ]
-web = ["flet-web"]
+web = []
 
 [project.scripts]
 flet = "flet.cli:main"
 
 [dependency-groups]
 extensions = [
-    "flet-ads",
-    "flet-audio",
-    "flet-audio-recorder",
-    "flet-camera",
-    "flet-charts",
-    "flet-code-editor",
-    "flet-color-pickers",
-    "flet-datatable2",
-    "flet-flashlight",
-    "flet-geolocator",
-    "flet-lottie",
-    "flet-map",
-    "flet-permission-handler",
-    "flet-rive",
-    "flet-secure-storage",
-    "flet-video",
-    "flet-webview",
 ]
 test = [
-    "pytest >=7.2.0",
-    "pytest_asyncio >=1.1.0",
 ]
 dev = [
-    "tomlkit >=0.11.6",
-    "cryptography >=39.0.0",
-    "pillow >=10.3.0",
-    "pre-commit >=2.21.0",
-    "pypi-cleanup==0.1.4",
-    "pandas >=2.2.3",
-    "numpy >=2.2.0",
-    "scikit-image >=0.25.2",
-    "ruff >=0.13.1",
-    { include-group = 'test' },
 ]
 docs-coverage = [
-    "docstr-coverage >=2.3.2",
 ]
 docs = [
-    { include-group = 'extensions' },
-    { include-group = 'docs-coverage' },
 ]
 all = [
-    { include-group = 'dev' },
-    { include-group = 'docs' },
 ]
 
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools.package-data]
-flet = [
-    "controls/material/icons.json",
-    "controls/material/icons.pyi",
-    "controls/cupertino/cupertino_icons.json",
-    "controls/cupertino/cupertino_icons.pyi",
-]

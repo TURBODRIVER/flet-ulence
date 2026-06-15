@@ -1,8 +1,4 @@
 import '../protocol/message.dart';
-import '../utils/platform_utils_web.dart'
-    if (dart.library.io) "../utils/platform_utils_non_web.dart";
-import 'flet_backend_channel_javascript_web.dart'
-    if (dart.library.io) "flet_backend_channel_javascript_io.dart";
 import 'flet_backend_channel_mock.dart';
 import 'flet_backend_channel_socket.dart';
 import 'flet_backend_channel_web_socket.dart';
@@ -14,17 +10,9 @@ abstract class FletBackendChannel {
   factory FletBackendChannel(
       {required String address,
       required Map<String, dynamic> args,
-      required bool forcePyodide,
       required FletBackendChannelOnDisconnectCallback onDisconnect,
       required FletBackendChannelOnMessageCallback onMessage}) {
-    if (isPyodideMode() || forcePyodide) {
-      // Pyodide/JavaScript
-      return FletJavaScriptBackendChannel(
-          address: address,
-          args: args,
-          onDisconnect: onDisconnect,
-          onMessage: onMessage);
-    } else if (address.startsWith("http://") ||
+    if (address.startsWith("http://") ||
         address.startsWith("https://")) {
       // WebSocket
       return FletWebSocketBackendChannel(

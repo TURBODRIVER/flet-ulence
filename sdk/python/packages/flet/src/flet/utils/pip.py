@@ -105,26 +105,6 @@ def ensure_flet_desktop_package_installed():
         install_flet_package("flet-desktop")
 
 
-def ensure_flet_web_package_installed():
-    """
-    Ensures a compatible `flet-web` package is installed.
-
-    If `flet-web` is missing or its version differs from the current Flet SDK
-    version, this function installs it via
-    `install_flet_package()`.
-    """
-    try:
-        import flet_web.version
-
-        if (
-            flet_web.version.version
-            and flet_web.version.version != flet.version.flet_version
-        ):
-            raise RuntimeError("flet-web version mismatch")
-    except Exception:
-        install_flet_package("flet-web")
-
-
 def ensure_flet_cli_package_installed():
     """
     Ensures a compatible `flet-cli` package is installed.

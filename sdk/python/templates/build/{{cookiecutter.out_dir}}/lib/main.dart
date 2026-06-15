@@ -6,50 +6,35 @@ import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:serious_python/serious_python.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
-import "python.dart";
+import 'python.dart';
 
 {% for dep in cookiecutter.flutter.dependencies %}
 import 'package:{{ dep }}/{{ dep }}.dart' as {{ dep }};
 {% endfor %}
 
 /*
-{% set show_boot_screen = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.boot_screen.show")
-                        or get_pyproject("tool.flet.app.boot_screen.show")
-                        or False %}
+{% set python_asset_path = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.asset_path")
+                        or get_pyproject("tool.flet.app.asset_path") %}
 {% set boot_screen_message = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.boot_screen.message")
                         or get_pyproject("tool.flet.app.boot_screen.message") %}
-
-{% set show_startup_screen = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.startup_screen.show")
-                        or get_pyproject("tool.flet.app.startup_screen.show")
-                        or False %}
-{% set startup_screen_message = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.startup_screen.message")
-                        or get_pyproject("tool.flet.app.startup_screen.message") %}
-
 {% set hide_window_on_start = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.hide_window_on_start")
                         or get_pyproject("tool.flet.app.hide_window_on_start") %}
 
-show_boot_screen: {{ show_boot_screen }}
+python_asset_path : {{ python_asset_path }}
 boot_screen_message: {{ boot_screen_message }}
-show_startup_screen: {{ show_startup_screen }}
-startup_screen_message: {{ startup_screen_message }}
 hide_window_on_start: {{ hide_window_on_start }}
 */
 
 const bool isRelease = bool.fromEnvironment('dart.vm.product');
 
-const assetPath = "app/app.zip";
+const assetPath = "{{ python_asset_path }}";
 const pythonModuleName = "{{ cookiecutter.python_module_name }}";
-final showAppBootScreen = bool.tryParse("{{ show_boot_screen }}".toLowerCase()) ?? false;
-const appBootScreenMessage = '{{ boot_screen_message | default("Preparing the app for its first launch…", true) }}';
-final showAppStartupScreen = bool.tryParse("{{ show_startup_screen }}".toLowerCase()) ?? false;
-const appStartupScreenMessage = '{{ startup_screen_message | default("Getting things ready…", true) }}';
+const appBootScreenMessage = '{{ boot_screen_message | default("Preparing the App...", true) }}';
 final hideWindowOnStart = bool.tryParse("{{ hide_window_on_start }}".toLowerCase()) ?? false;
 
 List<FletExtension> extensions = [
@@ -69,64 +54,118 @@ Map<String, String> environmentVariables = Map.from(Platform.environment);
 
 void main(List<String> args) async {
 
-  FletDeepLinkingBootstrap.install();
-
   _args = List<String>.from(args);
-
-  var devPageUrl = const String.fromEnvironment("FLET_PAGE_URL");
-  if (devPageUrl != "") {
-    _args.addAll([devPageUrl, "--debug"]);
-  }
 
   for (var ext in extensions) {
     ext.ensureInitialized();
   }
 
-  runApp(FutureBuilder(
-      future: prepareApp(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          // OK - start Python program
-          return kIsWeb || (isDesktopPlatform() && _args.isNotEmpty)
-              ? FletApp(
-                  pageUrl: pageUrl,
-                  assetsDir: assetsDir,
-                  showAppStartupScreen: showAppStartupScreen,
-                  appStartupScreenMessage: appStartupScreenMessage,
-                  extensions: extensions)
-              : FutureBuilder(
-                  future: runPythonApp(args),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                    if (snapshot.hasData || snapshot.hasError) {
-                      // error or premature finish
-                      return MaterialApp(
-                        builder: (context, _) => ErrorScreen(
-                            title: "Error running app",
-                            text: snapshot.data ?? snapshot.error.toString()),
-                      );
-                    } else {
-                      // no result of error
-                      return FletApp(
-                          pageUrl: pageUrl,
-                          assetsDir: assetsDir,
-                          showAppStartupScreen: showAppStartupScreen,
-                          appStartupScreenMessage: appStartupScreenMessage,
-                          extensions: extensions);
-                    }
-                  });
-        } else if (snapshot.hasError) {
-          // error
-          return MaterialApp(
-              builder: (context, _) => ErrorScreen(
-                  title: "Error starting app",
-                  text: snapshot.error.toString()));
-        } else {
-          // loading
-          return MaterialApp(
-              builder: (context, _) => showAppBootScreen ? const BootScreen() : const BlankScreen());
+  // TODO: Add project toml variables for base theme
+  // TODO: Add project toml variable to force theme mode
+
+  final ThemeData _appBaseTheme = ThemeData(
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: const Color(0xFFFFFFFF),
+    cardColor: const Color(0xFFFFFFFF),
+    colorScheme: const ColorScheme.light(
+      surface: Color(0xFFFFFFFF),
+      onSurface: Color(0xFF797876),
+      primary: Color(0xFF142AFA),
+    ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color: Color(0xFF142AFA),
+    ),
+    textTheme: const TextTheme(
+      bodySmall: TextStyle(color: Color(0xFF797876)),
+      bodyMedium: TextStyle(color: Color(0xFF797876)),
+    ),
+  );
+
+  // TODO: Add project toml variables for light theme
+  // TODO: Add project toml variables for dark theme
+
+  runApp(Theme(
+    data: _appBaseTheme,
+    child: MaterialApp(
+      theme: _appBaseTheme,
+      darkTheme: _appBaseTheme,
+      themeMode: ThemeMode.light,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            platformBrightness: Brightness.light,
+          ),
+          child: child!,
+        );
+      },
+      home: FutureBuilder(
+        future: prepareApp(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return _PythonAppLoader(args: _args.cast<String>());
+          } else if (snapshot.hasError) {
+            return ErrorScreen(
+                title: "Error starting app",
+                text: snapshot.error.toString()
+            );
+          } else {
+            return BootScreen();
+          }
         }
-      }));
+      ),
+    ),
+  ));
+
+}
+
+class _PythonAppLoader extends StatefulWidget {
+  final List<String> args;
+  const _PythonAppLoader({required this.args});
+
+  @override
+  State<_PythonAppLoader> createState() => _PythonAppLoaderState();
+}
+
+class _PythonAppLoaderState extends State<_PythonAppLoader> {
+  late final Future<String?> _pythonFuture;
+  bool _showFlet = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _pythonFuture = runPythonApp(widget.args).then((result) {
+      return result;
+    });
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) setState(() => _showFlet = true);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<String?>(
+      future: _pythonFuture,
+      builder: (context, snapshot) {
+
+        if (snapshot.hasData || snapshot.hasError) {
+          return ErrorScreen(
+            title: "Error running app",
+            text: snapshot.data ?? snapshot.error.toString(),
+          );
+        }
+
+        if (_showFlet) {
+          return FletApp(
+            pageUrl: pageUrl,
+            assetsDir: assetsDir,
+            extensions: extensions,
+          );
+        }
+
+        return const BootScreen();
+      },
+    );
+  }
 }
 
 Future prepareApp() async {
@@ -139,15 +178,7 @@ Future prepareApp() async {
 
   await setupDesktop(hideWindowOnStart: hideWindowOnStart);
 
-  if (kIsWeb) {
-    // web mode - connect via HTTP
-    pageUrl = Uri.base.toString();
-    var routeUrlStrategy = getFletRouteUrlStrategy();
-    if (routeUrlStrategy == "path") {
-      usePathUrlStrategy();
-    }
-    assetsDir = getAssetsDir();
-  } else if (_args.isNotEmpty && isDesktopPlatform()) {
+  if (_args.isNotEmpty && isDesktopPlatform()) {
     // developer mode
     debugPrint("Flet app is running in Developer mode");
     pageUrl = _args[0];
@@ -164,7 +195,9 @@ Future prepareApp() async {
   } else {
     // production mode
     // extract app from asset
-    appDir = await extractAssetZip(assetPath, checkHash: true);
+    final supportDir = await path_provider.getApplicationSupportDirectory();
+    final targetPath = Directory(path.normalize(path.join(supportDir.path, 'flet'))).path;
+    appDir = await extractAssetZip(assetPath, targetPath: targetPath, checkHash: true);
 
     // set current directory to app path
     Directory.current = appDir;
@@ -174,24 +207,10 @@ Future prepareApp() async {
     // configure apps DATA and TEMP directories
     WidgetsFlutterBinding.ensureInitialized();
 
-    var appTempPath = (await path_provider.getApplicationCacheDirectory()).path;
-    var appDataPath =
-        (await path_provider.getApplicationDocumentsDirectory()).path;
+    environmentVariables.putIfAbsent("FLET_APP_STORAGE_DATA", () => appDir);
+    environmentVariables.putIfAbsent("FLET_APP_STORAGE_TEMP", () => appDir);
 
-    if (defaultTargetPlatform != TargetPlatform.iOS &&
-        defaultTargetPlatform != TargetPlatform.android) {
-      // append app name to the path and create dir
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      appDataPath = path.join(appDataPath, "flet", packageInfo.packageName);
-      if (!await Directory(appDataPath).exists()) {
-        await Directory(appDataPath).create(recursive: true);
-      }
-    }
-
-    environmentVariables.putIfAbsent("FLET_APP_STORAGE_DATA", () => appDataPath);
-    environmentVariables.putIfAbsent("FLET_APP_STORAGE_TEMP", () => appTempPath);
-
-    outLogFilename = path.join(appTempPath, "console.log");
+    outLogFilename = path.join(appDir, "console.log");
     environmentVariables.putIfAbsent("FLET_APP_CONSOLE", () => outLogFilename);
 
     environmentVariables.putIfAbsent(
@@ -209,7 +228,7 @@ Future prepareApp() async {
     }
   }
 
-  if (!kIsWeb && assetsDir.isNotEmpty) {
+  if (assetsDir.isNotEmpty) {
     environmentVariables.putIfAbsent("FLET_ASSETS_DIR", () => assetsDir);
   }
 
@@ -308,19 +327,6 @@ class ErrorScreen extends StatelessWidget {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleMedium,
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: text));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Copied to clipboard')),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.copy,
-                    size: 16,
-                  ),
-                  label: const Text("Copy"),
                 )
               ],
             ),
@@ -356,23 +362,10 @@ class BootScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Text(appBootScreenMessage, style: Theme.of(context).textTheme.bodySmall,)
+            Text(appBootScreenMessage, style: Theme.of(context).textTheme.bodyMedium,)
           ],
         ),
       ),
-    );
-  }
-}
-
-class BlankScreen extends StatelessWidget {
-  const BlankScreen({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SizedBox.shrink(),
     );
   }
 }

@@ -288,7 +288,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
             widget.control.getString("obscuring_character", '•')!,
         mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
         cursorOpacityAnimates: widget.control.getBool("animate_cursor_opacity",
-            Theme.of(context).platform == TargetPlatform.iOS)!,
+            false)!,
         onTapAlwaysCalled: widget.control.getBool("always_call_on_tap", false)!,
         strutStyle: widget.control.getStrutStyle("strut_style"),
         onTap: () {

@@ -39,7 +39,6 @@ from flet.controls.types import (
     LocaleConfiguration,
     MainAxisAlignment,
     Number,
-    Orientation,
     ScrollMode,
     ThemeMode,
 )
@@ -86,25 +85,9 @@ class PageMediaData:
     The number of device pixels for each logical pixel.
     """
 
-    orientation: Orientation
-    """
-    The orientation of the page.
-    """
-
     always_use_24_hour_format: bool = False
     """
     Whether to use 24-hour format when formatting time.
-
-    Note:
-        The behavior of this flag is different across platforms:
-
-        - On Android this flag is reported directly from the user settings called
-            "Use 24-hour format". It applies to any locale used by the application,
-            whether it is the system-wide locale, or the custom locale set by the
-            application.
-        - On iOS this flag is set to true when the user setting called "24-Hour Time"
-            is set or the system-wide locale's default uses 24-hour
-            formatting.
     """
 
 
@@ -133,8 +116,7 @@ class BasePage(AdaptiveControl):
     """
     A visual container representing a top-level view in a Flet application.
 
-    `BasePage` serves as the base class for :class:`~flet.Page` and \
-    :class:`~flet.MultiView`,
+    `BasePage` serves as the base class for :class:`~flet.Page`,
     and provides a unified surface for rendering application content, app bars,
     navigation elements, dialogs, overlays, and more. It manages one or more
     :class:`~flet.View` instances and exposes high-level layout,
@@ -148,7 +130,7 @@ class BasePage(AdaptiveControl):
     resizing and media changes.
 
     This class is not intended to be used directly in most apps; instead,
-    use :class:`~flet.Page` or :class:`~flet.MultiView`, which extend this base
+    use :class:`~flet.Page`, which extend this base
     functionality.
     """
 
@@ -219,7 +201,7 @@ class BasePage(AdaptiveControl):
         ```python
         def main(page: ft.Page):
             def handle_page_size(e):
-                print("New page size:", page.window.width, page.window_height)
+                print("New page size:", page.window.width, page.window.height)
 
             page.on_resize = handle_page_size
         ```
@@ -236,7 +218,6 @@ class BasePage(AdaptiveControl):
             view_padding=Padding.zero(),
             view_insets=Padding.zero(),
             device_pixel_ratio=0,
-            orientation=Orientation.PORTRAIT,
             always_use_24_hour_format=False,
         )
     )

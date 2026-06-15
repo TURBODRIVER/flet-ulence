@@ -5,13 +5,8 @@ import flet.version
 import flet_cli.commands.build
 import flet_cli.commands.create
 import flet_cli.commands.debug
-import flet_cli.commands.devices
 import flet_cli.commands.doctor
-import flet_cli.commands.emulators
-import flet_cli.commands.pack
-import flet_cli.commands.publish
 import flet_cli.commands.run
-import flet_cli.commands.serve
 
 
 # Source https://stackoverflow.com/a/26379693
@@ -24,6 +19,7 @@ def set_default_subparser(
     `parse_args()`.
 
     Args:
+        parser: Argument parser configured by the command runner.
         name: The name of the default subparser to use.
         args: A list of arguments passed to `parse_args()`.
         index: Position in `sys.argv` where the default subparser should be
@@ -75,8 +71,7 @@ def get_parser() -> argparse.ArgumentParser:
         action="version",
         version=(
             f"Flet: {flet.version.flet_version}\n"
-            f"Flutter: {flet.version.flutter_version}\n"
-            f"Pyodide: {flet.version.pyodide_version}"
+            f"Flutter: {flet.version.flutter_version}"
         ),
     )
 
@@ -87,11 +82,6 @@ def get_parser() -> argparse.ArgumentParser:
     flet_cli.commands.run.Command.register_to(sp, "run")
     flet_cli.commands.build.Command.register_to(sp, "build")
     flet_cli.commands.debug.Command.register_to(sp, "debug")
-    flet_cli.commands.pack.Command.register_to(sp, "pack")
-    flet_cli.commands.publish.Command.register_to(sp, "publish")
-    flet_cli.commands.serve.Command.register_to(sp, "serve")
-    flet_cli.commands.emulators.Command.register_to(sp, "emulators")
-    flet_cli.commands.devices.Command.register_to(sp, "devices")
     flet_cli.commands.doctor.Command.register_to(sp, "doctor")
 
     # set "run" as the default subparser

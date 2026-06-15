@@ -1,0 +1,13 @@
+argparse
+cookiecutter
+flet
+flet-cli
+flet-desktop
+jinja2
+msgpack
+packaging
+repath
+rich
+six
+urllib3
+watchdog
