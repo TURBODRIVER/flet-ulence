@@ -17,7 +17,7 @@ __all__ = [
 ]
 
 
-class TextOverflow(Enum):
+class TextOverflow(str, Enum):
     """
     How overflowing text should be handled.
     """
@@ -43,7 +43,7 @@ class TextOverflow(Enum):
     """
 
 
-class TextBaseline(Enum):
+class TextBaseline(str, Enum):
     """A horizontal line used for aligning text."""
 
     ALPHABETIC = "alphabetic"
@@ -57,7 +57,7 @@ class TextBaseline(Enum):
     """
 
 
-class TextThemeStyle(Enum):
+class TextThemeStyle(str, Enum):
     """
     Predefined Material text style roles from the active theme.
 
@@ -208,7 +208,7 @@ class TextDecoration(IntFlag):
     """
 
 
-class TextDecorationStyle(Enum):
+class TextDecorationStyle(str, Enum):
     """
     The style in which to draw a text decoration.
     """

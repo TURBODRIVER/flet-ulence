@@ -13,7 +13,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoTimerPicker", "CupertinoTimerPickerMode"]
 
 
-class CupertinoTimerPickerMode(Enum):
+class CupertinoTimerPickerMode(str, Enum):
     """
     Different modes of :class:`~flet.CupertinoTimerPicker`.
     """

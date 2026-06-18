@@ -25,7 +25,7 @@ __all__ = [
 ]
 
 
-class MarkdownExtensionSet(Enum):
+class MarkdownExtensionSet(str, Enum):
     """
     Preset markdown syntax extension bundles for :class:`~flet.Markdown`.
 
@@ -305,7 +305,7 @@ class MarkdownStyleSheet:
     """
 
 
-class MarkdownCodeTheme(Enum):
+class MarkdownCodeTheme(str, Enum):
     """
     Built-in code highlighting themes for markdown code blocks.
 

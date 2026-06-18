@@ -14,7 +14,7 @@ from flet.controls.types import (
 __all__ = ["Window", "WindowEvent", "WindowEventType", "WindowResizeEdge"]
 
 
-class WindowEventType(Enum):
+class WindowEventType(str, Enum):
     """
     Type of native desktop window event.
 
@@ -69,7 +69,7 @@ class WindowEventType(Enum):
     """The window entered full-screen mode."""
 
 
-class WindowResizeEdge(Enum):
+class WindowResizeEdge(str, Enum):
     """
     Edge or corner used by :meth:`flet.Window.start_resizing`.
 

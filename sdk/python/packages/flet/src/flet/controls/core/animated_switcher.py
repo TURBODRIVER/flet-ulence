@@ -12,7 +12,7 @@ from flet.utils.validation import V
 __all__ = ["AnimatedSwitcher", "AnimatedSwitcherTransition"]
 
 
-class AnimatedSwitcherTransition(Enum):
+class AnimatedSwitcherTransition(str, Enum):
     """
     Visual transition strategy used by :attr:`flet.AnimatedSwitcher.transition`.
 

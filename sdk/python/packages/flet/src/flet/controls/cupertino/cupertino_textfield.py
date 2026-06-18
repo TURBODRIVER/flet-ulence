@@ -13,7 +13,7 @@ from flet.controls.types import BlendMode
 __all__ = ["CupertinoTextField", "OverlayVisibilityMode"]
 
 
-class OverlayVisibilityMode(Enum):
+class OverlayVisibilityMode(str, Enum):
     """
     Visibility of text field overlays based on the state of the current text entry.
     """

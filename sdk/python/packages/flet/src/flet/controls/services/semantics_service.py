@@ -8,7 +8,7 @@ from flet.utils import from_dict
 __all__ = ["AccessibilityFeatures", "Assertiveness", "SemanticsService"]
 
 
-class Assertiveness(Enum):
+class Assertiveness(str, Enum):
     """
     Determines the assertiveness level of the accessibility announcement.
     """

@@ -20,7 +20,7 @@ from flet.utils.validation import V
 __all__ = ["NavigationRail", "NavigationRailDestination", "NavigationRailLabelType"]
 
 
-class NavigationRailLabelType(Enum):
+class NavigationRailLabelType(str, Enum):
     """
     Defines how destination labels are shown in a :class:`~flet.NavigationRail`.
 

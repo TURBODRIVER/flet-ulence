@@ -15,7 +15,7 @@ __all__ = [
 ]
 
 
-class FilePickerFileType(Enum):
+class FilePickerFileType(str, Enum):
     """
     Defines the file types that can be selected using the :class:`~flet.FilePicker`.
     """

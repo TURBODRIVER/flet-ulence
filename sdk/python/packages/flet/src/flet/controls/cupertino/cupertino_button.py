@@ -22,7 +22,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoButton", "CupertinoButtonSize"]
 
 
-class CupertinoButtonSize(Enum):
+class CupertinoButtonSize(str, Enum):
     """
     Preset size style for :class:`~flet.CupertinoButton`.
 

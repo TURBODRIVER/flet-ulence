@@ -61,7 +61,7 @@ class ColorFilter:
         )
 
 
-class FilterQuality(Enum):
+class FilterQuality(str, Enum):
     """
     Quality levels for image sampling in Image and DecorationImage objects.
     """
@@ -91,7 +91,7 @@ class FilterQuality(Enum):
     """
 
 
-class BlurStyle(Enum):
+class BlurStyle(str, Enum):
     """
     Styles to use for blurs
     """
@@ -189,7 +189,7 @@ Represents shadows as either:
 """
 
 
-class BoxShape(Enum):
+class BoxShape(str, Enum):
     """
     The shape to use when rendering a :class:`~flet.Border` or \
     :class:`~flet.BoxDecoration`.
@@ -213,7 +213,7 @@ class BoxShape(Enum):
     """
 
 
-class BoxFit(Enum):
+class BoxFit(str, Enum):
     """
     How a box should be inscribed into another box.
     """

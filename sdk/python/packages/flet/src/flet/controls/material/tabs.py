@@ -39,7 +39,7 @@ __all__ = [
 ]
 
 
-class TabAlignment(Enum):
+class TabAlignment(str, Enum):
     """
     Defines how tabs are aligned horizontally in a :class:`~flet.Tabs`.
     """
@@ -68,7 +68,7 @@ class TabAlignment(Enum):
     """
 
 
-class TabIndicatorAnimation(Enum):
+class TabIndicatorAnimation(str, Enum):
     """
     Defines how the tab indicator animates when the selected tab changes.
     """
@@ -84,7 +84,7 @@ class TabIndicatorAnimation(Enum):
     """
 
 
-class TabBarIndicatorSize(Enum):
+class TabBarIndicatorSize(str, Enum):
     """
     Defines how the bounds of the selected tab indicator are computed.
     """

@@ -47,7 +47,7 @@ from flet.controls.types import (
 )
 
 
-class PageTransitionTheme(Enum):
+class PageTransitionTheme(str, Enum):
     """
     Page transition preset for route changes.
 

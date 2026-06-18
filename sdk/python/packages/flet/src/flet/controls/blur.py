@@ -11,7 +11,7 @@ __all__ = [
 ]
 
 
-class BlurTileMode(Enum):
+class BlurTileMode(str, Enum):
     """
     Edge sampling mode used when applying blur beyond source bounds.
     """

@@ -21,7 +21,7 @@ from flet.controls.types import (
 )
 
 
-class PopupMenuPosition(Enum):
+class PopupMenuPosition(str, Enum):
     """
     Used to configure how the :class:`~flet.PopupMenuButton` positions its popup menu.
     """

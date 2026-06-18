@@ -28,7 +28,7 @@ __all__ = [
 ]
 
 
-class TextAffinity(Enum):
+class TextAffinity(str, Enum):
     """
     Defines the permissions which can be checked and requested.
     """
@@ -143,7 +143,7 @@ class TextSelection:
         return source_text[self.start : self.end]
 
 
-class TextSelectionChangeCause(Enum):
+class TextSelectionChangeCause(str, Enum):
     """
     Indicates what triggered the change in selected text.
     """

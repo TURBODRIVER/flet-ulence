@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 
-class Axis(Enum):
+class Axis(str, Enum):
     """
     The two cardinal directions in two dimensions.
 

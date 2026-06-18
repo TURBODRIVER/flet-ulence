@@ -21,7 +21,7 @@ from flet.utils.validation import V
 __all__ = ["DismissDirection", "SnackBar", "SnackBarAction", "SnackBarBehavior"]
 
 
-class SnackBarBehavior(Enum):
+class SnackBarBehavior(str, Enum):
     """
     Defines where a :class:`~flet.SnackBar` appears within a page and how it is \
     positioned relative to bottom UI elements.
@@ -44,7 +44,7 @@ class SnackBarBehavior(Enum):
     """
 
 
-class DismissDirection(Enum):
+class DismissDirection(str, Enum):
     """
     Defines swipe directions allowed for dismissing a :class:`~flet.SnackBar`.
 

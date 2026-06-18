@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from flet.controls.buttons import ShapeBorder
 
 
-class AppView(Enum):
+class AppView(str, Enum):
     """
     TBD
     """
@@ -28,7 +28,7 @@ class AppView(Enum):
     FLET_APP_HIDDEN = "flet_app_hidden"
 
 
-class UrlTarget(Enum):
+class UrlTarget(str, Enum):
     """
     Specifies where to open a URL.
     """
@@ -71,7 +71,7 @@ class Url:
     """
 
 
-class FontWeight(Enum):
+class FontWeight(str, Enum):
     """
     The thickness of the glyphs used to draw the text.
     """
@@ -179,7 +179,7 @@ class AutomaticNotchShape(NotchShape):
         self._type = "auto"
 
 
-class ResponsiveRowBreakpoint(Enum):
+class ResponsiveRowBreakpoint(str, Enum):
     """
     Breakpoint names used by :class:`~flet.ResponsiveRow` and responsive properties \
     such as :attr:`flet.Control.col`.
@@ -231,7 +231,7 @@ Represents either:
 """
 
 
-class MainAxisAlignment(Enum):
+class MainAxisAlignment(str, Enum):
     """
     How the children should be placed along the main axis.
     """
@@ -269,7 +269,7 @@ class MainAxisAlignment(Enum):
     """
 
 
-class CrossAxisAlignment(Enum):
+class CrossAxisAlignment(str, Enum):
     """
     How the children should be placed along the cross axis
     """
@@ -301,7 +301,7 @@ class CrossAxisAlignment(Enum):
     """
 
 
-class VerticalAlignment(Enum):
+class VerticalAlignment(str, Enum):
     """
     The vertical alignment of text within an input box.
     """
@@ -324,7 +324,7 @@ class VerticalAlignment(Enum):
     """
 
 
-class LabelPosition(Enum):
+class LabelPosition(str, Enum):
     """
     Position of label in a :class:`~flet.Checkbox`, :class:`~flet.Radio` or \
     :class:`~flet.Switch`
@@ -341,7 +341,7 @@ class LabelPosition(Enum):
     """
 
 
-class BlendMode(Enum):
+class BlendMode(str, Enum):
     """
     See [BlendMode](https://api.flutter.dev/flutter/dart-ui/BlendMode.html) from \
     Flutter documentation for blend mode examples.
@@ -379,7 +379,7 @@ class BlendMode(Enum):
     XOR = "xor"
 
 
-class TextAlign(Enum):
+class TextAlign(str, Enum):
     """
     The horizontal alignment of text within an input box.
     """
@@ -416,7 +416,7 @@ class TextAlign(Enum):
     """
 
 
-class ScrollMode(Enum):
+class ScrollMode(str, Enum):
     """
     Defines scrolling behavior and scroll bar visibility for scrollable controls.
 
@@ -479,7 +479,7 @@ class ScrollMode(Enum):
     """
 
 
-class ClipBehavior(Enum):
+class ClipBehavior(str, Enum):
     """
     Different ways to clip content.
 
@@ -517,7 +517,7 @@ class ClipBehavior(Enum):
     """
 
 
-class ImageRepeat(Enum):
+class ImageRepeat(str, Enum):
     """
     How to paint any portions of a box not covered by an image.
     """
@@ -535,7 +535,7 @@ class ImageRepeat(Enum):
     """Repeat the image in the y direction until the box is filled vertically."""
 
 
-class PagePlatform(Enum):
+class PagePlatform(str, Enum):
     """
     Supported platforms for a page. Each platform corresponds to a specific 
     operating system or environment.
@@ -557,7 +557,7 @@ class PagePlatform(Enum):
         return self in {PagePlatform.MACOS, PagePlatform.WINDOWS, PagePlatform.LINUX}
 
 
-class ThemeMode(Enum):
+class ThemeMode(str, Enum):
     """
     Describes which theme will be used by Flet app.
     """
@@ -579,7 +579,7 @@ class ThemeMode(Enum):
     """
 
 
-class Brightness(Enum):
+class Brightness(str, Enum):
     """
     Describes the contrast of a theme or color palette.
     """
@@ -601,7 +601,7 @@ class Brightness(Enum):
     """
 
 
-class FloatingActionButtonLocation(Enum):
+class FloatingActionButtonLocation(str, Enum):
     """
     Defines a position for the :class:`~flet.FloatingActionButton`.
 
@@ -630,7 +630,7 @@ class FloatingActionButtonLocation(Enum):
     START_TOP = "startTop"
 
 
-class AppLifecycleState(Enum):
+class AppLifecycleState(str, Enum):
     """
     States that an application can be in once it is running.
     """
@@ -683,7 +683,7 @@ class AppLifecycleState(Enum):
     """
 
 
-class MouseCursor(Enum):
+class MouseCursor(str, Enum):
     """
     Various mouse cursor types that represent different operations or states.
     """
@@ -909,7 +909,7 @@ class MouseCursor(Enum):
     """
 
 
-class PointerDeviceType(Enum):
+class PointerDeviceType(str, Enum):
     """
     The kind of pointer device.
     """
@@ -945,7 +945,7 @@ class PointerDeviceType(Enum):
     """
 
 
-class StrokeCap(Enum):
+class StrokeCap(str, Enum):
     """
     Styles to use for line endings.
     """
@@ -966,7 +966,7 @@ class StrokeCap(Enum):
     """
 
 
-class StrokeJoin(Enum):
+class StrokeJoin(str, Enum):
     """
     Styles to use for line segment joins.
     """
@@ -988,7 +988,7 @@ class StrokeJoin(Enum):
     """
 
 
-class VisualDensity(Enum):
+class VisualDensity(str, Enum):
     """
     Defines the visual density of user interface components.
     """

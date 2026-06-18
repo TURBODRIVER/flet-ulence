@@ -10,7 +10,7 @@ from flet.controls.transform import OffsetValue
 __all__ = ["PointMode", "Points"]
 
 
-class PointMode(Enum):
+class PointMode(str, Enum):
     """
     Defines how a list of points is interpreted when drawing a set of points.
     """

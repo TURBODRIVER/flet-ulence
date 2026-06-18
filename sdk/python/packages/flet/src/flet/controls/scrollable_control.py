@@ -23,7 +23,7 @@ __all__ = [
 ]
 
 
-class ScrollType(Enum):
+class ScrollType(str, Enum):
     """
     The kind of scroll notification emitted by `ScrollableControl`.
     """
@@ -61,7 +61,7 @@ class ScrollType(Enum):
     """
 
 
-class ScrollDirection(Enum):
+class ScrollDirection(str, Enum):
     """
     User scroll direction reported by Flutter user-scroll notifications.
 
@@ -85,7 +85,7 @@ class ScrollDirection(Enum):
     """
 
 
-class ScrollbarOrientation(Enum):
+class ScrollbarOrientation(str, Enum):
     """
     Defines the edge/side of the viewport where the :class:`~flet.Scrollbar` is shown.
     """

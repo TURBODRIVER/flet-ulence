@@ -29,7 +29,7 @@ __all__ = [
 ]
 
 
-class KeyboardType(Enum):
+class KeyboardType(str, Enum):
     """
     The type of information for which to optimize the text input control.
     """
@@ -120,7 +120,7 @@ class KeyboardType(Enum):
     """
 
 
-class TextCapitalization(Enum):
+class TextCapitalization(str, Enum):
     """
     Configures how the platform keyboard will select an uppercase or lowercase \
     keyboard.

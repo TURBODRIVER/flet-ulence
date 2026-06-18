@@ -17,7 +17,7 @@ from flet.utils.validation import V
 __all__ = ["Slider", "SliderInteraction"]
 
 
-class SliderInteraction(Enum):
+class SliderInteraction(str, Enum):
     """
     Defines how users can interact with a :class:`~flet.Slider` to change its value.
 

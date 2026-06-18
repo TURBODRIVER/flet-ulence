@@ -37,7 +37,7 @@ class BorderSideStrokeAlign(float, Enum):
     """
 
 
-class BorderStyle(Enum):
+class BorderStyle(str, Enum):
     """
     Defines how a border side is rendered.
     """

@@ -24,7 +24,7 @@ __all__ = [
 ]
 
 
-class TimePickerHourFormat(Enum):
+class TimePickerHourFormat(str, Enum):
     """
     Defines the hour format for the :class:`~flet.TimePicker` control.
     """
@@ -39,7 +39,7 @@ class TimePickerHourFormat(Enum):
     """A 24-hour clock without an AM/PM selector."""
 
 
-class TimePickerEntryMode(Enum):
+class TimePickerEntryMode(str, Enum):
     """
     Interactive input mode of the :class:`~flet.TimePicker` dialog.
 

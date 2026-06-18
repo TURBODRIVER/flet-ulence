@@ -17,7 +17,7 @@ __all__ = [
 ]
 
 
-class CupertinoDatePickerMode(Enum):
+class CupertinoDatePickerMode(str, Enum):
     """
     Different display modes of :class:`~flet.CupertinoDatePicker`.
     """
@@ -62,7 +62,7 @@ class CupertinoDatePickerMode(Enum):
     """
 
 
-class CupertinoDatePickerDateOrder(Enum):
+class CupertinoDatePickerDateOrder(str, Enum):
     """
     Determines the order of the columns inside
     :class:`~flet.CupertinoDatePicker` in date mode.

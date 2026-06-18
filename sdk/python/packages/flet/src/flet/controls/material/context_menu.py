@@ -18,7 +18,7 @@ __all__ = [
 ]
 
 
-class ContextMenuTrigger(Enum):
+class ContextMenuTrigger(str, Enum):
     """Defines how a menu is shown for a specific mouse button."""
 
     DOWN = "down"

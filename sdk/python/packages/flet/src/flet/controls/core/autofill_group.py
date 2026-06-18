@@ -8,7 +8,7 @@ from flet.utils.validation import V
 __all__ = ["AutofillGroup", "AutofillGroupDisposeAction", "AutofillHint"]
 
 
-class AutofillHint(Enum):
+class AutofillHint(str, Enum):
     """
     Predefined autofill hint identifiers for text fields.
 
@@ -754,7 +754,7 @@ class AutofillHint(Enum):
     """  # noqa: E501
 
 
-class AutofillGroupDisposeAction(Enum):
+class AutofillGroupDisposeAction(str, Enum):
     """
     Predefined autofill context clean-up actions.
     """

@@ -11,7 +11,7 @@ from flet.controls.types import ClipBehavior, ColorValue, Number
 __all__ = ["Card", "CardVariant"]
 
 
-class CardVariant(Enum):
+class CardVariant(str, Enum):
     """
     Material card visual style preset.
 

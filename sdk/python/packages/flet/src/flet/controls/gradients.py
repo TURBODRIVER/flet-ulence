@@ -17,7 +17,7 @@ __all__ = [
 from flet.controls.types import Number
 
 
-class GradientTileMode(Enum):
+class GradientTileMode(str, Enum):
     """
     Defines what happens at the edge of a gradient.
     More information about GradientTileMode

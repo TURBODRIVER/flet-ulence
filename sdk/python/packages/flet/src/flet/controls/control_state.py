@@ -4,7 +4,7 @@ from typing import TypeVar, Union
 __all__ = ["ControlState", "ControlStateValue"]
 
 
-class ControlState(Enum):
+class ControlState(str, Enum):
     """
     Interactive states that some controls can take on when receiving input
     from the user.

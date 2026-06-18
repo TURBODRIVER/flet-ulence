@@ -27,7 +27,7 @@ __all__ = [
 ]
 
 
-class DatePickerMode(Enum):
+class DatePickerMode(str, Enum):
     """Initial display of a calendar date picker."""
 
     DAY = "day"
@@ -37,7 +37,7 @@ class DatePickerMode(Enum):
     """Choosing a year."""
 
 
-class DatePickerEntryMode(Enum):
+class DatePickerEntryMode(str, Enum):
     """Mode of date entry method for the date picker dialog."""
 
     CALENDAR = "calendar"

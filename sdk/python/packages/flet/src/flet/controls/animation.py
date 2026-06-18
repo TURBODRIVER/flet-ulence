@@ -13,7 +13,7 @@ __all__ = [
 ]
 
 
-class AnimationCurve(Enum):
+class AnimationCurve(str, Enum):
     """
     Animation curves.
     """

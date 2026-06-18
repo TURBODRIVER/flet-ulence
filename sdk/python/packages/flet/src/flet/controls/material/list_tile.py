@@ -21,7 +21,7 @@ from flet.controls.types import (
 __all__ = ["ListTile", "ListTileStyle", "ListTileTitleAlignment"]
 
 
-class ListTileTitleAlignment(Enum):
+class ListTileTitleAlignment(str, Enum):
     """
     Defines how :class:`~flet.ListTile` aligns :attr:`~flet.ListTile.leading`
     and :attr:`~flet.ListTile.trailing` relative to the tile's title area.
@@ -69,7 +69,7 @@ class ListTileTitleAlignment(Enum):
     """
 
 
-class ListTileStyle(Enum):
+class ListTileStyle(str, Enum):
     """
     Defines the title font used for :class:`~flet.ListTile`
     descendants of a :class:`~flet.ListTileTheme`.

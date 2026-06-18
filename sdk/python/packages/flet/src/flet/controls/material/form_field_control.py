@@ -17,7 +17,7 @@ from flet.controls.types import (
 )
 
 
-class InputBorder(Enum):
+class InputBorder(str, Enum):
     NONE = "none"
     OUTLINE = "outline"
     UNDERLINE = "underline"

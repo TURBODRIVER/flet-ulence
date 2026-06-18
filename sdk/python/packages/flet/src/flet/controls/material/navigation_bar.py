@@ -21,7 +21,7 @@ from flet.utils.validation import V
 __all__ = ["NavigationBar", "NavigationBarDestination", "NavigationBarLabelBehavior"]
 
 
-class NavigationBarLabelBehavior(Enum):
+class NavigationBarLabelBehavior(str, Enum):
     """
     Defines how the destinations' labels will be laid out and when they'll be \
     displayed.

@@ -25,7 +25,7 @@ __all__ = [
 ]
 
 
-class PaintingStyle(Enum):
+class PaintingStyle(str, Enum):
     """
     Strategy used by :attr:`flet.Paint.style` when drawing geometry.
 

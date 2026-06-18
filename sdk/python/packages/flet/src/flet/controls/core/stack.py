@@ -12,7 +12,7 @@ from flet.controls.types import ClipBehavior
 __all__ = ["Stack", "StackFit"]
 
 
-class StackFit(Enum):
+class StackFit(str, Enum):
     """
     How to size the non-positioned children of a :class:`~flet.Stack`.
     """

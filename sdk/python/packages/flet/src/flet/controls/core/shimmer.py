@@ -14,7 +14,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["Shimmer", "ShimmerDirection"]
 
 
-class ShimmerDirection(Enum):
+class ShimmerDirection(str, Enum):
     """
     Direction of the shimmering gradient animation.
     """

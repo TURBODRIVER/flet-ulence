@@ -24,7 +24,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["ExpansionTile", "TileAffinity"]
 
 
-class TileAffinity(Enum):
+class TileAffinity(str, Enum):
     """
     Where to place a control in controls that use :class:`~flet.ListTile` to position \
     a control next to a label.
