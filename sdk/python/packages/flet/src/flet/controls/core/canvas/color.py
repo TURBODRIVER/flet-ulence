@@ -18,7 +18,7 @@ class Color(Shape):
     Color to paint onto the canvas.
     """
 
-    blend_mode: BlendMode = BlendMode.SRC_OVER
+    blend_mode: BlendMode | str = BlendMode.SRC_OVER
     """
     Blend mode to apply.
     """

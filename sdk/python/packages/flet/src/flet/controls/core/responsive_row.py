@@ -76,12 +76,12 @@ class ResponsiveRow(LayoutControl, ScrollableControl, AdaptiveControl):
         ValueError: If any breakpoint-specific value is not strictly greater than `0`.
     """
 
-    alignment: MainAxisAlignment = MainAxisAlignment.START
+    alignment: MainAxisAlignment | str = MainAxisAlignment.START
     """
     Defines how the child :attr:`controls` should be placed horizontally.
     """
 
-    vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
+    vertical_alignment: CrossAxisAlignment | str = CrossAxisAlignment.START
     """
     Defines how the child :attr:`controls` should be placed vertically.
     """

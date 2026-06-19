@@ -144,7 +144,7 @@ class BasePage(AdaptiveControl):
     The first view in the list is considered the active one by default.
     """
 
-    theme_mode: Optional[ThemeMode] = ThemeMode.SYSTEM
+    theme_mode: Optional[ThemeMode | str] = ThemeMode.SYSTEM
     """
     The page's theme mode.
     """
@@ -712,7 +712,7 @@ class BasePage(AdaptiveControl):
         return self.__root_view().horizontal_alignment
 
     @horizontal_alignment.setter
-    def horizontal_alignment(self, value: CrossAxisAlignment):
+    def horizontal_alignment(self, value: CrossAxisAlignment | str):
         self.__root_view().horizontal_alignment = value
 
     # vertical_alignment

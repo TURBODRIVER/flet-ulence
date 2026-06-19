@@ -159,7 +159,7 @@ class RangeSlider(LayoutControl):
     state.
     """
 
-    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor | str]] = None
     """
     The cursor for a mouse pointer entering or hovering over this control.
     """

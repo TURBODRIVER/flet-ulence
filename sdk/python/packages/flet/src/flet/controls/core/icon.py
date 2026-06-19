@@ -118,7 +118,7 @@ class Icon(LayoutControl):
         ValueError: If it is not strictly greater than `0.0`.
     """
 
-    blend_mode: Optional[BlendMode] = BlendMode.SRC_OVER
+    blend_mode: Optional[BlendMode | str] = BlendMode.SRC_OVER
     """
     The blend mode used when rendering the icon.
 

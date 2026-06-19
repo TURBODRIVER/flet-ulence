@@ -50,7 +50,7 @@ class Option(Control):
     fallback, else `text` will be ignored.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     Defines the alignment of this option in it's container.
 
@@ -110,7 +110,7 @@ class DropdownM2(FormFieldControl):
     A list of `Option` controls representing items in this dropdown.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     Defines how the `hint` or the selected item is positioned within this dropdown.
     """

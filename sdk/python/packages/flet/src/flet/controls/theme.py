@@ -724,7 +724,7 @@ class DialogTheme:
     descendant :class:`~flet.AlertDialog` controls.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     Overrides the default value of :attr:`flet.AlertDialog.alignment` in all \
     descendant \
@@ -737,7 +737,7 @@ class DialogTheme:
     descendant :class:`~flet.AlertDialog` controls.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     Overrides the default value of :attr:`flet.AlertDialog.clip_behavior` in all \
     descendant :class:`~flet.AlertDialog` controls.
@@ -853,7 +853,7 @@ class BottomSheetTheme:
     descendant :class:`~flet.BottomSheet` controls.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     Overrides the default value of :attr:`flet.BottomSheet.clip_behavior` in all \
     descendant :class:`~flet.BottomSheet` controls.
@@ -914,7 +914,7 @@ class CardTheme:
     :class:`~flet.Card` controls.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     Overrides the default value of :attr:`flet.Card.clip_behavior` in all descendant \
     :class:`~flet.Card` controls.
@@ -1396,7 +1396,7 @@ class RadioTheme:
     in all descendant :class:`~flet.Radio` controls.
     """
 
-    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor | str]] = None
     """
     Overrides the default value of :attr:`flet.Radio.mouse_cursor`
     in all descendant :class:`~flet.Radio` controls.
@@ -1453,7 +1453,7 @@ class CheckboxTheme:
     :class:`~flet.Checkbox` controls.
     """
 
-    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor | str]] = None
     """
     Overrides the default value of :attr:`flet.Checkbox.mouse_cursor` in all \
     descendant \
@@ -1491,7 +1491,7 @@ class BadgeTheme:
     :class:`~flet.Badge` controls.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     Overrides the default value of :attr:`flet.Badge.alignment` in all descendant \
     :class:`~flet.Badge` controls.
@@ -1564,7 +1564,7 @@ class SwitchTheme:
     in all descendant :class:`~flet.Switch` controls.
     """
 
-    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor | str]] = None
     """
     Overrides the default value of :attr:`flet.Switch.mouse_cursor` in all descendant \
     :class:`~flet.Switch` controls.
@@ -2289,7 +2289,7 @@ class ListTileTheme:
     :attr:`flet.ListTile.leading_and_trailing_text_style`.
     """
 
-    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor | str]] = None
     """
     Overrides the default value for :attr:`flet.ListTile.mouse_cursor`.
     """
@@ -2381,7 +2381,7 @@ class TooltipTheme:
     Overrides the default value for :attr:`flet.Tooltip.decoration`.
     """
 
-    text_align: Optional[TextAlign] = None
+    text_align: Optional[TextAlign | str] = None
     """
     Overrides the default value for :attr:`flet.Tooltip.text_align`.
     """
@@ -2424,7 +2424,7 @@ class ExpansionTileTheme:
     Overrides the default value for :attr:`flet.ExpansionTile.collapsed_icon_color`.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     Overrides the default value for :attr:`flet.ExpansionTile.clip_behavior`.
     """
@@ -2439,7 +2439,7 @@ class ExpansionTileTheme:
     Overrides the default value for :attr:`flet.ExpansionTile.tile_padding`.
     """
 
-    expanded_alignment: Optional[Alignment] = None
+    expanded_alignment: Optional[Alignment | str] = None
     """
     Overrides the default value for :attr:`flet.ExpansionTile.expanded_alignment`.
     """
@@ -2507,7 +2507,7 @@ class SliderTheme:
     The :class:`~flet.TextStyle` for the text on the value indicator.
     """
 
-    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor | str]] = None
     """
     Overrides the default value for :attr:`flet.Slider.mouse_cursor`.
     """
@@ -2765,7 +2765,7 @@ class PopupMenuTheme:
     descendant :class:`~flet.PopupMenuButton` controls.
     """
 
-    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor | str]] = None
     """
     Overrides the default value of :attr:`flet.PopupMenuItem.mouse_cursor` in all \
     descendant :class:`~flet.PopupMenuItem` controls.
@@ -3186,7 +3186,7 @@ class DataTableTheme:
     Overrides the default value for :attr:`flet.DataTable.heading_row_height`.
     """
 
-    data_row_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    data_row_cursor: Optional[ControlStateValue[MouseCursor | str]] = None
     """
     Overrides the default value for :class:`~flet.DataRow` mouse cursor.
     """
@@ -3201,7 +3201,7 @@ class DataTableTheme:
     Overrides the default value for :attr:`flet.DataColumn.heading_row_alignment`.
     """
 
-    heading_cell_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    heading_cell_cursor: Optional[ControlStateValue[MouseCursor | str]] = None
     """
     Overrides the default value for :class:`~flet.DataColumn` mouse cursor.
     """

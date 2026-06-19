@@ -36,7 +36,7 @@ class CupertinoActionSheetAction(LayoutControl):
     Whether this action should receive the style of a destructive action.
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     Defines the mouse cursor for this action button.
     """

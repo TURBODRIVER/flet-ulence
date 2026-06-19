@@ -123,7 +123,7 @@ class InteractiveViewer(LayoutControl):
         Has effect only on pointer device scrolling, not pinch to zoom.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
+    clip_behavior: ClipBehavior | str = ClipBehavior.HARD_EDGE
     """
     Defines how to clip the :attr:`content`.
 
@@ -133,7 +133,7 @@ class InteractiveViewer(LayoutControl):
     is sized appropriately when using :attr:`flet.ClipBehavior.NONE`.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     The alignment of the :attr:`content` within this viewer.
     """

@@ -99,12 +99,12 @@ class Stack(LayoutControl, AdaptiveControl):
     so the last control in the list will be displayed on top (LIFO - Last In First Out).
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
+    clip_behavior: ClipBehavior | str = ClipBehavior.HARD_EDGE
     """
     The content will be clipped (or not) according to this option.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     Specifies the alignment for non-positioned (those without explicit alignment \
     properties such as :attr:`~flet.LayoutControl.top`

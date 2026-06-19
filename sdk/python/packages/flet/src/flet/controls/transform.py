@@ -42,7 +42,7 @@ class Scale:
     The scalar by which to multiply the y-axis.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     Gives the origin of scale.
     """
@@ -69,7 +69,7 @@ class Scale:
         scale: Optional[Number] = None,
         scale_x: Optional[Number] = None,
         scale_y: Optional[Number] = None,
-        alignment: Optional[Alignment] = None,
+        alignment: Optional[Alignment | str] = None,
         origin: Optional["Offset"] = None,
         transform_hit_tests: Optional[bool] = None,
         filter_quality: Optional["FilterQuality"] = None,
@@ -105,7 +105,7 @@ class Rotate:
     The rotation in clockwise radians.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     The alignment of the rotation.
     """
@@ -130,7 +130,7 @@ class Rotate:
         self,
         *,
         angle: Optional[Number] = None,
-        alignment: Optional[Alignment] = None,
+        alignment: Optional[Alignment | str] = None,
         origin: Optional["Offset"] = None,
         transform_hit_tests: Optional[bool] = None,
         filter_quality: Optional["FilterQuality"] = None,
@@ -424,7 +424,7 @@ class Transform:
     The origin of the coordinate system (relative to the upper left corner).
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     The alignment of the origin, relative to the size of the box.
     """

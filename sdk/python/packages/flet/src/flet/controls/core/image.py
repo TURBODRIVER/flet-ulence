@@ -54,7 +54,7 @@ class Image(LayoutControl):
     How to paint any portions of the layout bounds not covered by this image.
     """
 
-    fit: Optional[BoxFit] = None
+    fit: Optional[BoxFit | str] = None
     """
     Defines how to inscribe this image into the space allocated during layout.
     """
@@ -70,7 +70,7 @@ class Image(LayoutControl):
     :attr:`color_blend_mode`.
     """
 
-    color_blend_mode: Optional[BlendMode] = None
+    color_blend_mode: Optional[BlendMode | str] = None
     """
     Used to combine :attr:`color` with the image.
 
@@ -95,7 +95,7 @@ class Image(LayoutControl):
     Whether to exclude this image from semantics.
     """
 
-    filter_quality: FilterQuality = FilterQuality.MEDIUM
+    filter_quality: FilterQuality | str = FilterQuality.MEDIUM
     """
     The rendering quality of the image.
     """

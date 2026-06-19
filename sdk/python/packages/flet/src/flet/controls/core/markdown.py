@@ -204,7 +204,7 @@ class MarkdownStyleSheet:
     Text style for table body cells.
     """
 
-    table_head_text_align: Optional[TextAlign] = None
+    table_head_text_align: Optional[TextAlign | str] = None
     """
     Text alignment for table header cells.
     """

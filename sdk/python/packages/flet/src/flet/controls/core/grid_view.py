@@ -96,7 +96,7 @@ class GridView(LayoutControl, ScrollableControl, AdaptiveControl):
     The amount of space by which to inset the children.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     The content will be clipped (or not) according to this option.
     """

@@ -122,7 +122,7 @@ class PageView(LayoutControl):
         If :attr:`viewport_fraction` >= 1.0, this property has no effect.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
+    clip_behavior: ClipBehavior | str = ClipBehavior.HARD_EDGE
     """
     Defines how pages are clipped if they overflow their bounds.
     """

@@ -131,7 +131,7 @@ class AppBar(AdaptiveControl):
     is greater than zero.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     The content will be clipped (or not) according to this option.
     """

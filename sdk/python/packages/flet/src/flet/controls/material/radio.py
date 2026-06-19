@@ -104,7 +104,7 @@ class Radio(LayoutControl, AdaptiveControl):
     Defines how compact the radio's layout will be.
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     The cursor for a mouse pointer entering or hovering over this control.
     """

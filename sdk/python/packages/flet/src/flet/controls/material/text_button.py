@@ -68,7 +68,7 @@ class TextButton(LayoutControl, AdaptiveControl):
     provided, it is fired after that.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.NONE
+    clip_behavior: ClipBehavior | str = ClipBehavior.NONE
     """
     Defines how the content of this button is clipped.
     """

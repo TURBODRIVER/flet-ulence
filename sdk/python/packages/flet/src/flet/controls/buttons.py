@@ -245,7 +245,7 @@ class ButtonStyle:
     The shape of the button's underlying Material.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     The alignment of the button's content.
     """
@@ -277,7 +277,7 @@ class ButtonStyle:
     Defines how compact the button's layout will be.
     """
 
-    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor | str]] = None
     """
     The cursor to be displayed when the mouse pointer enters or is hovering over the \
     button.
@@ -295,13 +295,13 @@ class ButtonStyle:
         padding: Optional[ControlStateValue[PaddingValue]] = None,
         side: Optional[ControlStateValue[BorderSide]] = None,
         shape: Optional[ControlStateValue[OutlinedBorder]] = None,
-        alignment: Optional[Alignment] = None,
+        alignment: Optional[Alignment | str] = None,
         enable_feedback: Optional[bool] = None,
         text_style: Optional[ControlStateValue[TextStyle]] = None,
         icon_size: Optional[ControlStateValue[Optional[Number]]] = None,
         icon_color: Optional[ControlStateValue[ColorValue]] = None,
         visual_density: Optional[VisualDensity] = None,
-        mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None,
+        mouse_cursor: Optional[ControlStateValue[MouseCursor | str]] = None,
     ) -> "ButtonStyle":
         """
         Returns a copy of this object with the specified properties overridden.

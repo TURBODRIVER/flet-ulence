@@ -277,7 +277,7 @@ class SnackBar(DialogControl):
     The shape of this snack bar.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
+    clip_behavior: ClipBehavior | str = ClipBehavior.HARD_EDGE
     """
     The :attr:`content` will be clipped (or not) according to this option.
     """

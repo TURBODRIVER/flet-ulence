@@ -109,12 +109,12 @@ class LinearGradient(Gradient):
     [here](https://api.flutter.dev/flutter/painting/LinearGradient-class.html).
     """
 
-    begin: Alignment = field(default_factory=lambda: Alignment.CENTER_LEFT)
+    begin: Alignment | str = field(default_factory=lambda: Alignment.CENTER_LEFT)
     """
     The offset at which stop `0.0` of the gradient is placed.
     """
 
-    end: Alignment = field(default_factory=lambda: Alignment.CENTER_RIGHT)
+    end: Alignment | str = field(default_factory=lambda: Alignment.CENTER_RIGHT)
     """
     The offset at which stop `1.0` of the gradient is placed.
     """
@@ -133,7 +133,7 @@ class RadialGradient(Gradient):
     [here](https://api.flutter.dev/flutter/painting/RadialGradient-class.html).
     """
 
-    center: Alignment = field(default_factory=lambda: Alignment.CENTER)
+    center: Alignment | str = field(default_factory=lambda: Alignment.CENTER)
     """
     The center of the gradient, as an offset into the `(-1.0, -1.0)` x `(1.0, 1.0)` \
     square describing the gradient which will be mapped onto the paint box.
@@ -149,7 +149,7 @@ class RadialGradient(Gradient):
     `100.0` pixels from the :attr:`center`.
     """
 
-    focal: Optional[Alignment] = None
+    focal: Optional[Alignment | str] = None
     """
     The focal point of the gradient. If specified, the gradient will appear to be \
     focused along the vector from :attr:`center` to focal.
@@ -177,7 +177,7 @@ class SweepGradient(Gradient):
     [here](https://api.flutter.dev/flutter/painting/SweepGradient-class.html).
     """
 
-    center: Alignment = field(default_factory=lambda: Alignment.CENTER)
+    center: Alignment | str = field(default_factory=lambda: Alignment.CENTER)
     """
     The center of the gradient, as an offset into the `(-1.0, -1.0)` x `(1.0, 1.0)` \
     square describing the gradient which will be mapped onto the paint box.

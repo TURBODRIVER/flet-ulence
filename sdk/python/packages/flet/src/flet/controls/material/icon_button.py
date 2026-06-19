@@ -148,7 +148,7 @@ class IconButton(LayoutControl, AdaptiveControl):
         ValueError: If it is not strictly greater than `0`.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     Defines how the icon is positioned within this button.
 
@@ -176,7 +176,7 @@ class IconButton(LayoutControl, AdaptiveControl):
     it is fired after that.
     """
 
-    mouse_cursor: Optional[MouseCursor] = field(default=None, metadata={"skip": True})
+    mouse_cursor: Optional[MouseCursor | str] = field(default=None, metadata={"skip": True})
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this \
     control.

@@ -121,7 +121,7 @@ class BottomSheet(DialogControl):
     The size constraints to apply to this bottom sheet.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     Defines how the content of this bottom sheet should be clipped.
     """

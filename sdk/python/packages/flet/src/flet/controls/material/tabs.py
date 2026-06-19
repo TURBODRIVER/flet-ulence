@@ -334,7 +334,7 @@ class TabBarView(LayoutControl, AdaptiveControl):
         ancestor :class:`~flet.Tabs` control.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
+    clip_behavior: ClipBehavior | str = ClipBehavior.HARD_EDGE
     """
     Defines how the :attr:`controls` will be clipped.
     """
@@ -534,7 +534,7 @@ class TabBar(LayoutControl, AdaptiveControl):
     Defaults to `True`.
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this \
     control.

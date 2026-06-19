@@ -90,12 +90,12 @@ class View(ScrollableControl, LayoutControl):
     end edge of the view.
     """
 
-    vertical_alignment: MainAxisAlignment = MainAxisAlignment.START
+    vertical_alignment: MainAxisAlignment | str = MainAxisAlignment.START
     """
     Defines how the child :attr:`controls` should be placed vertically.
     """
 
-    horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.START
+    horizontal_alignment: CrossAxisAlignment | str = CrossAxisAlignment.START
     """
     How the child Controls should be placed horizontally.
     """

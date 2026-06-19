@@ -95,7 +95,7 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     The amount of space by which to inset the :attr:`controls`.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
+    clip_behavior: ClipBehavior | str = ClipBehavior.HARD_EDGE
     """
     Defines how to clip the :attr:`controls`.
     """

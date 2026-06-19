@@ -45,7 +45,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     A child Control contained by the gesture detector.
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     The mouse cursor for mouse pointers that are hovering over the control.
     """

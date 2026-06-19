@@ -58,7 +58,7 @@ class Draggable(Control):
     The control to show under the pointer when a drag is under way.
     """
 
-    axis: Optional[Axis] = None
+    axis: Optional[Axis | str] = None
     """
     Restricts the draggable's movement to a specific axis.
 
@@ -67,7 +67,7 @@ class Draggable(Control):
     - `None`: Allows dragging in any direction.
     """
 
-    affinity: Optional[Axis] = None
+    affinity: Optional[Axis | str] = None
     """
     Specifies the axis along which this control competes with other gestures to \
     initiate a drag.

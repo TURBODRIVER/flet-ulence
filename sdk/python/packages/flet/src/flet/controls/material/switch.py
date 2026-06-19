@@ -190,7 +190,7 @@ class Switch(LayoutControl, AdaptiveControl):
     `ControlState.FOCUSED` and `ControlState.DEFAULT` (fallback).
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this \
     control.

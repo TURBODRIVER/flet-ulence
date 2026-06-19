@@ -324,7 +324,7 @@ class Paint:
     Defaults to opaque black.
     """
 
-    blend_mode: Optional[BlendMode] = None
+    blend_mode: Optional[BlendMode | str] = None
     """
     A blend mode to apply when a shape is drawn or a layer is composited.
 
@@ -382,7 +382,7 @@ class Paint:
         self,
         *,
         color: Optional[ColorValue] = None,
-        blend_mode: Optional[BlendMode] = None,
+        blend_mode: Optional[BlendMode | str] = None,
         blur_image: Optional[BlurValue] = None,
         anti_alias: Optional[bool] = None,
         gradient: Optional[PaintGradient] = None,

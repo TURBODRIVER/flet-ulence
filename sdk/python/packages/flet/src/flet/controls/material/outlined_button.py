@@ -62,7 +62,7 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     added to the page will get focus.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.NONE
+    clip_behavior: ClipBehavior | str = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option.
     """

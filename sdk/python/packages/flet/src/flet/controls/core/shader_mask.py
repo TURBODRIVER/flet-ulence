@@ -45,7 +45,7 @@ class ShaderMask(LayoutControl):
     The Control to which the :attr:`shader` is applied.
     """
 
-    blend_mode: BlendMode = BlendMode.MODULATE
+    blend_mode: BlendMode | str = BlendMode.MODULATE
     """
     The blend mode to use when applying the shader to the :attr:`content`.
     """

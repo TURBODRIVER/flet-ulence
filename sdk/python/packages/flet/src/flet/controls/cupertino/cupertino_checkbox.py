@@ -116,7 +116,7 @@ class CupertinoCheckbox(LayoutControl):
     Internally defaults to `RoundedRectangleBorder(radius=4)`.
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     The cursor for a mouse pointer entering or hovering over this checkbox.
     """

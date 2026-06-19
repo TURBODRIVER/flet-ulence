@@ -43,7 +43,7 @@ class Text(Shape):
     objects to build a rich text paragraph.
     """
 
-    alignment: Alignment = field(default_factory=lambda: Alignment.TOP_LEFT)
+    alignment: Alignment | str = field(default_factory=lambda: Alignment.TOP_LEFT)
     """
     A point within a text rectangle to determine its position and rotation center.
     """

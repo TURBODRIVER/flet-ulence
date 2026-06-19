@@ -115,7 +115,7 @@ class CupertinoButton(LayoutControl):
     button.
     """
 
-    alignment: Optional[Alignment] = field(default_factory=lambda: Alignment.CENTER)
+    alignment: Optional[Alignment | str] = field(default_factory=lambda: Alignment.CENTER)
     """
     The alignment of this button's content.
 
@@ -156,7 +156,7 @@ class CupertinoButton(LayoutControl):
     of `0.80`, a brightness of `0.69` and a saturation of `0.835`.
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     The cursor for a mouse pointer when it enters or is hovering over this button.
     """

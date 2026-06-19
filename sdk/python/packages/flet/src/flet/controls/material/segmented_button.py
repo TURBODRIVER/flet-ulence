@@ -151,7 +151,7 @@ class SegmentedButton(LayoutControl):
     `selected` segments.
     """
 
-    direction: Optional[Axis] = None
+    direction: Optional[Axis | str] = None
     """
     The orientation of the button's `segments`.
 

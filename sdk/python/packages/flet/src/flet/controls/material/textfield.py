@@ -264,7 +264,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     on the field before setting this property.
     """
 
-    keyboard_type: KeyboardType = KeyboardType.TEXT
+    keyboard_type: KeyboardType | str = KeyboardType.TEXT
     """
     The type of keyboard to use for editing the text.
     """
@@ -366,7 +366,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     or end of the text respectively.
     """
 
-    text_align: Optional[TextAlign] = None
+    text_align: Optional[TextAlign | str] = None
     """
     How the text should be aligned horizontally.
 
@@ -495,7 +495,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     TBD
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
+    clip_behavior: ClipBehavior | str = ClipBehavior.HARD_EDGE
     """
     TBD
     """
@@ -505,7 +505,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     TBD
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     TBD
     """

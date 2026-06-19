@@ -27,7 +27,7 @@ class MenuStyle:
     Defines the visual style/appearance of a menu.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     Determines the desired alignment of the submenu when opened relative to
     the button that opens it.
@@ -80,7 +80,7 @@ class MenuStyle:
     shape decorated with an outline.
     """
 
-    mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    mouse_cursor: Optional[ControlStateValue[MouseCursor | str]] = None
     """
     The cursor for a mouse pointer when it enters or is hovering over the menu.
     """
@@ -158,7 +158,7 @@ class MenuBar(Control):
         ValueError: If it does not contain at least one visible `Control`.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.NONE
+    clip_behavior: ClipBehavior | str = ClipBehavior.NONE
     """
     Whether to clip the content of this control or not.
     """

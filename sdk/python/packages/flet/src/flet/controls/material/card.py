@@ -95,7 +95,7 @@ class Card(LayoutControl, AdaptiveControl):
     falls back to `RoundedRectangleBorder(radius=12.0)`.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     Defines how the :attr:`content` will be clipped.
 

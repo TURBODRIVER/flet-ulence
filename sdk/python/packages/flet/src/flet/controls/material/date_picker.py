@@ -73,7 +73,7 @@ class DatePickerEntryMode(str, Enum):
 class DatePickerEntryModeChangeEvent(Event["DatePicker"]):
     """Event fired when the :class:`~flet.DatePicker` entry mode is changed."""
 
-    entry_mode: DatePickerEntryMode
+    entry_mode: DatePickerEntryMode | str
     """The new date picker entry mode."""
 
 
@@ -147,7 +147,7 @@ class DatePicker(DialogControl):
     :attr:`flet.Page.locale_configuration` is used as fallback.
     """
 
-    keyboard_type: KeyboardType = KeyboardType.DATETIME
+    keyboard_type: KeyboardType | str = KeyboardType.DATETIME
     """
     The type of keyboard to use for editing the text.
     """
@@ -157,7 +157,7 @@ class DatePicker(DialogControl):
     Initial display mode of this picker.
     """
 
-    entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
+    entry_mode: DatePickerEntryMode | str = DatePickerEntryMode.CALENDAR
     """
     The initial mode of date entry method for the date picker dialog.
     """

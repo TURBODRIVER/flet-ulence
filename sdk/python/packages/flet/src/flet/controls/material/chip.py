@@ -182,7 +182,7 @@ class Chip(LayoutControl):
         ValueError: If it is not greater than or equal to `0.0`.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.NONE
+    clip_behavior: ClipBehavior | str = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option.
     """

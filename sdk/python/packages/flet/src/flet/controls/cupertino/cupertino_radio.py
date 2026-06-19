@@ -89,7 +89,7 @@ class CupertinoRadio(LayoutControl):
     The color for the radio's border when it has the input focus.
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     The cursor for a mouse pointer when it enters or is hovering over this radio.
     """

@@ -303,7 +303,7 @@ class Window(BaseControl):
     Whether to display a shadow around the app window.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     Defines the alignment of the app window.
     """

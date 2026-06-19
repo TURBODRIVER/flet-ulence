@@ -239,7 +239,7 @@ class SearchBar(LayoutControl):
     bar is tapped.
     """
 
-    keyboard_type: KeyboardType = KeyboardType.TEXT
+    keyboard_type: KeyboardType | str = KeyboardType.TEXT
     """
     The type of action button to use for the keyboard.
     """

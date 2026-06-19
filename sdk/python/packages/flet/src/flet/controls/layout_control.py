@@ -110,7 +110,7 @@ class LayoutControl(Control):
         :class:`~flet.Stack` control, :attr:`flet.Page.overlay` list.
     """
 
-    align: Optional[Alignment] = None
+    align: Optional[Alignment | str] = None
     """
     Alignment of the control within its parent.
     """

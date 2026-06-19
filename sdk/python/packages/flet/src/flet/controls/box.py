@@ -41,7 +41,7 @@ class ColorFilter:
     The color to use when applying the filter.
     """
 
-    blend_mode: Optional[BlendMode] = None
+    blend_mode: Optional[BlendMode | str] = None
     """
     The blend mode to apply to the color filter.
     """
@@ -50,7 +50,7 @@ class ColorFilter:
         self,
         *,
         color: Optional[ColorValue] = None,
-        blend_mode: Optional[BlendMode] = None,
+        blend_mode: Optional[BlendMode | str] = None,
     ) -> "ColorFilter":
         """
         Returns a copy of this object with the specified properties overridden.
@@ -302,7 +302,7 @@ class DecorationImage:
     How the image should be inscribed into the box.
     """
 
-    alignment: Alignment = field(default_factory=lambda: Alignment.CENTER)
+    alignment: Alignment | str = field(default_factory=lambda: Alignment.CENTER)
     """
     The alignment of the image within its bounds.
     """
@@ -327,7 +327,7 @@ class DecorationImage:
     The opacity of the image.
     """
 
-    filter_quality: FilterQuality = FilterQuality.MEDIUM
+    filter_quality: FilterQuality | str = FilterQuality.MEDIUM
     """
     The quality of the image filter.
     """
@@ -348,12 +348,12 @@ class DecorationImage:
         src: Optional[Union[str, bytes]] = None,
         color_filter: Optional[ColorFilter] = None,
         fit: Optional[BoxFit] = None,
-        alignment: Optional[Alignment] = None,
+        alignment: Optional[Alignment | str] = None,
         repeat: Optional[ImageRepeat] = None,
         match_text_direction: Optional[bool] = None,
         scale: Optional[Number] = None,
         opacity: Optional[Number] = None,
-        filter_quality: Optional[FilterQuality] = None,
+        filter_quality: Optional[FilterQuality | str] = None,
         invert_colors: Optional[bool] = None,
         anti_alias: Optional[bool] = None,
     ) -> "DecorationImage":
@@ -427,7 +427,7 @@ class BoxDecoration:
     into and to cast as the :attr:`shadows`.
     """
 
-    blend_mode: Optional[BlendMode] = None
+    blend_mode: Optional[BlendMode | str] = None
     """
     The blend mode to apply to the background :attr:`bgcolor` or :attr:`gradient`.
     """
@@ -455,7 +455,7 @@ class BoxDecoration:
         shadows: Optional[BoxShadowValue] = None,
         gradient: Optional[Gradient] = None,
         shape: Optional[BoxShape] = None,
-        blend_mode: Optional[BlendMode] = None,
+        blend_mode: Optional[BlendMode | str] = None,
     ):
         """Returns a new `BoxDecoration` with selected fields overridden."""
         return BoxDecoration(

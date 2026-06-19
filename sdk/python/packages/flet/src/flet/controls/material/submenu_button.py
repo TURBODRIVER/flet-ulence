@@ -71,7 +71,7 @@ class SubmenuButton(LayoutControl):
     Typically an :class:`~flet.Icon` control.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
+    clip_behavior: ClipBehavior | str = ClipBehavior.HARD_EDGE
     """
     Whether to clip the content of this control or not.
     """

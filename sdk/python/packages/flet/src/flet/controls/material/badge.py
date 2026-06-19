@@ -47,7 +47,7 @@ class Badge(BaseControl):
         Has effect only used if :attr:`label` is also provided.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     Aligns the :attr:`~flet.Badge.label` relative to the content of the badge.
 

@@ -268,7 +268,7 @@ class Text(LayoutControl):
     Defaults to `14`.
     """
 
-    weight: Optional[FontWeight] = None
+    weight: Optional[FontWeight | str] = None
     """
     Font weight.
 
@@ -301,7 +301,7 @@ class Text(LayoutControl):
     the box.
     """
 
-    overflow: TextOverflow = TextOverflow.CLIP
+    overflow: TextOverflow | str = TextOverflow.CLIP
     """
     Defines how the text overflows.
     """

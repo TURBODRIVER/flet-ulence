@@ -148,7 +148,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     (the expansion arrow icon appears on the tile's trailing edge).
     """
 
-    expanded_alignment: Optional[Alignment] = None
+    expanded_alignment: Optional[Alignment | str] = None
     """
     Defines the alignment of :attr:`controls`, which are arranged in a column when the \
     tile is expanded.
@@ -157,7 +157,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     if that is also `None`, then defaults to :attr:`flet.Alignment.CENTER`.
     """
 
-    expanded_cross_axis_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER
+    expanded_cross_axis_alignment: CrossAxisAlignment | str = CrossAxisAlignment.CENTER
     """
     Defines the alignment of each child control within :attr:`controls` when the tile \
     is expanded.
@@ -166,7 +166,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
         ValueError: If set to :attr:`flet.CrossAxisAlignment.BASELINE`.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     Defines how the content of this tile is clipped.
 

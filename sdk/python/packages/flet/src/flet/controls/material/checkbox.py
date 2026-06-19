@@ -166,7 +166,7 @@ class Checkbox(LayoutControl, AdaptiveControl):
     Defines how compact the checkbox's layout will be.
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this \
     checkbox.

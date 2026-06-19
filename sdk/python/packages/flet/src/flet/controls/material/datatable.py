@@ -513,7 +513,7 @@ class DataTable(LayoutControl):
     content in the first data column.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.NONE
+    clip_behavior: ClipBehavior | str = ClipBehavior.NONE
     """
     Defines how the contents of this table are clipped.
     """

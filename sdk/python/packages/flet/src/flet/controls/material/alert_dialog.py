@@ -190,7 +190,7 @@ class AlertDialog(DialogControl):
     does overflow.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     How to align this dialog.
 
@@ -214,7 +214,7 @@ class AlertDialog(DialogControl):
     TBD
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.NONE
+    clip_behavior: ClipBehavior | str = ClipBehavior.NONE
     """
     Defines how the contents of this dialog are clipped (or not) to the given \
     :attr:`shape`.

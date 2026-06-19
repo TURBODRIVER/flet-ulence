@@ -120,7 +120,7 @@ class Tooltip:
     The :class:`~flet.TextStyle` to use for the message of the tooltip.
     """
 
-    text_align: Optional[TextAlign] = None
+    text_align: Optional[TextAlign | str] = None
     """
     How the message of the tooltip is aligned horizontally.
 
@@ -187,7 +187,7 @@ class Tooltip:
     :attr:`flet.TooltipTriggerMode.LONG_PRESS`.
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     The cursor for a mouse pointer when it enters or is hovering over the content.
     """

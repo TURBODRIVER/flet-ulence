@@ -91,7 +91,7 @@ class Button(LayoutControl, AdaptiveControl):
     Whether this button should be focused initially.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     The button's clip behavior.
     """

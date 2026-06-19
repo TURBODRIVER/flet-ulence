@@ -69,7 +69,7 @@ class MenuItemButton(LayoutControl):
     Typically an :class:`~flet.Icon` control.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.NONE
+    clip_behavior: ClipBehavior | str = ClipBehavior.NONE
     """
     Whether to clip the content of this control or not.
     """
@@ -91,7 +91,7 @@ class MenuItemButton(LayoutControl):
     Defaults to `False`.
     """
 
-    overflow_axis: Axis = Axis.HORIZONTAL
+    overflow_axis: Axis | str = Axis.HORIZONTAL
     """
     The direction in which the menu item expands.
 

@@ -260,7 +260,7 @@ class TextStyle:
     [here](https://api.flutter.dev/flutter/painting/TextStyle/height.html).
     """
 
-    weight: Optional[FontWeight] = None
+    weight: Optional[FontWeight | str] = None
     """
     The typeface thickness to use when painting the text (e.g., bold).
 
@@ -338,7 +338,7 @@ class TextStyle:
     (i.e. between each word). A negative value can be used to bring the words closer.
     """
 
-    overflow: Optional[TextOverflow] = None
+    overflow: Optional[TextOverflow | str] = None
     """
     How visual text overflow should be handled.
     """
@@ -354,7 +354,7 @@ class TextStyle:
         *,
         size: Optional[Number] = None,
         height: Optional[Number] = None,
-        weight: Optional[FontWeight] = None,
+        weight: Optional[FontWeight | str] = None,
         italic: Optional[bool] = None,
         decoration: Optional[TextDecoration] = None,
         decoration_color: Optional[ColorValue] = None,
@@ -368,7 +368,7 @@ class TextStyle:
         foreground: Optional[Paint] = None,
         letter_spacing: Optional[Number] = None,
         word_spacing: Optional[Number] = None,
-        overflow: Optional[TextOverflow] = None,
+        overflow: Optional[TextOverflow | str] = None,
         baseline: Optional[TextBaseline] = None,
     ):
         """
@@ -429,7 +429,7 @@ class StrutStyle:
     https://api.flutter.dev/flutter/painting/StrutStyle/height.html
     """
 
-    weight: Optional[FontWeight] = None
+    weight: Optional[FontWeight | str] = None
     """
     The typeface thickness to use when calculating the strut.
 
@@ -465,7 +465,7 @@ class StrutStyle:
         *,
         size: Optional[Number] = None,
         height: Optional[Number] = None,
-        weight: Optional[FontWeight] = None,
+        weight: Optional[FontWeight | str] = None,
         italic: Optional[bool] = None,
         font_family: Optional[str] = None,
         leading: Optional[Number] = None,

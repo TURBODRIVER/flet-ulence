@@ -73,7 +73,7 @@ class CupertinoTextField(TextField):
     Configures the gradient background.
     """
 
-    blend_mode: Optional[BlendMode] = None
+    blend_mode: Optional[BlendMode | str] = None
     """
     The blend mode applied to the :attr:`~flet.FormFieldControl.bgcolor`
     or :attr:`gradient` background.

@@ -66,7 +66,7 @@ class BottomAppBar(LayoutControl):
     `Padding.symmetric(vertical=12.0, horizontal=16.0)`.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     Defines how the :attr:`content` of this app bar should be clipped.
 

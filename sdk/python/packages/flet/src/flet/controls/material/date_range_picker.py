@@ -105,12 +105,12 @@ class DateRangePicker(DialogControl):
     :attr:`flet.Page.locale_configuration` is used as fallback.
     """
 
-    keyboard_type: KeyboardType = KeyboardType.DATETIME
+    keyboard_type: KeyboardType | str = KeyboardType.DATETIME
     """
     The type of keyboard to use for editing the text.
     """
 
-    entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
+    entry_mode: DatePickerEntryMode | str = DatePickerEntryMode.CALENDAR
     """
     The initial mode of date entry method for the date picker dialog.
     """

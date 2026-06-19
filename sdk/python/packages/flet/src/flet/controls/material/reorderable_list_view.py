@@ -131,7 +131,7 @@ class ReorderableListView(ListView):
         ```
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     The cursor for a mouse pointer when it enters or is hovering over the drag handle.
     """

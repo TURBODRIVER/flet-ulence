@@ -42,12 +42,12 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
     A list of Controls to display.
     """
 
-    alignment: MainAxisAlignment = MainAxisAlignment.START
+    alignment: MainAxisAlignment | str = MainAxisAlignment.START
     """
     Defines how the child :attr:`controls` should be placed horizontally.
     """
 
-    vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER
+    vertical_alignment: CrossAxisAlignment | str = CrossAxisAlignment.CENTER
     """
     Defines how the child :attr:`controls` should be placed vertically.
 
@@ -88,7 +88,7 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
     The spacing between runs when :attr:`wrap` is `True`.
     """
 
-    run_alignment: MainAxisAlignment = MainAxisAlignment.START
+    run_alignment: MainAxisAlignment | str = MainAxisAlignment.START
     """
     How the runs should be placed in the cross-axis when :attr:`wrap` is `True`.
     """

@@ -52,7 +52,7 @@ class Container(LayoutControl, AdaptiveControl):
     child control is placed inside this padding.
     """
 
-    alignment: Optional[Alignment] = None
+    alignment: Optional[Alignment | str] = None
     """
     Defines the alignment of the :attr:`content` inside this container.
 
@@ -75,7 +75,7 @@ class Container(LayoutControl, AdaptiveControl):
     Defines the gradient background of this container.
     """
 
-    blend_mode: Optional[BlendMode] = None
+    blend_mode: Optional[BlendMode | str] = None
     """
     The blend mode applied to the `color` or `gradient` background of the container.
 
@@ -97,7 +97,7 @@ class Container(LayoutControl, AdaptiveControl):
     Sets the shape of this container.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: Optional[ClipBehavior | str] = None
     """
     Defines how the :attr:`content` of this container is clipped.
 

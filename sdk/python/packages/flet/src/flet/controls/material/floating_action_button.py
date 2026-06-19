@@ -84,7 +84,7 @@ class FloatingActionButton(LayoutControl):
     The color to use for filling this button when it has input focus.
     """
 
-    clip_behavior: ClipBehavior = ClipBehavior.NONE
+    clip_behavior: ClipBehavior | str = ClipBehavior.NONE
     """
     Defines how the :attr:`content` is clipped.
     """
@@ -177,7 +177,7 @@ class FloatingActionButton(LayoutControl):
     is provided, it is fired after that.
     """
 
-    mouse_cursor: Optional[MouseCursor] = None
+    mouse_cursor: Optional[MouseCursor | str] = None
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this \
     control.

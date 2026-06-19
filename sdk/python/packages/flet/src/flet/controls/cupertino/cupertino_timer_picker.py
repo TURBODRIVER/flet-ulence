@@ -68,7 +68,7 @@ class CupertinoTimerPicker(LayoutControl):
         ValueError: If it is not a multiple of :attr:`second_interval`.
     """
 
-    alignment: Alignment = field(default_factory=lambda: Alignment.CENTER)
+    alignment: Alignment | str = field(default_factory=lambda: Alignment.CENTER)
     """
     Defines how this picker should be positioned within its parent.
     """
