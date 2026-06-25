@@ -243,7 +243,7 @@ class Text(LayoutControl):
     objects to build a rich text paragraph.
     """
 
-    text_align: TextAlign = TextAlign.START
+    text_align: TextAlign | str = TextAlign.START
     """
     Text horizontal align.
     """

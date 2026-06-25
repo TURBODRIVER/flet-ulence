@@ -65,7 +65,7 @@ class FormFieldControl(LayoutControl):
     The icon to show before the input field and outside of the decoration's container.
     """
 
-    border: InputBorder = InputBorder.OUTLINE
+    border: InputBorder | str = InputBorder.OUTLINE
     """
     Border around input.
     """

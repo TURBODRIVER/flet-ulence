@@ -48,7 +48,7 @@ class Text(Shape):
     A point within a text rectangle to determine its position and rotation center.
     """
 
-    text_align: TextAlign = TextAlign.START
+    text_align: TextAlign | str = TextAlign.START
     """
     Text horizontal align.
     """

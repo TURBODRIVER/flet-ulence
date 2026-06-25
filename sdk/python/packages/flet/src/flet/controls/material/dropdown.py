@@ -125,7 +125,7 @@ class Dropdown(LayoutControl):
     will get focus.
     """
 
-    text_align: TextAlign = TextAlign.START
+    text_align: TextAlign | str = TextAlign.START
     """
     The text align for the TextField of the Dropdown.
     """
@@ -284,7 +284,7 @@ class Dropdown(LayoutControl):
     The :attr:`label`'s text style.
     """
 
-    border: Optional[InputBorder] = None
+    border: Optional[InputBorder | str] = None
     """
     Border around input.
 
