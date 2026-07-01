@@ -49,7 +49,7 @@ class Image(LayoutControl):
     source.
     """
 
-    repeat: ImageRepeat = ImageRepeat.NO_REPEAT
+    repeat: ImageRepeat | str = ImageRepeat.NO_REPEAT
     """
     How to paint any portions of the layout bounds not covered by this image.
     """

@@ -152,7 +152,7 @@ class DatePicker(DialogControl):
     The type of keyboard to use for editing the text.
     """
 
-    date_picker_mode: DatePickerMode = DatePickerMode.DAY
+    date_picker_mode: DatePickerMode | str = DatePickerMode.DAY
     """
     Initial display mode of this picker.
     """

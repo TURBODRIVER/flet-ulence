@@ -112,7 +112,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     TBD
     """
 
-    allowed_devices: Optional[list[PointerDeviceType]] = None
+    allowed_devices: Optional[list[PointerDeviceType | str]] = None
     """
     TBD
     """

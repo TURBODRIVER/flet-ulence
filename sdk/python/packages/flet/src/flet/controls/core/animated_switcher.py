@@ -75,7 +75,7 @@ class AnimatedSwitcher(LayoutControl):
     The animation curve to use when transitioning an old :attr:`content` out.
     """
 
-    transition: AnimatedSwitcherTransition = AnimatedSwitcherTransition.FADE
+    transition: AnimatedSwitcherTransition | str = AnimatedSwitcherTransition.FADE
     """
     An animation type to transition between new and old :attr:`content`.
     """

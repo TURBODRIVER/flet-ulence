@@ -230,12 +230,12 @@ class CupertinoDatePicker(LayoutControl):
             :attr:`flet.CupertinoDatePickerMode.DATE`.
     """
 
-    date_picker_mode: CupertinoDatePickerMode = CupertinoDatePickerMode.DATE_AND_TIME
+    date_picker_mode: CupertinoDatePickerMode | str = CupertinoDatePickerMode.DATE_AND_TIME
     """
     The mode of the date picker.
     """
 
-    date_order: Optional[CupertinoDatePickerDateOrder] = None
+    date_order: Optional[CupertinoDatePickerDateOrder | str] = None
     """
     The order in which the columns inside this picker are displayed.
 

@@ -108,7 +108,7 @@ class WindowEvent(Event[EventControlType]):
     Payload for :attr:`flet.Window.on_event` callbacks.
     """
 
-    type: WindowEventType
+    type: WindowEventType | str
     """
     Native event kind emitted by the desktop window backend.
     """
@@ -188,7 +188,7 @@ class Window(BaseControl):
     Defines the aspect ratio of the app window.
     """
 
-    brightness: Optional[Brightness] = None
+    brightness: Optional[Brightness | str] = None
     """
     The brightness of a app window.
     """
@@ -387,7 +387,7 @@ class Window(BaseControl):
         """
         await self._invoke_method("start_dragging")
 
-    async def start_resizing(self, edge: WindowResizeEdge):
+    async def start_resizing(self, edge: WindowResizeEdge | str):
         """
         Starts resizing the app window.
         """

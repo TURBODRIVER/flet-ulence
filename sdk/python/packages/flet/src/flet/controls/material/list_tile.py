@@ -208,7 +208,7 @@ class ListTile(LayoutControl, AdaptiveControl):
     Defines the background color of ListTile when `selected=True`.
     """
 
-    style: Optional[ListTileStyle] = None
+    style: Optional[ListTileStyle | str] = None
     """
     Defines the font used for the title.
 
@@ -245,7 +245,7 @@ class ListTile(LayoutControl, AdaptiveControl):
     it is fired after that.
     """
 
-    title_alignment: Optional[ListTileTitleAlignment] = None
+    title_alignment: Optional[ListTileTitleAlignment | str] = None
     """
     Defines how `leading` and `trailing` are vertically aligned relative to the titles \
     (`title` and `subtitle`).
@@ -271,7 +271,7 @@ class ListTile(LayoutControl, AdaptiveControl):
     The tile's shape.
     """
 
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity | str] = None
     """
     Defines how compact the control's layout will be.
     """

@@ -84,7 +84,7 @@ class CupertinoTextField(TextField):
     A list of shadows behind this text field.
     """
 
-    prefix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
+    prefix_visibility_mode: OverlayVisibilityMode | str = OverlayVisibilityMode.ALWAYS
     """
     Defines the visibility of the :attr:`~flet.FormFieldControl.prefix`
     control based on the state of text entry.
@@ -95,7 +95,7 @@ class CupertinoTextField(TextField):
         is not specified.
     """
 
-    suffix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
+    suffix_visibility_mode: OverlayVisibilityMode | str = OverlayVisibilityMode.ALWAYS
     """
     Defines the visibility of the :attr:`~flet.FormFieldControl.suffix`
     control based on the state of text entry.
@@ -106,7 +106,7 @@ class CupertinoTextField(TextField):
         is not specified.
     """
 
-    clear_button_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.NEVER
+    clear_button_visibility_mode: OverlayVisibilityMode | str = OverlayVisibilityMode.NEVER
     """
     Defines the visibility of the clear button based on the state of text entry.
 

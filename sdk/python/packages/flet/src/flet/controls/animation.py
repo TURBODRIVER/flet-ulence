@@ -257,7 +257,7 @@ class Animation:
         self,
         *,
         duration: Optional[DurationValue] = None,
-        curve: Optional[AnimationCurve] = None,
+        curve: Optional[AnimationCurve | str] = None,
     ) -> "Animation":
         """
         Returns a copy of this object with the specified properties overridden.
@@ -290,12 +290,12 @@ class AnimationStyle:
     The duration of the reverse animation.
     """
 
-    curve: Optional[AnimationCurve] = None
+    curve: Optional[AnimationCurve | str] = None
     """
     The curve to use for the animation.
     """
 
-    reverse_curve: Optional[AnimationCurve] = None
+    reverse_curve: Optional[AnimationCurve | str] = None
     """
     The curve to use for the reverse animation.
     """
@@ -316,7 +316,7 @@ class AnimationStyle:
         duration: Optional[DurationValue] = None,
         reverse_duration: Optional[DurationValue] = None,
         curve: Optional[AnimationCurve] = None,
-        reverse_curve: Optional[AnimationCurve] = None,
+        reverse_curve: Optional[AnimationCurve | str] = None,
     ) -> "AnimationStyle":
         """
         Returns a copy of this object with the specified properties overridden.

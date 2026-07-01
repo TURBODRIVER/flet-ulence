@@ -165,7 +165,7 @@ class Scrollbar:
     If `None`, defaults to `True`.
     """
 
-    orientation: Optional[ScrollbarOrientation] = None
+    orientation: Optional[ScrollbarOrientation | str] = None
     """
     Specifies where the scrollbar should appear relative to the scrollable.
 
@@ -191,7 +191,7 @@ class OnScrollEvent(Event["ScrollableControl"]):
     Payload for :attr:`flet.ScrollableControl.on_scroll` handlers.
     """
 
-    event_type: ScrollType
+    event_type: ScrollType | str
     """
     Logical type of the scroll notification.
 
@@ -235,7 +235,7 @@ class OnScrollEvent(Event["ScrollableControl"]):
     Populated for :attr:`flet.ScrollType.UPDATE` notifications.
     """
 
-    direction: Optional[ScrollDirection] = None
+    direction: Optional[ScrollDirection | str] = None
     """
     User scroll direction reported by Flutter.
 
@@ -332,7 +332,7 @@ class ScrollableControl(Control):
     - imperatively changing position with :meth:`scroll_to`.
     """
 
-    scroll: Optional[Union[ScrollMode, Scrollbar]] = None
+    scroll: Optional[Union[ScrollMode, Scrollbar, str]] = None
     """
     Defines the scroll bar configuration of this control.
 
@@ -366,7 +366,7 @@ class ScrollableControl(Control):
         delta: Optional[float] = None,
         scroll_key: Union[ScrollKey, str, int, float, bool, None] = None,
         duration: DurationValue = 0,
-        curve: AnimationCurve = AnimationCurve.EASE,
+        curve: AnimationCurve | str = AnimationCurve.EASE,
     ):
         """
         Moves the scroll position.

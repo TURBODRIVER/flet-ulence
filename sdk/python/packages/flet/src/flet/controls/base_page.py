@@ -359,7 +359,7 @@ class BasePage(AdaptiveControl):
         delta: Optional[Number] = None,
         scroll_key: Union[ScrollKey, str, int, float, bool, None] = None,
         duration: Optional[DurationValue] = None,
-        curve: Optional[AnimationCurve] = None,
+        curve: Optional[AnimationCurve | str] = None,
     ) -> None:
         """
         Moves scroll position to either absolute `offset`, relative `delta` or jump to \
@@ -689,7 +689,7 @@ class BasePage(AdaptiveControl):
     @property
     def floating_action_button_location(
         self,
-    ) -> Optional[Union[FloatingActionButtonLocation, OffsetValue]]:
+    ) -> Optional[Union[FloatingActionButtonLocation, OffsetValue, str]]:
         """
         Placement of the floating action button in the root view.
         """
@@ -698,7 +698,7 @@ class BasePage(AdaptiveControl):
 
     @floating_action_button_location.setter
     def floating_action_button_location(
-        self, value: Optional[Union[FloatingActionButtonLocation, OffsetValue]]
+        self, value: Optional[Union[FloatingActionButtonLocation, OffsetValue, str]]
     ):
         self.__root_view().floating_action_button_location = value
 
@@ -769,7 +769,7 @@ class BasePage(AdaptiveControl):
 
     # scroll
     @property
-    def scroll(self) -> Optional[Union[ScrollMode, Scrollbar]]:
+    def scroll(self) -> Optional[Union[ScrollMode, Scrollbar, str]]:
         """
         Scroll behavior mode for root view content.
         """
@@ -777,7 +777,7 @@ class BasePage(AdaptiveControl):
         return self.__root_view().scroll
 
     @scroll.setter
-    def scroll(self, value: Optional[Union[ScrollMode, Scrollbar]]):
+    def scroll(self, value: Optional[Union[ScrollMode, Scrollbar, str]]):
         self.__root_view().scroll = value
 
     # auto_scroll

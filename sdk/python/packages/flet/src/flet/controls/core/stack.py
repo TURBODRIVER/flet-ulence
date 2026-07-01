@@ -112,7 +112,7 @@ class Stack(LayoutControl, AdaptiveControl):
     partially-positioned :attr:`controls`.
     """
 
-    fit: StackFit = StackFit.LOOSE
+    fit: StackFit | str = StackFit.LOOSE
     """
     How to size the non-positioned :attr:`controls`.
     """

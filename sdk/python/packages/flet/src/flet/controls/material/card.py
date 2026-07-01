@@ -115,7 +115,7 @@ class Card(LayoutControl, AdaptiveControl):
     or behind.
     """
 
-    variant: CardVariant = CardVariant.ELEVATED
+    variant: CardVariant | str = CardVariant.ELEVATED
     """
     Defines the card variant to be used.
     """

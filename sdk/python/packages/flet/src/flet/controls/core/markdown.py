@@ -249,57 +249,57 @@ class MarkdownStyleSheet:
     Decoration used to render horizontal rule separators.
     """
 
-    blockquote_alignment: Optional[MainAxisAlignment] = None
+    blockquote_alignment: Optional[MainAxisAlignment | str] = None
     """
     Alignment for blockquote block content.
     """
 
-    codeblock_alignment: Optional[MainAxisAlignment] = None
+    codeblock_alignment: Optional[MainAxisAlignment | str] = None
     """
     Alignment for code block content.
     """
 
-    h1_alignment: Optional[MainAxisAlignment] = None
+    h1_alignment: Optional[MainAxisAlignment | str] = None
     """
     Alignment for level-1 heading blocks.
     """
 
-    h2_alignment: Optional[MainAxisAlignment] = None
+    h2_alignment: Optional[MainAxisAlignment | str] = None
     """
     Alignment for level-2 heading blocks.
     """
 
-    h3_alignment: Optional[MainAxisAlignment] = None
+    h3_alignment: Optional[MainAxisAlignment | str] = None
     """
     Alignment for level-3 heading blocks.
     """
 
-    h4_alignment: Optional[MainAxisAlignment] = None
+    h4_alignment: Optional[MainAxisAlignment | str] = None
     """
     Alignment for level-4 heading blocks.
     """
 
-    h5_alignment: Optional[MainAxisAlignment] = None
+    h5_alignment: Optional[MainAxisAlignment | str] = None
     """
     Alignment for level-5 heading blocks.
     """
 
-    h6_alignment: Optional[MainAxisAlignment] = None
+    h6_alignment: Optional[MainAxisAlignment | str] = None
     """
     Alignment for level-6 heading blocks.
     """
 
-    text_alignment: Optional[MainAxisAlignment] = None
+    text_alignment: Optional[MainAxisAlignment | str] = None
     """
     Default alignment for regular text blocks.
     """
 
-    ordered_list_alignment: Optional[MainAxisAlignment] = None
+    ordered_list_alignment: Optional[MainAxisAlignment | str] = None
     """
     Alignment for ordered list blocks.
     """
 
-    unordered_list_alignment: Optional[MainAxisAlignment] = None
+    unordered_list_alignment: Optional[MainAxisAlignment | str] = None
     """
     Alignment for unordered list blocks.
     """
@@ -947,12 +947,12 @@ class Markdown(LayoutControl):
     Whether rendered text is selectable or not.
     """
 
-    extension_set: MarkdownExtensionSet = MarkdownExtensionSet.NONE
+    extension_set: MarkdownExtensionSet | str = MarkdownExtensionSet.NONE
     """
     The extensions to use when rendering the markdown content.
     """
 
-    code_theme: Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]] = None
+    code_theme: Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme, str]] = None
     """
     A syntax highlighting theme for code blocks.
 
@@ -983,7 +983,7 @@ class Markdown(LayoutControl):
     and the leading spaces in the immediately following the line of text.
     """
 
-    auto_follow_links_target: Optional[UrlTarget] = None
+    auto_follow_links_target: Optional[UrlTarget | str] = None
     """
     Where to open URL in the web mode.
     """

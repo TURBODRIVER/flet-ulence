@@ -58,7 +58,7 @@ class ContextMenuDismissEvent(Event["ContextMenu"]):
     or `"tertiary"` (linked to :attr:`flet.ContextMenu.tertiary_items`).
     """
 
-    trigger: Optional[ContextMenuTrigger] = field(
+    trigger: Optional[ContextMenuTrigger | str] = field(
         default=None, metadata={"data_field": "tr"}
     )
     """
@@ -140,21 +140,21 @@ class ContextMenu(LayoutControl):
     :attr:`tertiary_trigger` is activated.
     """
 
-    primary_trigger: Optional[ContextMenuTrigger] = None
+    primary_trigger: Optional[ContextMenuTrigger | str] = None
     """
     Defines a trigger mode for the display of :attr:`primary_items`.
 
     If set to `None`, the trigger is disabled.
     """
 
-    secondary_trigger: Optional[ContextMenuTrigger] = ContextMenuTrigger.DOWN
+    secondary_trigger: Optional[ContextMenuTrigger | str] = ContextMenuTrigger.DOWN
     """
     Defines a trigger mode for the display of :attr:`secondary_items`.
 
     If set to `None`, the trigger is disabled.
     """
 
-    tertiary_trigger: Optional[ContextMenuTrigger] = ContextMenuTrigger.DOWN
+    tertiary_trigger: Optional[ContextMenuTrigger | str] = ContextMenuTrigger.DOWN
     """
     Defines a trigger mode for the display of :attr:`tertiary_items`.
 

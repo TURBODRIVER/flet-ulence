@@ -108,7 +108,7 @@ class SemanticsService(Service):
         self,
         message: str,
         rtl: bool = False,
-        assertiveness: Assertiveness = Assertiveness.POLITE,
+        assertiveness: Assertiveness | str = Assertiveness.POLITE,
     ):
         """
         Sends a semantic announcement with the given message.

@@ -122,7 +122,7 @@ class AlertDialog(DialogControl):
     bar defaults to zero.
     """
 
-    actions_alignment: Optional[MainAxisAlignment] = None
+    actions_alignment: Optional[MainAxisAlignment | str] = None
     """
     Defines the horizontal layout of the actions.
 

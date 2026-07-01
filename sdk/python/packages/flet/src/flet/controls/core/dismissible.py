@@ -29,7 +29,7 @@ class DismissibleDismissEvent(Event["Dismissible"]):
     :attr:`~flet.Dismissible.on_dismiss`.
     """
 
-    direction: DismissDirection
+    direction: DismissDirection | str
     """
     Direction in which the control is being (or was) dismissed.
     """
@@ -41,7 +41,7 @@ class DismissibleUpdateEvent(Event["Dismissible"]):
     Event payload emitted while a dismiss gesture is in progress.
     """
 
-    direction: DismissDirection
+    direction: DismissDirection | str
     """
     Direction of the current drag gesture.
     """
@@ -106,12 +106,12 @@ class Dismissible(LayoutControl, AdaptiveControl):
             but the :attr:`background` is not provided and visible.
     """
 
-    dismiss_direction: DismissDirection = DismissDirection.HORIZONTAL
+    dismiss_direction: DismissDirection | str = DismissDirection.HORIZONTAL
     """
     The direction in which the control can be dismissed.
     """
 
-    dismiss_thresholds: dict[DismissDirection, Optional[Number]] = field(
+    dismiss_thresholds: dict[DismissDirection | str, Optional[Number]] = field(
         default_factory=dict
     )
     """

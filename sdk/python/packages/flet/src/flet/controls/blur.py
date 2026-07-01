@@ -57,7 +57,7 @@ class Blur:
     Larger values produce stronger blur along the Y axis.
     """
 
-    tile_mode: Optional[BlurTileMode] = None
+    tile_mode: Optional[BlurTileMode | str] = None
     """
     How sampling outside source bounds is handled during blur.
     """

@@ -151,7 +151,7 @@ class PlatformBrightnessChangeEvent(Event["Page"]):
     :attr:`flet.Page.on_platform_brightness_change`.
     """
 
-    brightness: Brightness
+    brightness: Brightness | str
     """
     Current platform brightness mode.
     """
@@ -309,7 +309,7 @@ class AppLifecycleStateChangeEvent(Event["Page"]):
     :attr:`flet.Page.on_app_lifecycle_state_change`.
     """
 
-    state: AppLifecycleState
+    state: AppLifecycleState | str
     """
     New application lifecycle state.
     """
@@ -359,7 +359,7 @@ class Page(BasePage):
         This property is read-only.
     """
 
-    platform_brightness: Optional[Brightness] = None
+    platform_brightness: Optional[Brightness | str] = None
     """
     The current brightness mode of the host platform.
 
@@ -383,7 +383,7 @@ class Page(BasePage):
         This property is web- and read-only only.
     """
 
-    platform: Optional[PagePlatform] = None
+    platform: Optional[PagePlatform | str] = None
     """
     The operating system the application is running on.
     """

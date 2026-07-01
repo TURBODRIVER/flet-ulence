@@ -42,7 +42,7 @@ class CupertinoCheckbox(LayoutControl):
     A clickable label to display on the right of this checkbox.
     """
 
-    label_position: LabelPosition = LabelPosition.RIGHT
+    label_position: LabelPosition | str = LabelPosition.RIGHT
     """
     Defines on which side of this checkbox the :attr:`label` should be shown.
     """

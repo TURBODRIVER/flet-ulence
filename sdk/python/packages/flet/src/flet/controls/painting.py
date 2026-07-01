@@ -105,7 +105,7 @@ class PaintLinearGradient(PaintGradient):
         in `colors` is implied.
     """
 
-    tile_mode: GradientTileMode = GradientTileMode.CLAMP
+    tile_mode: GradientTileMode | str = GradientTileMode.CLAMP
     """
     How this gradient should tile the plane beyond in the region before :attr:`begin` \
     and after :attr:`end`.
@@ -121,7 +121,7 @@ class PaintLinearGradient(PaintGradient):
         end: Optional[OffsetValue] = None,
         colors: Optional[list[str]] = None,
         color_stops: Optional[list[Number]] = None,
-        tile_mode: Optional[GradientTileMode] = None,
+        tile_mode: Optional[GradientTileMode | str] = None,
     ) -> "PaintLinearGradient":
         """
         Returns a copy of this object with the specified properties overridden.
@@ -172,7 +172,7 @@ class PaintRadialGradient(PaintGradient):
     `1.0` and a color equal to the last color in `colors` is implied.
     """
 
-    tile_mode: GradientTileMode = GradientTileMode.CLAMP
+    tile_mode: GradientTileMode | str = GradientTileMode.CLAMP
     """
     How this gradient should tile the plane beyond in the region before `begin` and \
     after `end`.
@@ -204,7 +204,7 @@ class PaintRadialGradient(PaintGradient):
         radius: Optional[Number] = None,
         colors: Optional[list[str]] = None,
         color_stops: Optional[list[Number]] = None,
-        tile_mode: Optional[GradientTileMode] = None,
+        tile_mode: Optional[GradientTileMode | str] = None,
         focal: Optional[OffsetValue] = None,
         focal_radius: Optional[Number] = None,
     ) -> "PaintRadialGradient":
@@ -257,7 +257,7 @@ class PaintSweepGradient(PaintGradient):
     `1.0` and a color equal to the last color in `colors` is implied.
     """
 
-    tile_mode: GradientTileMode = GradientTileMode.CLAMP
+    tile_mode: GradientTileMode | str = GradientTileMode.CLAMP
     """
     How this gradient should tile the plane beyond in the region before `begin` and \
     after `end`.
@@ -290,7 +290,7 @@ class PaintSweepGradient(PaintGradient):
         center: Optional[OffsetValue] = None,
         colors: Optional[list[str]] = None,
         color_stops: Optional[list[Number]] = None,
-        tile_mode: Optional[GradientTileMode] = None,
+        tile_mode: Optional[GradientTileMode | str] = None,
         start_angle: Optional[Number] = None,
         end_angle: Optional[Number] = None,
         rotation: Optional[Number] = None,
@@ -348,12 +348,12 @@ class Paint:
     Configures gradient paint.
     """
 
-    stroke_cap: Optional[StrokeCap] = None
+    stroke_cap: Optional[StrokeCap | str] = None
     """
     TBD
     """
 
-    stroke_join: Optional[StrokeJoin] = None
+    stroke_join: Optional[StrokeJoin | str] = None
     """
     TBD
     """
@@ -373,7 +373,7 @@ class Paint:
     TBD
     """
 
-    style: Optional[PaintingStyle] = None
+    style: Optional[PaintingStyle | str] = None
     """
     TBD
     """
@@ -386,12 +386,12 @@ class Paint:
         blur_image: Optional[BlurValue] = None,
         anti_alias: Optional[bool] = None,
         gradient: Optional[PaintGradient] = None,
-        stroke_cap: Optional[StrokeCap] = None,
-        stroke_join: Optional[StrokeJoin] = None,
+        stroke_cap: Optional[StrokeCap | str] = None,
+        stroke_join: Optional[StrokeJoin | str] = None,
         stroke_miter_limit: Optional[Number] = None,
         stroke_width: Optional[Number] = None,
         stroke_dash_pattern: Optional[list[Number]] = None,
-        style: Optional[PaintingStyle] = None,
+        style: Optional[PaintingStyle | str] = None,
     ) -> "Paint":
         """
         Returns a copy of this object with the specified properties overridden.

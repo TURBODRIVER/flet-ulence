@@ -48,7 +48,7 @@ class Checkbox(LayoutControl, AdaptiveControl):
         is indeterminate (displayed as a dash).
     """
 
-    label_position: LabelPosition = LabelPosition.RIGHT
+    label_position: LabelPosition | str = LabelPosition.RIGHT
     """
     Defines on which side of the checkbox the :attr:`label` should be shown.
     """
@@ -161,7 +161,7 @@ class Checkbox(LayoutControl, AdaptiveControl):
     have a different default container color and check color.
     """
 
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity | str] = None
     """
     Defines how compact the checkbox's layout will be.
     """

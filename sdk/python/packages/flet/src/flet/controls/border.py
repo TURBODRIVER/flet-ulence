@@ -89,7 +89,7 @@ class BorderSide:
     `Border`.
     """
 
-    style: BorderStyle = BorderStyle.SOLID
+    style: BorderStyle | str = BorderStyle.SOLID
     """
     The style of this side of the border.
     """

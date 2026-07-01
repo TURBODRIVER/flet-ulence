@@ -162,7 +162,7 @@ class NavigationRail(LayoutControl):
     :attr:`label_type` should be set to :attr:`flet.NavigationRailLabelType.NONE`
     """
 
-    label_type: Optional[NavigationRailLabelType] = None
+    label_type: Optional[NavigationRailLabelType | str] = None
     """
     Defines the layout and behavior of the labels for the default, unextended \
     navigation rail.

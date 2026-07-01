@@ -104,7 +104,7 @@ class CupertinoButton(LayoutControl):
     The minimum size of this button.
     """
 
-    size: CupertinoButtonSize = CupertinoButtonSize.LARGE
+    size: CupertinoButtonSize | str = CupertinoButtonSize.LARGE
     """
     The size of this button.
     """

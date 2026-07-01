@@ -34,7 +34,7 @@ class TapEvent(Event[EventControlType]):
     Payload for tap press/release events.
     """
 
-    kind: Optional[PointerDeviceType] = field(
+    kind: Optional[PointerDeviceType | str] = field(
         default=None, metadata={"data_field": "k"}
     )
     """
@@ -60,7 +60,7 @@ class TapMoveEvent(Event[EventControlType]):
     Payload for pointer movement during a tap gesture sequence.
     """
 
-    kind: PointerDeviceType = field(metadata={"data_field": "k"})
+    kind: PointerDeviceType | str = field(metadata={"data_field": "k"})
     """
     The kind of the device that initiated the event.
     """
@@ -104,7 +104,7 @@ class LongPressDownEvent(Event[EventControlType]):
     gesture is accepted.
     """
 
-    kind: Optional[PointerDeviceType] = field(
+    kind: Optional[PointerDeviceType | str] = field(
         default=None, metadata={"data_field": "k"}
     )
     """
@@ -218,7 +218,7 @@ class DragStartEvent(Event[EventControlType]):
     Start payload for recognized drag gestures.
     """
 
-    kind: PointerDeviceType = field(metadata={"data_field": "k"})
+    kind: PointerDeviceType | str = field(metadata={"data_field": "k"})
     """
     The kind of the device that initiated the event.
     """
@@ -472,7 +472,7 @@ class PointerEvent(Event[EventControlType]):
     Low-level pointer payload with detailed device metrics.
     """
 
-    kind: PointerDeviceType = field(metadata={"data_field": "k"})
+    kind: PointerDeviceType | str = field(metadata={"data_field": "k"})
     """
     The kind of input device for which the event was generated.
     """

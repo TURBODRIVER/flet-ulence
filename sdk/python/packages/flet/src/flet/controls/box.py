@@ -152,7 +152,7 @@ class BoxShadow:
     casting it.
     """
 
-    blur_style: BlurStyle = BlurStyle.NORMAL
+    blur_style: BlurStyle | str = BlurStyle.NORMAL
     """
     The blur style to apply to this shadow.
     """
@@ -164,7 +164,7 @@ class BoxShadow:
         blur_radius: Optional[Number] = None,
         color: Optional[ColorValue] = None,
         offset: Optional[OffsetValue] = None,
-        blur_style: Optional[BlurStyle] = None,
+        blur_style: Optional[BlurStyle | str] = None,
     ) -> "BoxShadow":
         """
         Returns a copy of this object with the specified properties overridden.
@@ -297,7 +297,7 @@ class DecorationImage:
     A color filter to apply to the image before painting it.
     """
 
-    fit: Optional[BoxFit] = None
+    fit: Optional[BoxFit | str] = None
     """
     How the image should be inscribed into the box.
     """
@@ -307,7 +307,7 @@ class DecorationImage:
     The alignment of the image within its bounds.
     """
 
-    repeat: ImageRepeat = ImageRepeat.NO_REPEAT
+    repeat: ImageRepeat | str = ImageRepeat.NO_REPEAT
     """
     How the image should be repeated to fill the box.
     """
@@ -347,9 +347,9 @@ class DecorationImage:
         *,
         src: Optional[Union[str, bytes]] = None,
         color_filter: Optional[ColorFilter] = None,
-        fit: Optional[BoxFit] = None,
+        fit: Optional[BoxFit | str] = None,
         alignment: Optional[Alignment | str] = None,
-        repeat: Optional[ImageRepeat] = None,
+        repeat: Optional[ImageRepeat | str] = None,
         match_text_direction: Optional[bool] = None,
         scale: Optional[Number] = None,
         opacity: Optional[Number] = None,
@@ -421,7 +421,7 @@ class BoxDecoration:
     A gradient to use when filling the box.
     """
 
-    shape: BoxShape = BoxShape.RECTANGLE
+    shape: BoxShape | str = BoxShape.RECTANGLE
     """
     The shape to fill the :attr:`bgcolor`, :attr:`gradient`, and :attr:`image`
     into and to cast as the :attr:`shadows`.
@@ -454,7 +454,7 @@ class BoxDecoration:
         border_radius: Optional[BorderRadiusValue] = None,
         shadows: Optional[BoxShadowValue] = None,
         gradient: Optional[Gradient] = None,
-        shape: Optional[BoxShape] = None,
+        shape: Optional[BoxShape | str] = None,
         blend_mode: Optional[BlendMode | str] = None,
     ):
         """Returns a new `BoxDecoration` with selected fields overridden."""

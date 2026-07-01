@@ -61,7 +61,7 @@ class ProgressRing(LayoutControl):
     default value is `0`. Otherwise, the default value is `-1`.
     """
 
-    stroke_cap: Optional[StrokeCap] = None
+    stroke_cap: Optional[StrokeCap | str] = None
     """
     The progress indicator's line ending.
     """

@@ -343,7 +343,7 @@ class TextStyle:
     How visual text overflow should be handled.
     """
 
-    baseline: Optional[TextBaseline] = None
+    baseline: Optional[TextBaseline | str] = None
     """
     The common baseline that should be aligned between this text span and its parent \
     text span, or, for the root text spans, with the line box.
@@ -369,7 +369,7 @@ class TextStyle:
         letter_spacing: Optional[Number] = None,
         word_spacing: Optional[Number] = None,
         overflow: Optional[TextOverflow | str] = None,
-        baseline: Optional[TextBaseline] = None,
+        baseline: Optional[TextBaseline | str] = None,
     ):
         """
         Returns a copy of this object with the specified properties overridden.

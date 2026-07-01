@@ -138,7 +138,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     if that is also `None`, then defaults to `Padding.symmetric(horizontal=16.0)`.
     """
 
-    affinity: Optional[TileAffinity] = None
+    affinity: Optional[TileAffinity | str] = None
     """
     Typically used to force the expansion arrow icon to the tile's :attr:`leading` or \
     :attr:`trailing` edge.
@@ -300,7 +300,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     `True` - expanded, `False` - collapsed.
     """
 
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity | str] = None
     """
     Defines how compact this tile's layout will be.
     """

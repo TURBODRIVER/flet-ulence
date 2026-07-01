@@ -380,7 +380,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     will get focus.
     """
 
-    capitalization: Optional[TextCapitalization] = None
+    capitalization: Optional[TextCapitalization | str] = None
     """
     Enables automatic on-the-fly capitalization of entered text.
 
@@ -500,7 +500,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     TBD
     """
 
-    keyboard_brightness: Optional[Brightness] = None
+    keyboard_brightness: Optional[Brightness | str] = None
     """
     TBD
     """
@@ -515,7 +515,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     TBD
     """
 
-    autofill_hints: Optional[Union[AutofillHint, list[AutofillHint]]] = None
+    autofill_hints: Optional[Union[AutofillHint, list[AutofillHint], str, list[str]]] = None
     """
     Helps the autofill service identify the type of this text input.
 

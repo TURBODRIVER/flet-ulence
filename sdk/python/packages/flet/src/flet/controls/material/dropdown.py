@@ -193,7 +193,7 @@ class Dropdown(LayoutControl):
     A filter to apply to the text input field.
     """
 
-    capitalization: Optional[TextCapitalization] = None
+    capitalization: Optional[TextCapitalization | str] = None
     """
     Configures how the text input should be capitalized.
     """

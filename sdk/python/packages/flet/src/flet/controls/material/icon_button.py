@@ -182,7 +182,7 @@ class IconButton(LayoutControl, AdaptiveControl):
     control.
     """
 
-    visual_density: Optional[VisualDensity] = field(
+    visual_density: Optional[VisualDensity | str] = field(
         default=None, metadata={"skip": True}
     )
     """

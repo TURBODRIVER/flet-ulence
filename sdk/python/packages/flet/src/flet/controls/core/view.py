@@ -65,7 +65,7 @@ class View(ScrollableControl, LayoutControl):
     """
 
     floating_action_button_location: Optional[
-        Union[FloatingActionButtonLocation, OffsetValue]
+        Union[FloatingActionButtonLocation, OffsetValue, str]
     ] = None
     """
     Describes position of :attr:`floating_action_button`

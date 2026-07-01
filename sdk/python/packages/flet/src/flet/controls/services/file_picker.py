@@ -240,7 +240,7 @@ class FilePicker(Service):
         dialog_title: Optional[str] = None,
         file_name: Optional[str] = None,
         initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        file_type: FilePickerFileType | str = FilePickerFileType.ANY,
         allowed_extensions: Optional[list[str]] = None,
         src_bytes: Optional[bytes] = None,
     ) -> Optional[str]:
@@ -281,7 +281,7 @@ class FilePicker(Service):
         self,
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
+        file_type: FilePickerFileType | str = FilePickerFileType.ANY,
         allowed_extensions: Optional[list[str]] = None,
         allow_multiple: bool = False,
         with_data: bool = False,

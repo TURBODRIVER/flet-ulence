@@ -61,7 +61,7 @@ class TextSelection:
     The offset at which the selection terminates.
     """
 
-    affinity: "TextAffinity" = TextAffinity.DOWNSTREAM
+    affinity: "TextAffinity | str" = TextAffinity.DOWNSTREAM
     """
     If the text range is collapsed and has more than one visual location (e.g., occurs \
     at a line break), which of the two locations to use when painting the caret.
@@ -214,7 +214,7 @@ class TextSelectionChangeEvent(Event[EventControlType]):
     selection: TextSelection
     """The new text selection."""
 
-    cause: Optional[TextSelectionChangeCause] = None
+    cause: Optional[TextSelectionChangeCause | str] = None
     """The cause of the selection change."""
 
 
@@ -285,7 +285,7 @@ class Text(LayoutControl):
     The text's style.
     """
 
-    theme_style: Optional[TextThemeStyle] = None
+    theme_style: Optional[TextThemeStyle | str] = None
     """
     Pre-defined text style.
     """

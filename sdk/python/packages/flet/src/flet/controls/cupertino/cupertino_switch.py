@@ -37,7 +37,7 @@ class CupertinoSwitch(LayoutControl):
     The current value of this switch.
     """
 
-    label_position: LabelPosition = LabelPosition.RIGHT
+    label_position: LabelPosition | str = LabelPosition.RIGHT
     """
     The position of the :attr:`label` relative to this switch.
     """

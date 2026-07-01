@@ -49,7 +49,7 @@ def app_async(*args, **kwargs):
 def run(
     main: AppCallable,
     before_main: Optional[AppCallable] = None,
-    view: Optional[AppView] = AppView.FLET_APP,
+    view: Optional[AppView | str] = AppView.FLET_APP,
     assets_dir: Optional[str] = "assets",
     target=None,
 ):
@@ -81,7 +81,7 @@ def run(
 async def run_async(
     main: AppCallable,
     before_main: Optional[AppCallable] = None,
-    view: Optional[AppView] = AppView.FLET_APP,
+    view: Optional[AppView | str] = AppView.FLET_APP,
     assets_dir: Optional[str] = "assets",
     target=None,
 ):

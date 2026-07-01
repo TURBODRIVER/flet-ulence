@@ -181,7 +181,7 @@ class Slider(LayoutControl, AdaptiveControl):
     The color of the thumb.
     """
 
-    interaction: Optional[SliderInteraction] = None
+    interaction: Optional[SliderInteraction | str] = None
     """
     The allowed way for the user to interact with this slider.
 

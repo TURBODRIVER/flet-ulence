@@ -788,7 +788,7 @@ class AutofillGroup(Control):
         ValueError: If it is not visible.
     """
 
-    dispose_action: AutofillGroupDisposeAction = AutofillGroupDisposeAction.COMMIT
+    dispose_action: AutofillGroupDisposeAction | str = AutofillGroupDisposeAction.COMMIT
     """
     The action to be run when this group is the topmost and it's being disposed, in \
     order to clean up the current autofill context.

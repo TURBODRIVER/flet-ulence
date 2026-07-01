@@ -187,7 +187,7 @@ class Chip(LayoutControl):
     The content will be clipped (or not) according to this option.
     """
 
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity | str] = None
     """
     TBD
     """

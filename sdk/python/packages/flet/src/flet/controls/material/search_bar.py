@@ -228,7 +228,7 @@ class SearchBar(LayoutControl):
     The color of the divider when in search view.
     """
 
-    capitalization: Optional[TextCapitalization] = None
+    capitalization: Optional[TextCapitalization | str] = None
     """
     Enables automatic on-the-fly capitalization of entered text.
     """

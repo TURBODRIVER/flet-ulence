@@ -176,7 +176,7 @@ class SnackBar(DialogControl):
         ValueError: If it is neither a string nor a visible `Control`.
     """
 
-    behavior: Optional[SnackBarBehavior] = None
+    behavior: Optional[SnackBarBehavior | str] = None
     """
     This defines the behavior and location of the snack bar.
 
@@ -195,7 +195,7 @@ class SnackBar(DialogControl):
             is not :attr:`flet.SnackBarBehavior.FLOATING`.
     """
 
-    dismiss_direction: Optional[DismissDirection] = None
+    dismiss_direction: Optional[DismissDirection | str] = None
     """
     The direction in which the SnackBar can be dismissed.
 

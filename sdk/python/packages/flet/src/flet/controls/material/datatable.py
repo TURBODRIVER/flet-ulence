@@ -83,7 +83,7 @@ class DataColumn(Control):
     might have been abbreviated to keep the column width to a reasonable size.
     """
 
-    heading_row_alignment: Optional[MainAxisAlignment] = None
+    heading_row_alignment: Optional[MainAxisAlignment | str] = None
     """
     Defines the horizontal layout of the label and sort indicator in the heading row.
     """

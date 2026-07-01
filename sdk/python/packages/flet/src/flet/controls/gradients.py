@@ -74,7 +74,7 @@ class Gradient:
     If :attr:`stops` is provided, this list must have the same length as it.
     """
 
-    tile_mode: GradientTileMode = GradientTileMode.CLAMP
+    tile_mode: GradientTileMode | str = GradientTileMode.CLAMP
     """
     How this gradient should tile the plane beyond in the region before `begin` and \
     after `end`.

@@ -272,7 +272,7 @@ class ButtonStyle:
     If not set or `None`, then the `color` will be used.
     """
 
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity | str] = None
     """
     Defines how compact the button's layout will be.
     """
@@ -300,7 +300,7 @@ class ButtonStyle:
         text_style: Optional[ControlStateValue[TextStyle]] = None,
         icon_size: Optional[ControlStateValue[Optional[Number]]] = None,
         icon_color: Optional[ControlStateValue[ColorValue]] = None,
-        visual_density: Optional[VisualDensity] = None,
+        visual_density: Optional[VisualDensity | str] = None,
         mouse_cursor: Optional[ControlStateValue[MouseCursor | str]] = None,
     ) -> "ButtonStyle":
         """

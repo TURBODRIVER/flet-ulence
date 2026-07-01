@@ -162,7 +162,7 @@ class PopupMenuButton(LayoutControl):
     Defaults to `8`.
     """
 
-    menu_position: Optional[PopupMenuPosition] = None
+    menu_position: Optional[PopupMenuPosition | str] = None
     """
     Defines position of the popup menu relative to the button.
 

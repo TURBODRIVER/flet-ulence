@@ -39,7 +39,7 @@ class Switch(LayoutControl, AdaptiveControl):
     The clickable label to display on the right of this switch.
     """
 
-    label_position: LabelPosition = LabelPosition.RIGHT
+    label_position: LabelPosition | str = LabelPosition.RIGHT
     """
     The position of the :attr:`label`, if provided.
     """

@@ -99,7 +99,7 @@ class CupertinoTimerPicker(LayoutControl):
         ValueError: If it is not a factor of `60`.
     """
 
-    mode: CupertinoTimerPickerMode = CupertinoTimerPickerMode.HOUR_MINUTE_SECONDS
+    mode: CupertinoTimerPickerMode | str = CupertinoTimerPickerMode.HOUR_MINUTE_SECONDS
     """
     The mode of this picker.
     """

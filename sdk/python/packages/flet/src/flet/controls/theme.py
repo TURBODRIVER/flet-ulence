@@ -105,21 +105,21 @@ class PageTransitionsTheme:
     override how Material routes animate on each target platform.
     """
 
-    linux: Optional[PageTransitionTheme] = None
+    linux: Optional[PageTransitionTheme | str] = None
     """
     Transition preset for Linux desktop routes.
 
     If `None`, defaults to :attr:`flet.PageTransitionTheme.ZOOM`.
     """
 
-    macos: Optional[PageTransitionTheme] = None
+    macos: Optional[PageTransitionTheme | str] = None
     """
     Transition preset for macOS desktop routes.
 
     If `None`, defaults to :attr:`flet.PageTransitionTheme.ZOOM`.
     """
 
-    windows: Optional[PageTransitionTheme] = None
+    windows: Optional[PageTransitionTheme | str] = None
     """
     Transition preset for Windows desktop routes.
 
@@ -598,7 +598,7 @@ class TabBarTheme:
     Customizes the appearance of :class:`~flet.TabBar` control across the app.
     """
 
-    indicator_size: Optional[TabBarIndicatorSize] = None
+    indicator_size: Optional[TabBarIndicatorSize | str] = None
     """
     Overrides the default value for :attr:`flet.TabBar.indicator_size`.
     """
@@ -608,7 +608,7 @@ class TabBarTheme:
     Overrides the default value for :attr:`flet.TabBar.indicator`.
     """
 
-    indicator_animation: Optional[TabIndicatorAnimation] = None
+    indicator_animation: Optional[TabIndicatorAnimation | str] = None
     """
     Overrides the default value for :attr:`flet.TabBar.indicator_animation`.
     """
@@ -618,7 +618,7 @@ class TabBarTheme:
     Overrides the default value for :attr:`flet.TabBar.splash_border_radius`.
     """
 
-    tab_alignment: Optional[TabAlignment] = None
+    tab_alignment: Optional[TabAlignment | str] = None
     """
     Overrides the default value for :attr:`flet.TabBar.tab_alignment`.
     """
@@ -1044,7 +1044,7 @@ class ChipTheme:
     descendant :class:`~flet.Chip` controls.
     """
 
-    brightness: Optional[Brightness] = None
+    brightness: Optional[Brightness | str] = None
     """
     Overrides the default value for all chips which affects various base material \
     color choices in the chip rendering.
@@ -1210,7 +1210,7 @@ class NavigationRailTheme:
     in all descendant :class:`~flet.NavigationRail` controls.
     """
 
-    label_type: Optional[NavigationRailLabelType] = None
+    label_type: Optional[NavigationRailLabelType | str] = None
     """
     The type that defines the layout and behavior of the labels in the \
     :class:`~flet.NavigationRail`.
@@ -1390,7 +1390,7 @@ class RadioTheme:
     :class:`~flet.Radio` controls.
     """
 
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity | str] = None
     """
     Overrides the default value of :attr:`flet.Radio.visual_density`
     in all descendant :class:`~flet.Radio` controls.
@@ -1441,7 +1441,7 @@ class CheckboxTheme:
     :class:`~flet.Checkbox` controls.
     """
 
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity | str] = None
     """
     Overrides the default value of :attr:`flet.Checkbox.visual_density` in all \
     descendant :class:`~flet.Checkbox` controls.
@@ -1686,13 +1686,13 @@ class SnackBarTheme:
     descendant :class:`~flet.SnackBar` controls.
     """
 
-    dismiss_direction: Optional[DismissDirection] = None
+    dismiss_direction: Optional[DismissDirection | str] = None
     """
     Overrides the default value of :attr:`flet.SnackBar.dismiss_direction` in all \
     descendant :class:`~flet.SnackBar` controls.
     """
 
-    behavior: Optional[SnackBarBehavior] = None
+    behavior: Optional[SnackBarBehavior | str] = None
     """
     Overrides the default value of :attr:`flet.SnackBar.behavior` in all descendant \
     :class:`~flet.SnackBar` controls.
@@ -2248,7 +2248,7 @@ class ListTileTheme:
     Overrides the default value for :attr:`flet.ListTile.shape`.
     """
 
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity | str] = None
     """
     Overrides the default value for :attr:`flet.ListTile.visual_density`.
     """
@@ -2299,17 +2299,17 @@ class ListTileTheme:
     Overrides the default value for :attr:`flet.ListTile.min_height`.
     """
 
-    affinity: Optional[TileAffinity] = None
+    affinity: Optional[TileAffinity | str] = None
     """
     Overrides the default value for :attr:`flet.ExpansionTile.affinity`.
     """
 
-    style: Optional[ListTileStyle] = None
+    style: Optional[ListTileStyle | str] = None
     """
     Overrides the default value for :attr:`flet.ListTile.style`.
     """
 
-    title_alignment: Optional[ListTileTitleAlignment] = None
+    title_alignment: Optional[ListTileTitleAlignment | str] = None
     """
     Overrides the default value for :attr:`flet.ListTile.title_alignment`.
     """
@@ -2591,7 +2591,7 @@ class SliderTheme:
     The color given to the value indicator shape stroke.
     """
 
-    interaction: Optional[SliderInteraction] = None
+    interaction: Optional[SliderInteraction | str] = None
     """
     Overrides the default value for :attr:`flet.Slider.interaction`.
     """
@@ -2687,7 +2687,7 @@ class ProgressIndicatorTheme:
     Overrides the default value for :attr:`flet.ProgressRing.stroke_align`.
     """
 
-    stroke_cap: Optional[StrokeCap] = None
+    stroke_cap: Optional[StrokeCap | str] = None
     """
     Overrides the default value for :attr:`flet.ProgressRing.stroke_cap`.
     """
@@ -2759,7 +2759,7 @@ class PopupMenuTheme:
     :class:`~flet.PopupMenuButton` controls.
     """
 
-    menu_position: Optional[PopupMenuPosition] = None
+    menu_position: Optional[PopupMenuPosition | str] = None
     """
     Overrides the default value of :attr:`flet.PopupMenuButton.menu_position` in all \
     descendant :class:`~flet.PopupMenuButton` controls.
@@ -2791,7 +2791,7 @@ class SearchBarTheme:
     :class:`~flet.SearchBar` controls.
     """
 
-    text_capitalization: Optional[TextCapitalization] = None
+    text_capitalization: Optional[TextCapitalization | str] = None
     """
     Overrides the default value of :attr:`flet.SearchBar.capitalization` in all \
     descendant :class:`~flet.SearchBar` controls.
@@ -3044,7 +3044,7 @@ class NavigationBarTheme:
     Overrides the default value for :attr:`flet.NavigationBar.indicator_shape`.
     """
 
-    label_behavior: Optional[NavigationBarLabelBehavior] = None
+    label_behavior: Optional[NavigationBarLabelBehavior | str] = None
     """
     Overrides the default value for :attr:`flet.NavigationBar.label_behavior`.
     """
@@ -3196,7 +3196,7 @@ class DataTableTheme:
     Overrides the default value for :class:`~flet.DataTable` decoration.
     """
 
-    heading_row_alignment: Optional[MainAxisAlignment] = None
+    heading_row_alignment: Optional[MainAxisAlignment | str] = None
     """
     Overrides the default value for :attr:`flet.DataColumn.heading_row_alignment`.
     """
@@ -3359,4 +3359,4 @@ class Theme:
     text_theme: Optional[TextTheme] = None
     time_picker_theme: Optional[TimePickerTheme] = None
     tooltip_theme: Optional[TooltipTheme] = None
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity | str] = None

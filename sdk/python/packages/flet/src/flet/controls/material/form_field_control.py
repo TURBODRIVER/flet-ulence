@@ -35,7 +35,7 @@ class FormFieldControl(LayoutControl):
     The :class:`~flet.TextStyle` to use for the text being edited.
     """
 
-    text_vertical_align: Optional[Union[VerticalAlignment, Number]] = None
+    text_vertical_align: Optional[Union[VerticalAlignment, Number, str]] = None
     """
     Defines how the text should be aligned vertically.
 

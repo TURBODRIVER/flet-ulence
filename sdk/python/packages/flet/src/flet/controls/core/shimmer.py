@@ -94,7 +94,7 @@ class Shimmer(LayoutControl):
     Duration of a shimmer cycle in milliseconds.
     """
 
-    direction: ShimmerDirection = ShimmerDirection.LTR
+    direction: ShimmerDirection | str = ShimmerDirection.LTR
     """
     Direction of the shimmering animation.
     """

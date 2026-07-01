@@ -115,7 +115,7 @@ class MenuStyle:
     This value must be less than or equal to :attr:`max_size`.
     """
 
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity | str] = None
     """
     Defines how compact the menu's layout will be.
     """

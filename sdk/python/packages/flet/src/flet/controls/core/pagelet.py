@@ -93,7 +93,7 @@ class Pagelet(LayoutControl, AdaptiveControl):
     """
 
     floating_action_button_location: Optional[
-        Union[FloatingActionButtonLocation, OffsetValue]
+        Union[FloatingActionButtonLocation, OffsetValue, str]
     ] = FloatingActionButtonLocation.END_FLOAT
     """
     Defines the position of the :attr:`floating_action_button`.

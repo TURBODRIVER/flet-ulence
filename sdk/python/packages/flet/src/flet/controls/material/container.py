@@ -92,7 +92,7 @@ class Container(LayoutControl, AdaptiveControl):
     The border radius of this container.
     """
 
-    shape: BoxShape = BoxShape.RECTANGLE
+    shape: BoxShape | str = BoxShape.RECTANGLE
     """
     Sets the shape of this container.
     """
@@ -194,7 +194,7 @@ class Container(LayoutControl, AdaptiveControl):
     inside the container and down its tree.
     """
 
-    theme_mode: Optional[ThemeMode] = None
+    theme_mode: Optional[ThemeMode | str] = None
     """
     "Resets" parent theme and creates a new, unique scheme for all controls inside the \
     container. Otherwise the styles defined in container's :attr:`theme` property \

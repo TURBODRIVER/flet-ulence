@@ -84,7 +84,7 @@ class TimePickerEntryModeChangeEvent(Event["TimePicker"]):
     changes.
     """
 
-    entry_mode: TimePickerEntryMode
+    entry_mode: TimePickerEntryMode | str
     """The new entry mode."""
 
 
@@ -135,7 +135,7 @@ class TimePicker(DialogControl):
     Whether this picker cannot be dismissed by clicking the area outside of it.
     """
 
-    entry_mode: TimePickerEntryMode = TimePickerEntryMode.DIAL
+    entry_mode: TimePickerEntryMode | str = TimePickerEntryMode.DIAL
     """
     The initial mode of time entry method for this picker.
 
@@ -230,7 +230,7 @@ class TimePicker(DialogControl):
     Called when the :attr:`entry_mode` is changed through the time picker dialog.
     """
 
-    hour_format: TimePickerHourFormat = TimePickerHourFormat.SYSTEM
+    hour_format: TimePickerHourFormat | str = TimePickerHourFormat.SYSTEM
     """
     Defines the hour format of this time picker.
     """

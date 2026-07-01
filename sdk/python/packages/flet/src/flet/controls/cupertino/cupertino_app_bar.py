@@ -124,7 +124,7 @@ class CupertinoAppBar(Control):
         :attr:`automatically_imply_leading` is `False`.
     """
 
-    brightness: Optional[Brightness] = None
+    brightness: Optional[Brightness | str] = None
     """
     The brightness of the specified :attr:`bgcolor`.
 

@@ -38,7 +38,7 @@ class Radio(LayoutControl, AdaptiveControl):
     The clickable label to display on the right of a Radio.
     """
 
-    label_position: LabelPosition = LabelPosition.RIGHT
+    label_position: LabelPosition | str = LabelPosition.RIGHT
     """
     Defaults to `LabelPosition.RIGHT`.
     """
@@ -99,7 +99,7 @@ class Radio(LayoutControl, AdaptiveControl):
     state by selecting it again when selected.
     """
 
-    visual_density: Optional[VisualDensity] = None
+    visual_density: Optional[VisualDensity | str] = None
     """
     Defines how compact the radio's layout will be.
     """

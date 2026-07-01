@@ -45,7 +45,7 @@ class CupertinoRadio(LayoutControl):
     selected.
     """
 
-    label_position: LabelPosition = LabelPosition.RIGHT
+    label_position: LabelPosition | str = LabelPosition.RIGHT
     """
     The position of the label relative to this radio.
     """

@@ -49,7 +49,7 @@ class Points(Shape):
     The list of offsets describing points.
     """
 
-    point_mode: PointMode = PointMode.POINTS
+    point_mode: PointMode | str = PointMode.POINTS
     """
     Defines how a list of points is interpreted when drawing a set of points.
     """

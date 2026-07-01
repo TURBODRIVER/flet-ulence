@@ -372,7 +372,7 @@ class TabBar(LayoutControl, AdaptiveControl):
     of the available space.
     """
 
-    tab_alignment: Optional[TabAlignment] = None
+    tab_alignment: Optional[TabAlignment | str] = None
     """
     Specifies the horizontal alignment of the tabs within this tab bar.
 
@@ -433,7 +433,7 @@ class TabBar(LayoutControl, AdaptiveControl):
     then the tab's bounds are only as wide as the tab control itself.
     """
 
-    indicator_size: Optional[TabBarIndicatorSize] = None
+    indicator_size: Optional[TabBarIndicatorSize | str] = None
     """
     Defines how the selected tab indicator's size is computed.
 
@@ -449,7 +449,7 @@ class TabBar(LayoutControl, AdaptiveControl):
     and :attr:`indicator` properties.
     """
 
-    indicator_animation: Optional[TabIndicatorAnimation] = None
+    indicator_animation: Optional[TabIndicatorAnimation | str] = None
     """
     Specifies the animation behavior of the tab indicator.
 

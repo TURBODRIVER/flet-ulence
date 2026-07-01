@@ -134,7 +134,7 @@ class NavigationBar(LayoutControl, AdaptiveControl):
     The color of the navigation bar itself.
     """
 
-    label_behavior: Optional[NavigationBarLabelBehavior] = None
+    label_behavior: Optional[NavigationBarLabelBehavior | str] = None
     """
     Defines how the destinations' labels will be laid out and when they'll be \
     displayed.
