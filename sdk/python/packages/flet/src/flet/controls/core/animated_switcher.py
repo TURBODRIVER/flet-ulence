@@ -65,12 +65,12 @@ class AnimatedSwitcher(LayoutControl):
     The duration of the transition from the new :attr:`content` to the old one.
     """
 
-    switch_in_curve: AnimationCurve = AnimationCurve.LINEAR
+    switch_in_curve: AnimationCurve | str = AnimationCurve.LINEAR
     """
     The animation curve to use when transitioning in a new :attr:`content`.
     """
 
-    switch_out_curve: AnimationCurve = AnimationCurve.LINEAR
+    switch_out_curve: AnimationCurve | str = AnimationCurve.LINEAR
     """
     The animation curve to use when transitioning an old :attr:`content` out.
     """

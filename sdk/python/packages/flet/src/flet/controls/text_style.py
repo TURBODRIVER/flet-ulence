@@ -272,7 +272,7 @@ class TextStyle:
     Whether to use italic typeface.
     """
 
-    decoration: Optional[TextDecoration] = None
+    decoration: Optional[TextDecoration | int] = None
     """
     The decorations to paint near the text (e.g., an underline).
     """
@@ -288,7 +288,7 @@ class TextStyle:
     the font.
     """
 
-    decoration_style: Optional[TextDecorationStyle] = None
+    decoration_style: Optional[TextDecorationStyle | str] = None
     """
     The style in which to paint the text decorations (e.g., dashed).
 
@@ -356,10 +356,10 @@ class TextStyle:
         height: Optional[Number] = None,
         weight: Optional[FontWeight | str] = None,
         italic: Optional[bool] = None,
-        decoration: Optional[TextDecoration] = None,
+        decoration: Optional[TextDecoration | int] = None,
         decoration_color: Optional[ColorValue] = None,
         decoration_thickness: Optional[Number] = None,
-        decoration_style: Optional[TextDecorationStyle] = None,
+        decoration_style: Optional[TextDecorationStyle | str] = None,
         font_family: Optional[str] = None,
         font_family_fallback: Optional[list[str]] = None,
         color: Optional[ColorValue] = None,

@@ -248,7 +248,7 @@ class Animation:
     For more control and flexibility, use :class:`~flet.Duration` instead.
     """
 
-    curve: AnimationCurve = AnimationCurve.LINEAR
+    curve: AnimationCurve | str = AnimationCurve.LINEAR
     """
     Easing curve that shapes interpolation over time.
     """

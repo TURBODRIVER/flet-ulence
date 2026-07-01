@@ -264,7 +264,7 @@ class Tabs(LayoutControl, AdaptiveControl):
     async def move_to(
         self,
         index: int,
-        animation_curve: AnimationCurve = AnimationCurve.EASE_IN,
+        animation_curve: AnimationCurve | str = AnimationCurve.EASE_IN,
         animation_duration: Optional[DurationValue] = None,
     ):
         """

@@ -139,7 +139,7 @@ class PageView(LayoutControl):
         self,
         index: int,
         animation_duration: DurationValue = DEFAULT_ANIMATION_DURATION,
-        animation_curve: AnimationCurve = DEFAULT_ANIMATION_CURVE,
+        animation_curve: AnimationCurve | str = DEFAULT_ANIMATION_CURVE,
     ):
         """
         Animates to the page at `index`.
@@ -199,7 +199,7 @@ class PageView(LayoutControl):
     async def next_page(
         self,
         animation_duration: DurationValue = DEFAULT_ANIMATION_DURATION,
-        animation_curve: AnimationCurve = DEFAULT_ANIMATION_CURVE,
+        animation_curve: AnimationCurve | str = DEFAULT_ANIMATION_CURVE,
     ):
         """
         Animates to the next page. Same as calling
@@ -217,7 +217,7 @@ class PageView(LayoutControl):
     async def previous_page(
         self,
         animation_duration: DurationValue = DEFAULT_ANIMATION_DURATION,
-        animation_curve: AnimationCurve = DEFAULT_ANIMATION_CURVE,
+        animation_curve: AnimationCurve | str = DEFAULT_ANIMATION_CURVE,
     ):
         """
         Animates to the previous page. Same as calling

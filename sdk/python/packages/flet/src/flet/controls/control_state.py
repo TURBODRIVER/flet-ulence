@@ -89,7 +89,7 @@ class ControlState(str, Enum):
 
 
 T = TypeVar("T")
-ControlStateValue = Union[T, dict[ControlState, T]]
+ControlStateValue = Union[T, dict[ControlState | str, T]]
 """Type alias for state-dependent control values.
 
 Represents either:
