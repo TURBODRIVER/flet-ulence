@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:serious_python/serious_python.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'python.dart';
+import "python.dart";
 
 {% for dep in cookiecutter.flutter.dependencies %}
 import 'package:{{ dep }}/{{ dep }}.dart' as {{ dep }};
@@ -32,7 +32,7 @@ hide_window_on_start: {{ hide_window_on_start }}
 
 const bool isRelease = bool.fromEnvironment('dart.vm.product');
 
-const assetPath = "{{ python_asset_path }}";
+const assetPath = '{{ python_asset_path | default("app/app.zip", true) }}';
 const pythonModuleName = "{{ cookiecutter.python_module_name }}";
 const appBootScreenMessage = '{{ boot_screen_message | default("Preparing the App...", true) }}';
 final hideWindowOnStart = bool.tryParse("{{ hide_window_on_start }}".toLowerCase()) ?? false;

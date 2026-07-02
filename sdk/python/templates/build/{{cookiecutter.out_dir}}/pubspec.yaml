@@ -29,8 +29,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - app/app.zip
-    - app/app.zip.hash
+    - app\app.zip
+    - app\app.zip.hash
 
 # dart run flutter_launcher_icons
 flutter_launcher_icons:

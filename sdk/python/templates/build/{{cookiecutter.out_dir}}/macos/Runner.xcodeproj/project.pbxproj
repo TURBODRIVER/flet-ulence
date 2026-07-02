@@ -10,7 +10,9 @@
 		33CC111A2044C6BA0003C045 /* Flutter Assemble */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 33CC111B2044C6BA0003C045 /* Build configuration list for PBXAggregateTarget "Flutter Assemble" */;
-			buildPhases = 33CC111E2044C6BF0003C045 /* ShellScript */;
+			buildPhases = (
+				33CC111E2044C6BF0003C045 /* ShellScript */,
+			);
 			dependencies = (
 			);
 			name = "Flutter Assemble";
