@@ -70,10 +70,10 @@ void main(List<String> args) async {
     colorScheme: const ColorScheme.light(
       surface: Color(0xFFFFFFFF),
       onSurface: Color(0xFF797876),
-      primary: Color(0xFF142AFA),
+      primary: Color(0xFF797876),
     ),
     progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: Color(0xFF142AFA),
+      color: Color(0xFF797876),
     ),
     textTheme: const TextTheme(
       bodySmall: TextStyle(color: Color(0xFF797876)),
