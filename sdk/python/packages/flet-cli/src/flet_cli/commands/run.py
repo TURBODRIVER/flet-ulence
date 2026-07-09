@@ -42,6 +42,22 @@ class Command(BaseCommand):
             help="Path to the Python script that starts your Flet app",
         )
         parser.add_argument(
+            "-p",
+            "--port",
+            dest="port",
+            type=int,
+            default=None,
+            help="Custom TCP or HTTP port to run the Flet app on. "
+                 "If not specified, a random port will be chosen",
+        )
+        parser.add_argument(
+            "--host",
+            dest="host",
+            type=str,
+            default=None,
+            help='The host to run Flet app on. Use "*" to listen on all IPs',
+        )
+        parser.add_argument(
             "--name",
             dest="app_name",
             type=str,
@@ -248,6 +264,7 @@ class Handler(FileSystemEventHandler):
         self.flet_app_data_dir = flet_app_data_dir
         self.flet_app_temp_dir = flet_app_temp_dir
         self.terminate = threading.Event()
+        self._process = None
         self.start_process()
 
     def start_process(self):
@@ -259,6 +276,10 @@ class Handler(FileSystemEventHandler):
         """
 
         p_env = {**os.environ}
+        if self.port is not None:
+            p_env["FLET_SERVER_PORT"] = str(self.port)
+        if self.host is not None:
+            p_env["FLET_SERVER_IP"] = str(self.host)
         if self.uds_path is not None:
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
         if self.assets_dir is not None:
@@ -271,12 +292,12 @@ class Handler(FileSystemEventHandler):
         p_env["PYTHONIOENCODING"] = "utf-8"
         p_env["PYTHONWARNINGS"] = "default::DeprecationWarning"
 
-        self.p = subprocess.Popen(
+        self._process = subprocess.Popen(
             self.args, env=p_env, stdout=subprocess.PIPE, encoding="utf-8"
         )
 
         self.is_running = True
-        th = threading.Thread(target=self.print_output, args=[self.p], daemon=True)
+        th = threading.Thread(target=self.print_output, args=[self._process], daemon=True)
         th.start()
 
     def on_any_event(self, event):
@@ -329,11 +350,10 @@ class Handler(FileSystemEventHandler):
                         self.hidden = True
                     if self.page_url.startswith("http"):
                         print(self.page_url)
-                    else:
-                        th = threading.Thread(
-                            target=self.open_flet_view_and_wait, args=(), daemon=True
-                        )
-                        th.start()
+                    th = threading.Thread(
+                        target=self.open_flet_view_and_wait, args=(), daemon=True
+                    )
+                    th.start()
             else:
                 print(line)
 
@@ -351,11 +371,11 @@ class Handler(FileSystemEventHandler):
             self.page_url, self.assets_dir, self.hidden
         )
         self.fvp.wait()
-        self.p.send_signal(signal.SIGTERM)
+        self._process.send_signal(signal.SIGTERM)
         try:
-            self.p.wait(2)
+            self._process.wait(2)
         except subprocess.TimeoutExpired:
-            self.p.kill()
+            self._process.kill()
         self.terminate.set()
 
     def restart_program(self):
@@ -367,8 +387,8 @@ class Handler(FileSystemEventHandler):
         """
 
         self.is_running = False
-        self.p.send_signal(signal.SIGTERM)
-        self.p.wait()
+        self._process.send_signal(signal.SIGTERM)
+        self._process.wait()
         self.start_process()
 
     def clear_console(self):

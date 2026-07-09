@@ -1,6 +1,6 @@
 [project]
 name = "flet-cli"
-version = "0.1.0"
+version = "0.86.0"
 description = "Flet CLI"
 authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
 license = "Apache-2.0"
@@ -12,11 +12,13 @@ dependencies = [
     "packaging >=25.0",
     "tomli >= 1.1.0 ; python_version < '3.11'",
     "cookiecutter >=2.6.0",
-    "binaryornot <0.5",
-    "chardet <6"
 ]
 
 [project.urls]
 Homepage = "https://flet.dev"
 Repository = "https://github.com/flet-dev/flet"
 Documentation = "https://flet.dev/docs"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

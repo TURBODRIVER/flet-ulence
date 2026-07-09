@@ -326,7 +326,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             choices=["location", "camera", "microphone", "photo_library"],
-            help="The list of pre-defined permissions macOS builds",
+            help="The list of pre-defined permissions for macOS builds",
         )
         parser.add_argument(
             "--build-number",
@@ -554,10 +554,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         info_plist = merge_dict(
             info_plist,
-            (
-                self.get_pyproject("tool.flet.macos.info")
-            )
-            or {},
+            self.get_pyproject("tool.flet.macos.info") or {},
         )
 
         # parse --info-plist
@@ -692,6 +689,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             template_ref = flet.version.flet_version
 
         is_local_dev = False
+        # Identity printed in status / hashed for invalidation; may differ from
+        # the path cookiecutter actually reads when caching kicks in below.
+        template_source = template_url
         if template_url:
             # User-provided template (git repo or local path) — use checkout
             checkout = template_ref
@@ -700,13 +700,17 @@ class BaseBuildCommand(BaseFlutterCommand):
             local_tpl = Path(__file__).resolve().parents[5] / "templates" / "build"
             if local_tpl.is_dir():
                 template_url = str(local_tpl)
+                template_source = template_url
                 checkout = None
                 is_local_dev = True
             else:
-                template_url = DEFAULT_TEMPLATE_URL.format(version=template_ref)
+                from flet_cli.utils.template_cache import get_cached_template_zip
+
+                template_source = DEFAULT_TEMPLATE_URL.format(version=template_ref)
+                template_url = str(get_cached_template_zip(template_source, template_ref))
                 checkout = None
 
-        hash.update(template_url)
+        hash.update(template_source)
         hash.update(template_ref)
 
         template_dir = self.options.template_dir or self.get_pyproject(
@@ -732,7 +736,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             # create a new Flutter bootstrap project directory, if non-existent
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)
-                status = f"[bold blue]Creating app shell from {template_url}"
+                status = f"[bold blue]Creating app shell from {template_source}"
                 if checkout:
                     status += f' with ref "{template_ref}"'
                 status += "..."
@@ -1037,7 +1041,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             dev_packages = (
                 self.get_pyproject(f"tool.flet.{self.config_platform}.dev_packages")
                 or self.get_pyproject("tool.flet.dev_packages")
-                or []
+                or {}
             )
             if len(dev_packages) > 0:
                 for i in range(0, len(toml_dependencies)):

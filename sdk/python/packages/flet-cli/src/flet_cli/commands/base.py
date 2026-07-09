@@ -60,6 +60,8 @@ class BaseCommand:
     arguments: list[Option] = [verbose_option]
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
+        self.verbose = False
+
         for arg in self.arguments:
             arg.add_to_parser(parser)
         self.add_arguments(parser)

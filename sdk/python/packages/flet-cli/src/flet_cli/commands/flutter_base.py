@@ -48,7 +48,6 @@ class BaseFlutterCommand(BaseCommand):
         self.dart_exe = None
         self.flutter_exe = None
         self.required_flutter_version: Optional[version.Version] = None
-        self.verbose = False
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
         self.no_rich_output = no_rich_output
         self.current_platform = platform.system()
@@ -59,8 +58,8 @@ class BaseFlutterCommand(BaseCommand):
             "linux": "Linux",
             None: "Windows",
         }
-        self.status = None
         self.assume_yes = False
+        self.status = None
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         """
@@ -256,44 +255,6 @@ class BaseFlutterCommand(BaseCommand):
                 f"Flutter {self.required_flutter_version} "
                 f"installed {self.emojis['checkmark']}"
             )
-
-    def install_jdk(self):
-        """
-        Install or resolve JDK and configure Flutter to use it.
-        """
-
-        from flet_cli.utils.jdk import install_jdk
-
-        self.update_status("[bold blue]Installing JDK...")
-        jdk_dir = install_jdk(self.log_stdout, progress=self.progress)
-        self.env["JAVA_HOME"] = jdk_dir
-
-        # config flutter's JDK dir
-        if self.verbose > 0:
-            console.log(
-                "Configuring Flutter's path to JDK",
-                style=verbose1_style,
-            )
-        config_result = self.run(
-            [
-                self.flutter_exe,
-                "config",
-                "--no-version-check",
-                "--suppress-analytics",
-                f"--jdk-dir={jdk_dir}",
-            ],
-            cwd=os.getcwd(),
-            capture_output=self.verbose < 1,
-        )
-        if config_result.returncode != 0:
-            if isinstance(config_result.stdout, str):
-                console.log(config_result.stdout, style=verbose1_style)
-            if isinstance(config_result.stderr, str):
-                console.log(config_result.stderr, style=error_style)
-            self.cleanup(config_result.returncode)
-
-        if self.verbose > 0:
-            console.log(f"JDK installed {self.emojis['checkmark']}")
 
     def _prompt_input(self, prompt: str) -> bool:
         """

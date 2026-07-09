@@ -1,12 +1,11 @@
 import argparse
 import contextlib
-import os
 import platform
 
 from rich.console import Group
 from rich.live import Live
 
-from flet_cli.commands.build_base import BaseBuildCommand, console, verbose2_style
+from flet_cli.commands.build_base import BaseBuildCommand, console
 
 
 class Command(BaseBuildCommand):
@@ -17,12 +16,12 @@ class Command(BaseBuildCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
         self.debug_platforms = {
-            "windows": {"target_platform": "windows", "device_id": "windows"},
-            "macos": {"target_platform": "macos", "device_id": "macos"},
-            "linux": {"target_platform": "linux", "device_id": "linux"},
+            "windows": {"target_platform": "windows"},
+            "macos": {"target_platform": "macos"},
+            "linux": {"target_platform": "linux"},
         }
         self.debug_platform = None
-        self.device_id = None
+        self.platform_label = None
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         """
@@ -69,10 +68,6 @@ class Command(BaseBuildCommand):
             self.target_platform = self.debug_platforms[self.debug_platform][
                 "target_platform"
             ]
-            self.device_id = self.debug_platforms[self.debug_platform]["device_id"]
-            if self.options.device_id:
-                self.device_id = self.options.device_id
-
         self.status = console.status(
             f"[bold blue]Initializing {self.target_platform} debug session...",
             spinner="bouncingBall",
@@ -80,7 +75,6 @@ class Command(BaseBuildCommand):
         with Live(Group(self.status, self.progress), console=console) as self.live:
             self.initialize_command()
             if self.options.show_devices:
-                self.run_flutter_devices()
                 self.live.update("", refresh=True)
                 return
             self.validate_target_platform()
@@ -94,21 +88,6 @@ class Command(BaseBuildCommand):
             self.customize_icons()
             self.run_flutter()
             self.cleanup(0, message="Debug session ended.")
-
-    def add_flutter_command_args(self, args: list[str]):
-        """
-        Append `flutter run` arguments for selected device and mode.
-
-        Args:
-            args: Mutable argument list to extend.
-        """
-
-        assert self.device_id
-        args.extend(["run", "-d", self.device_id])
-
-        if self.options:
-            if self.options.release:
-                args.append("--release")
 
     def run_flutter(self):
         """
@@ -125,17 +104,3 @@ class Command(BaseBuildCommand):
 
         with contextlib.suppress(KeyboardInterrupt):
             self._run_flutter_command()
-
-    def run_flutter_devices(self):
-        """
-        Run `flutter devices` and print discovered devices to verbose output.
-        """
-
-        self.update_status("[bold blue]Checking connected devices...")
-        flutter_devices = self.run(
-            [self.flutter_exe, "devices", "--no-version-check", "--suppress-analytics"],
-            cwd=os.getcwd(),
-            capture_output=True,
-        )
-        if flutter_devices.returncode == 0 and flutter_devices.stdout:
-            console.log(flutter_devices.stdout, style=verbose2_style)
