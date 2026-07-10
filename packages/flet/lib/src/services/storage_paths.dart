@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 import '../flet_service.dart';
@@ -30,7 +31,8 @@ class StoragePaths extends FletService {
       case "get_temporary_directory":
         return (await getTemporaryDirectory()).path;
       case "get_console_log_filename":
-        return (await getApplicationCacheDirectory()).path;
+        return path.join(
+            (await getApplicationCacheDirectory()).path, "console.log");
       default:
         throw Exception("Unknown StoragePaths method: $name");
     }

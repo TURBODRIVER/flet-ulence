@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';
 
@@ -35,8 +34,6 @@ class _CupertinoContextMenuControlState
     }
 
     return CupertinoContextMenu(
-      enableHapticFeedback:
-          widget.control.getBool("enable_haptic_feedback", false)!,
       actions: actions,
       child: content,
     );

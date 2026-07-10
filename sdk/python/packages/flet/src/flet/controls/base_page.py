@@ -39,6 +39,7 @@ from flet.controls.types import (
     LocaleConfiguration,
     MainAxisAlignment,
     Number,
+    Orientation,
     ScrollMode,
     ThemeMode,
 )
@@ -83,6 +84,11 @@ class PageMediaData:
     device_pixel_ratio: float
     """
     The number of device pixels for each logical pixel.
+    """
+
+    orientation: Orientation | str
+    """
+    The orientation of the page.
     """
 
     always_use_24_hour_format: bool = False
@@ -130,8 +136,7 @@ class BasePage(AdaptiveControl):
     resizing and media changes.
 
     This class is not intended to be used directly in most apps; instead,
-    use :class:`~flet.Page`, which extend this base
-    functionality.
+    use :class:`~flet.Page`, which extend this base functionality.
     """
 
     views: list[View] = field(default_factory=lambda: [View()])
@@ -218,6 +223,7 @@ class BasePage(AdaptiveControl):
             view_padding=Padding.zero(),
             view_insets=Padding.zero(),
             device_pixel_ratio=0,
+            orientation=Orientation.PORTRAIT,
             always_use_24_hour_format=False,
         )
     )

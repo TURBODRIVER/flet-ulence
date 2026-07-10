@@ -24,10 +24,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_POSTAL_ADDRESS_LOCALITY](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_POSTAL_ADDRESS_LOCALITY).
-    * iOS: [addressCity](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     ADDRESS_CITY_AND_STATE = "addressCityAndState"
     """
@@ -35,9 +33,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * iOS: [addressCityAndState](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     ADDRESS_STATE = "addressState"
     """
@@ -45,10 +42,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_POSTAL_ADDRESS_REGION](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_POSTAL_ADDRESS_REGION).
-    * iOS: [addressState](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     BIRTHDAY = "birthday"
     """
@@ -56,10 +51,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_BIRTH_DATE_FULL](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_BIRTH_DATE_FULL).
-    * web: ["bday"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     BIRTHDAY_DAY = "birthdayDay"
     """
@@ -67,10 +60,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_BIRTH_DATE_DAY](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_BIRTH_DATE_DAY).
-    * web: ["bday-day"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     BIRTHDAY_MONTH = "birthdayMonth"
     """
@@ -78,10 +69,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_BIRTH_DATE_MONTH](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_BIRTH_DATE_MONTH).
-    * web: ["bday-month"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     BIRTHDAY_YEAR = "birthdayYear"
     """
@@ -89,10 +78,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_BIRTH_DATE_YEAR](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_BIRTH_DATE_YEAR).
-    * web: ["bday-year"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     COUNTRY_CODE = "countryCode"
     """
@@ -100,9 +87,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["country"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     COUNTRY_NAME = "countryName"
     """
@@ -110,11 +96,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_POSTAL_ADDRESS_COUNTRY](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_POSTAL_ADDRESS_COUNTRY).
-    * iOS: [countryName](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["country-name"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     CREDIT_CARD_EXPIRATION_DATE = "creditCardExpirationDate"
     """
@@ -122,10 +105,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_CREDIT_CARD_NUMBER](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_CREDIT_CARD_NUMBER).
-    * web: ["cc-exp"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     CREDIT_CARD_EXPIRATION_DAY = "creditCardExpirationDay"
     """
@@ -133,9 +114,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_CREDIT_CARD_EXPIRATION_DAY](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_CREDIT_CARD_EXPIRATION_DAY).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     CREDIT_CARD_EXPIRATION_MONTH = "creditCardExpirationMonth"
     """
@@ -143,10 +123,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_CREDIT_CARD_EXPIRATION_MONTH](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_CREDIT_CARD_EXPIRATION_MONTH).
-    * web: ["cc-exp-month"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     CREDIT_CARD_EXPIRATION_YEAR = "creditCardExpirationYear"
     """
@@ -154,10 +132,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_CREDIT_CARD_EXPIRATION_YEAR](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_CREDIT_CARD_EXPIRATION_YEAR).
-    * web: ["cc-exp-year"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     CREDIT_CARD_FAMILY_NAME = "creditCardFamilyName"
     """
@@ -165,9 +141,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["cc-family-name"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     CREDIT_CARD_GIVEN_NAME = "creditCardGivenName"
     """
@@ -175,9 +150,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["cc-given-name"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     CREDIT_CARD_MIDDLE_NAME = "creditCardMiddleName"
     """
@@ -186,9 +160,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["cc-additional-name"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     CREDIT_CARD_NAME = "creditCardName"
     """
@@ -196,9 +169,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["cc-name"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     CREDIT_CARD_NUMBER = "creditCardNumber"
     """
@@ -206,11 +178,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_CREDIT_CARD_NUMBER](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_CREDIT_CARD_NUMBER).
-    * iOS: [creditCardNumber](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["cc-number"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     CREDIT_CARD_SECURITY_CODE = "creditCardSecurityCode"
     """
@@ -218,10 +187,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_CREDIT_CARD_SECURITY_CODE](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_CREDIT_CARD_SECURITY_CODE).
-    * web: ["cc-csc"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     CREDIT_CARD_TYPE = "creditCardType"
     """
@@ -229,9 +196,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["cc-type"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     EMAIL = "email"
     """
@@ -239,11 +205,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_EMAIL_ADDRESS](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_EMAIL_ADDRESS).
-    * iOS: [emailAddress](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["email"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     FAMILY_NAME = "familyName"
     """
@@ -251,11 +214,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PERSON_NAME_FAMILY](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PERSON_NAME_FAMILY).
-    * iOS: [familyName](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["family-name"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     FULL_STREET_ADDRESS = "fullStreetAddress"
     """
@@ -263,11 +223,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_POSTAL_ADDRESS_STREET_ADDRESS](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_POSTAL_ADDRESS_STREET_ADDRESS).
-    * iOS: [fullStreetAddress](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["street-address"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     GENDER = "gender"
     """
@@ -275,10 +232,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_GENDER](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_GENDER).
-    * web: ["sex"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     GIVEN_NAME = "givenName"
     """
@@ -286,11 +241,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PERSON_NAME_GIVEN](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PERSON_NAME_GIVEN).
-    * iOS: [givenName](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["given-name"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     IMPP = "impp"
     """
@@ -299,9 +251,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["impp"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     JOB_TITLE = "jobTitle"
     """
@@ -309,10 +260,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * iOS: [jobTitle](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["organization-title"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     LANGUAGE = "language"
     """
@@ -320,9 +269,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["language"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     LOCATION = "location"
     """
@@ -331,9 +279,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * iOS: [location](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     MIDDLE_INITIAL = "middleInitial"
     """
@@ -341,9 +288,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PERSON_NAME_MIDDLE_INITIAL](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PERSON_NAME_MIDDLE_INITIAL).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     MIDDLE_NAME = "middleName"
     """
@@ -351,11 +297,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PERSON_NAME_MIDDLE](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PERSON_NAME_MIDDLE).
-    * iOS: [middleName](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["additional-name"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     NAME = "name"
     """
@@ -363,11 +306,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PERSON_NAME](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PERSON_NAME).
-    * iOS: [name](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["name"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     NAME_PREFIX = "namePrefix"
     """
@@ -375,11 +315,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PERSON_NAME_PREFIX](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PERSON_NAME_PREFIX).
-    * iOS: [namePrefix](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["honorific-prefix"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     NAME_SUFFIX = "nameSuffix"
     """
@@ -387,11 +324,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PERSON_NAME_SUFFIX](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PERSON_NAME_SUFFIX).
-    * iOS: [nameSuffix](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["honorific-suffix"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     NEW_PASSWORD = "newPassword"
     """
@@ -399,11 +333,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_NEW_PASSWORD](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_NEW_PASSWORD).
-    * iOS: [newPassword](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["new-password"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     NEW_USERNAME = "newUsername"
     """
@@ -411,9 +342,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_NEW_USERNAME](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_NEW_USERNAME).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     NICKNAME = "nickname"
     """
@@ -421,10 +351,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * iOS: [nickname](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["nickname"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     ONE_TIME_CODE = "oneTimeCode"
     """
@@ -432,11 +360,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_SMS_OTP](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_SMS_OTP).
-    * iOS: [oneTimeCode](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["one-time-code"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     ORGANIZATION_NAME = "organizationName"
     """
@@ -446,10 +371,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * iOS: [organizationName](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["organization"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     PASSWORD = "password"
     """
@@ -457,11 +380,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PASSWORD](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PASSWORD).
-    * iOS: [password](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["current-password"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     PHOTO = "photo"
     """
@@ -471,9 +391,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["photo"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     POSTAL_ADDRESS = "postalAddress"
     """
@@ -481,9 +400,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_POSTAL_ADDRESS](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_POSTAL_ADDRESS).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     POSTAL_ADDRESS_EXTENDED = "postalAddressExtended"
     """
@@ -491,9 +409,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_POSTAL_ADDRESS_EXTENDED_ADDRESS](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_POSTAL_ADDRESS_EXTENDED_ADDRESS).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     POSTAL_ADDRESS_EXTENDED_POSTAL_CODE = "postalAddressExtendedPostalCode"
     """
@@ -501,9 +418,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_POSTAL_ADDRESS_EXTENDED_POSTAL_CODE](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_POSTAL_ADDRESS_EXTENDED_POSTAL_CODE).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     POSTAL_CODE = "postalCode"
     """
@@ -511,11 +427,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_POSTAL_CODE](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_POSTAL_CODE).
-    * iOS: [postalCode](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["postal-code"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     STREET_ADDRESS_LEVEL1 = "streetAddressLevel1"
     """
@@ -527,9 +440,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["address-level1"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     STREET_ADDRESS_LEVEL2 = "streetAddressLevel2"
     """
@@ -539,9 +451,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["address-level2"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     STREET_ADDRESS_LEVEL3 = "streetAddressLevel3"
     """
@@ -550,9 +461,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["address-level3"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     STREET_ADDRESS_LEVEL4 = "streetAddressLevel4"
     """
@@ -560,9 +470,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["address-level4"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     STREET_ADDRESS_LINE1 = "streetAddressLine1"
     """
@@ -570,10 +479,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * iOS: [streetAddressLine1](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["address-line1"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     STREET_ADDRESS_LINE2 = "streetAddressLine2"
     """
@@ -581,11 +488,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * iOS: [streetAddressLine2](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-        As of iOS 14.2 this hint does not trigger autofill.
-    * web: ["address-line2"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     STREET_ADDRESS_LINE3 = "streetAddressLine3"
     """
@@ -593,9 +497,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["address-line3"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     SUB_LOCALITY = "subLocality"
     """
@@ -603,9 +506,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * iOS: [sublocality](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     TELEPHONE_NUMBER = "telephoneNumber"
     """
@@ -613,11 +515,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PHONE_NUMBER](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PHONE_NUMBER).
-    * iOS: [telephoneNumber](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["tel"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     TELEPHONE_NUMBER_AREA_CODE = "telephoneNumberAreaCode"
     """
@@ -626,9 +525,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["tel-area-code"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     TELEPHONE_NUMBER_COUNTRY_CODE = "telephoneNumberCountryCode"
     """
@@ -636,10 +534,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PHONE_COUNTRY_CODE](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PHONE_COUNTRY_CODE).
-    * web: ["tel-country-code"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     TELEPHONE_NUMBER_DEVICE = "telephoneNumberDevice"
     """
@@ -648,9 +544,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PHONE_NUMBER_DEVICE](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PHONE_NUMBER_DEVICE).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     TELEPHONE_NUMBER_EXTENSION = "telephoneNumberExtension"
     """
@@ -658,9 +553,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["tel-extension"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     TELEPHONE_NUMBER_LOCAL = "telephoneNumberLocal"
     """
@@ -669,9 +563,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["tel-local"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     TELEPHONE_NUMBER_LOCAL_PREFIX = "telephoneNumberLocalPrefix"
     """
@@ -681,9 +574,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["tel-local-prefix"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     TELEPHONE_NUMBER_LOCAL_SUFFIX = "telephoneNumberLocalSuffix"
     """
@@ -693,9 +585,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["tel-local-suffix"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     TELEPHONE_NUMBER_NATIONAL = "telephoneNumberNational"
     """
@@ -703,10 +594,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_PHONE_NATIONAL](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_PHONE_NATIONAL).
-    * web: ["tel-national"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     TRANSACTION_AMOUNT = "transactionAmount"
     """
@@ -715,9 +604,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["transaction-amount"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     TRANSACTION_CURRENCY = "transactionCurrency"
     """
@@ -726,9 +614,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * web: ["transaction-currency"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     URL = "url"
     """
@@ -736,10 +623,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * iOS: [URL](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["url"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
     USERNAME = "username"
     """
@@ -747,11 +632,8 @@ class AutofillHint(str, Enum):
 
     This hint will be translated to the below values on different platforms:
 
-    * Android: [AUTOFILL_HINT_USERNAME](https://developer.android.com/reference/androidx/autofill/HintConstants#AUTOFILL_HINT_USERNAME).
-    * iOS: [username](https://developer.apple.com/documentation/uikit/uitextcontenttype).
-    * web: ["username"](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls:-the-autocomplete-attribute).
-    * Otherwise, the hint string will be used as-is.
-    """  # noqa: E501
+    The hint string will be used as-is.
+    """
 
 
 class AutofillGroupDisposeAction(str, Enum):

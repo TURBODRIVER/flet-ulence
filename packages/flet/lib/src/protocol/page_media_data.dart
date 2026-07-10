@@ -6,6 +6,7 @@ class PageMediaData extends Equatable {
   final PaddingData viewPadding;
   final PaddingData viewInsets;
   final double devicePixelRatio;
+  final Orientation orientation;
   final bool alwaysUse24HourFormat;
 
   const PageMediaData({
@@ -13,6 +14,7 @@ class PageMediaData extends Equatable {
     required this.viewPadding,
     required this.viewInsets,
     required this.devicePixelRatio,
+    required this.orientation,
     required this.alwaysUse24HourFormat,
   });
 
@@ -21,6 +23,7 @@ class PageMediaData extends Equatable {
         'view_padding': viewPadding.toMap(),
         'view_insets': viewInsets.toMap(),
         'device_pixel_ratio': devicePixelRatio,
+        'orientation': orientation.name,
         'always_use_24_hour_format': alwaysUse24HourFormat,
       };
 
@@ -30,6 +33,7 @@ class PageMediaData extends Equatable {
         viewPadding,
         viewInsets,
         devicePixelRatio,
+        orientation,
         alwaysUse24HourFormat,
       ];
 }

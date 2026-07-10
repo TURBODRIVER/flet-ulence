@@ -109,8 +109,8 @@ class QueryString(UrlComponents):
         """
         Return the URL path, normalizing hash-style routes when present.
         """
-        self._updated_url = self.url.replace("#/", "") if "#" in self.url else self.url
-        return urllib.parse.urlparse(self._updated_url).path
+        updated_url = self.url.replace("#/", "") if "#" in self.url else self.url
+        return urllib.parse.urlparse(updated_url).path
 
     def __call__(self):
         """

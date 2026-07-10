@@ -310,12 +310,6 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             widget.control.getString("clear_button_semantics_label"),
         autocorrect: autocorrect,
         enableSuggestions: widget.control.getBool("enable_suggestions", true)!,
-        smartDashesType: widget.control.getBool("smart_dashes_type", true)!
-            ? SmartDashesType.enabled
-            : SmartDashesType.disabled,
-        smartQuotesType: widget.control.getBool("smart_quotes_type", true)!
-            ? SmartQuotesType.enabled
-            : SmartQuotesType.disabled,
         suffixMode: widget.control.getOverlayVisibilityMode(
             "suffix_visibility_mode", OverlayVisibilityMode.always)!,
         prefixMode: widget.control.getOverlayVisibilityMode(
@@ -339,8 +333,6 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             .getPadding("scroll_padding", const EdgeInsets.all(20.0))!,
         obscuringCharacter:
             widget.control.getString("obscuring_character", '•')!,
-        cursorOpacityAnimates:
-            widget.control.getBool("animate_cursor_opacity", false)!,
         expands: fitParentSize,
         enableIMEPersonalizedLearning:
             widget.control.getBool("enable_ime_personalized_learning", true)!,

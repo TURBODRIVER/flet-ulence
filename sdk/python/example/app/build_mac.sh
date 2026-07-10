@@ -1,8 +1,8 @@
-#!/bin/bash
-
-#### Build requirements
-
+#!/bin/sh
 set -e
+
+#### Env
+
 export PYTHONUTF8=1
 export PYTHONIOENCODING=utf-8
 
@@ -11,21 +11,30 @@ export PATH="$HOME/.pub-cache/bin:$PATH"
 
 #### Vars
 
-APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FLET_DIR="$HOME/Input/Path/To/Flet/flet-ulence"
+FLET_DIR="$HOME/Documents/flet-ulence"
+APP_DIR="$(cd "$(dirname "$0")" && pwd)"
+VENV="$APP_DIR/.venv/bin"
 
-#### Deleting existing build
+#### Delete
 
 rm -rf "$APP_DIR/build"
 
-#### Preparing assets
+#### Flet
 
-"$APP_DIR/.venv/bin/python" prepare_assets.py
+"$VENV/pip" uninstall -y flet-desktop flet-cli flet -v
+"$VENV/pip" install --no-deps -e "$FLET_DIR/sdk/python/packages/flet" --no-cache-dir -v
+"$VENV/pip" install --no-deps -e "$FLET_DIR/sdk/python/packages/flet-cli" --no-cache-dir -v
+"$VENV/pip" install --no-deps -e "$FLET_DIR/sdk/python/packages/flet-desktop" --no-cache-dir -v
 
-#### Building app
+### Verify
 
-"$APP_DIR/.venv/bin/pip" install -e "$FLET_DIR/sdk/python/packages/flet-desktop"
-"$APP_DIR/.venv/bin/pip" install -e "$FLET_DIR/sdk/python/packages/flet-cli"
-"$APP_DIR/.venv/bin/pip" install -e "$FLET_DIR/sdk/python/packages/flet"
+"$VENV/python" -c "import importlib.metadata as m; print(m.version('flet'))"
+"$VENV/flet" --version
 
-"$APP_DIR/.venv/bin/flet" build macos --template "$FLET_DIR/sdk/python/templates/build" --verbose
+#### Prepare
+
+"$VENV/python" prepare_assets.py
+
+#### Build
+
+"$VENV/flet" build macos --template "$FLET_DIR/sdk/python/templates/build" --verbose

@@ -14,6 +14,7 @@ from flet.controls.icon_data import IconData
 from flet.controls.types import (
     ColorValue,
     Locale,
+    Orientation,
 )
 
 __all__ = [
@@ -184,6 +185,11 @@ class TimePicker(DialogControl):
     hour/minute.
 
     The default value is `"Enter a valid time"`.
+    """
+
+    orientation: Optional[Orientation | str] = None
+    """
+    The orientation of the dialog when displayed.
     """
 
     barrier_color: Optional[ColorValue] = None

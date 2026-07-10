@@ -1,4 +1,4 @@
-from typing import Annotated, Optional, Union
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
@@ -13,7 +13,6 @@ from flet.controls.types import (
     MouseCursor,
     Number,
     StrOrControl,
-    Url,
 )
 from flet.utils.validation import V, ValidationRules
 
@@ -169,7 +168,7 @@ class FloatingActionButton(LayoutControl):
     Whether detected gestures should provide acoustic and/or haptic feedback.
     """
 
-    url: Optional[Union[str, Url]] = None
+    url: Optional[str] = None
     """
     The URL to open when this button is clicked.
 

@@ -30,8 +30,15 @@ from flet.controls.control_event import (
 )
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
+from flet.controls.device_info import (
+    DeviceInfo,
+    LinuxDeviceInfo,
+    MacOsDeviceInfo,
+    WindowsDeviceInfo,
+)
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
+from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.service import Service
 from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.types import (
@@ -42,6 +49,7 @@ from flet.controls.types import (
     Wrapper,
 )
 from flet.utils.deprecated import deprecated
+from flet.utils.from_dict import from_dict
 from flet.utils.strings import random_string
 
 if TYPE_CHECKING:
@@ -256,26 +264,6 @@ class KeyboardEvent(Event["Page"]):
 
 
 @dataclass
-class LoginEvent(Event["Page"]):
-    """
-    Event payload for OAuth login completion.
-
-    Emitted to :attr:`flet.Page.on_login` for both successful and
-    failed authorization attempts.
-    """
-
-    error: Optional[str]
-    """
-    Error code or message when login failed; empty/`None` on success.
-    """
-
-    error_description: Optional[str]
-    """
-    Provider-specific error details when login failed.
-    """
-
-
-@dataclass
 class InvokeMethodResults:
     """
     Result envelope for a control invoke-method response.
@@ -367,22 +355,6 @@ class Page(BasePage):
         This property is read-only.
     """
 
-    client_ip: Optional[str] = None
-    """
-    IP address of the connected user.
-
-    Note:
-        This property is web- and read-only only.
-    """
-
-    client_user_agent: Optional[str] = None
-    """
-    Browser details of the connected user.
-
-    Note:
-        This property is web- and read-only only.
-    """
-
     platform: Optional[PagePlatform | str] = None
     """
     The operating system the application is running on.
@@ -448,39 +420,10 @@ class Page(BasePage):
     Called when a keyboard key is pressed.
     """
 
-    on_connect: Optional[ControlEventHandler["Page"]] = None
-    """
-    Called when a web user (re-)connects to a page session.
-
-    It is not triggered when an app page is first opened, but is triggered when
-    the page is refreshed, or Flet web client has re-connected after computer
-    was unlocked. This event could be used to detect when a web user becomes
-    "online".
-    """
-
-    on_disconnect: Optional[ControlEventHandler["Page"]] = None
-    """
-    Called when a web user disconnects from a page session, i.e. closes browser \
-    tab/window.
-    """
-
     on_close: Optional[ControlEventHandler["Page"]] = None
     """
     Called when a session has expired after configured amount of time (60 minutes by \
     default).
-    """
-
-    on_login: Optional[EventHandler[LoginEvent]] = None
-    """
-    Called upon successful or failed OAuth authorization flow.
-
-    See [Authentication](https://flet.dev/docs/cookbook/authentication#checking-authentication-results)
-    guide for more information and examples.
-    """  # noqa: E501
-
-    on_logout: Optional[ControlEventHandler["Page"]] = None
-    """
-    Called after `page.logout()` call.
     """
 
     on_error: Optional[ControlEventHandler["Page"]] = None
@@ -974,6 +917,20 @@ class Page(BasePage):
 
     @property
     @deprecated(
+        reason="Use Clipboard() instead.",
+        docs_reason="Use :class:`~flet.Clipboard` instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
+    )
+    def clipboard(self):
+        """
+        The Clipboard service for the current page.
+        """
+
+        return Clipboard()
+
+    @property
+    @deprecated(
         reason="Use StoragePaths() instead.",
         docs_reason="Use :class:`~flet.StoragePaths` instead.",
         version="0.80.0",
@@ -985,3 +942,22 @@ class Page(BasePage):
         """
 
         return StoragePaths()
+
+    async def get_device_info(self) -> Optional[DeviceInfo]:
+        """
+        Returns device information.
+
+        Returns:
+            The device information object for the current platform,
+                or `None` if unavailable.
+        """
+        info = await self._invoke_method("get_device_info")
+
+        if self.platform == PagePlatform.MACOS:
+            return from_dict(MacOsDeviceInfo, info)
+        elif self.platform == PagePlatform.LINUX:
+            return from_dict(LinuxDeviceInfo, info)
+        elif self.platform == PagePlatform.WINDOWS:
+            return from_dict(WindowsDeviceInfo, info)
+        else:
+            return None

@@ -89,6 +89,7 @@ import 'controls/responsive_row.dart';
 import 'controls/rotated_box.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
+import 'controls/screenshot.dart';
 import 'controls/search_bar.dart';
 import 'controls/segmented_button.dart';
 import 'controls/selection_area.dart';
@@ -108,9 +109,10 @@ import 'controls/window_drag_area.dart';
 import 'flet_extension.dart';
 import 'flet_service.dart';
 import 'models/control.dart';
+import 'services/clipboard.dart';
 import 'services/file_picker.dart';
+import 'services/semantics_service.dart';
 import 'services/storage_paths.dart';
-import 'services/tester.dart';
 import 'services/window.dart';
 import 'utils/cupertino_icons.dart';
 import 'utils/material_icons.dart';
@@ -315,6 +317,8 @@ class FletCoreExtension extends FletExtension {
         return RowControl(key: key, control: control);
       case "SafeArea":
         return SafeAreaControl(key: key, control: control);
+      case "Screenshot":
+        return ScreenshotControl(key: key, control: control);
       case "SearchBar":
         return SearchBarControl(key: key, control: control);
       case "SegmentedButton":
@@ -367,14 +371,16 @@ class FletCoreExtension extends FletExtension {
   @override
   FletService? createService(Control control) {
     switch (control.type) {
+      case "Clipboard":
+        return ClipboardService(control: control);
       case "FilePicker":
         return FilePickerService(control: control);
+      case "SemanticsService":
+        return SemanticsServiceControl(control: control);
       case "StoragePaths":
         return StoragePaths(control: control);
       case "Window":
         return WindowService(control: control);
-      case "Tester":
-        return TesterService(control: control);
       default:
         return null;
     }

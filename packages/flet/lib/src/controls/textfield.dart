@@ -251,12 +251,6 @@ class _TextFieldControlState extends State<TextFieldControl> {
                 .getTextInputType("keyboard_type", TextInputType.text)!,
         autocorrect: widget.control.getBool("autocorrect", true)!,
         enableSuggestions: widget.control.getBool("enable_suggestions", true)!,
-        smartDashesType: widget.control.getBool("smart_dashes_type", true)!
-            ? SmartDashesType.enabled
-            : SmartDashesType.disabled,
-        smartQuotesType: widget.control.getBool("smart_quotes_type", true)!
-            ? SmartQuotesType.enabled
-            : SmartQuotesType.disabled,
         textAlign: widget.control.getTextAlign("text_align", TextAlign.start)!,
         minLines: fitParentSize ? null : minLines,
         maxLines: fitParentSize ? null : maxLines,
@@ -287,8 +281,6 @@ class _TextFieldControlState extends State<TextFieldControl> {
         obscuringCharacter:
             widget.control.getString("obscuring_character", '•')!,
         mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
-        cursorOpacityAnimates: widget.control.getBool("animate_cursor_opacity",
-            false)!,
         onTapAlwaysCalled: widget.control.getBool("always_call_on_tap", false)!,
         strutStyle: widget.control.getStrutStyle("strut_style"),
         onTap: () {

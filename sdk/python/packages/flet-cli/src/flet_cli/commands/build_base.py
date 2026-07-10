@@ -57,9 +57,9 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.python_module_filename = None
         self.out_dir = None
         self.python_module_name = None
-        self.python_asset_path = None
         self.get_pyproject = None
         self.python_app_path = None
+        self.asset_zip_path = None
         self.build_dir = None
         self.flutter_dir: Optional[Path] = None
         self.flutter_packages_dir = None
@@ -97,7 +97,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.cross_platform_permissions = {
             "location": {
                 "macos_info_plist": {
-                    "NSLocationUsageDescription": "This app needs access to your location.",  # noqa: E501
+                    "NSLocationUsageDescription": "This app needs access to your location.",
                 },
                 "macos_entitlements": {
                     "com.apple.security.personal-information.location": True
@@ -105,19 +105,19 @@ class BaseBuildCommand(BaseFlutterCommand):
             },
             "camera": {
                 "macos_info_plist": {
-                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
+                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."
                 },
                 "macos_entitlements": {"com.apple.security.device.camera": True},
             },
             "microphone": {
                 "macos_info_plist": {
-                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
+                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",
                 },
                 "macos_entitlements": {"com.apple.security.device.audio-input": True},
             },
             "photo_library": {
                 "macos_info_plist": {
-                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
+                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."
                 },
                 "macos_entitlements": {
                     "com.apple.security.personal-information.photos-library": True
@@ -170,6 +170,12 @@ class BaseBuildCommand(BaseFlutterCommand):
             default=[],
             help="Files and/or directories to exclude from the package"
             "; can be used multiple times",
+        )
+        parser.add_argument(
+            "--asset-zip-path",
+            dest="asset_zip_path",
+            required=False,
+            help="Relative path to app python zip file.",
         )
         parser.add_argument(
             "--clear-cache",
@@ -504,6 +510,11 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.python_app_path
         assert self.get_pyproject
 
+        self.asset_zip_path = (
+            self.options.asset_zip_path
+            or self.get_pyproject("tool.flet.app.asset_zip_path")
+            or "app/app.zip"
+        )
         project_name_raw = (
             self.options.project_name
             or self.get_pyproject("project.name")
@@ -611,7 +622,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "out_dir": self.flutter_dir.name,
             "sep": os.sep,
             "python_module_name": self.python_module_name,
-            "python_asset_path": self.python_asset_path,
+            "asset_zip_path": self.asset_zip_path,
             "project_name": project_name,
             "project_name_slug": project_name_slug,
             "artifact_name": artifact_name,
@@ -1205,10 +1216,10 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         hash.commit()
 
-        # make sure app/app.zip exists
-        app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
+        # make sure app zip file exists
+        app_zip_path = self.flutter_dir.joinpath(self.asset_zip_path)
         if not os.path.exists(app_zip_path):
-            self.cleanup(1, "Flet app package app/app.zip was not created.")
+            self.cleanup(1, "Flet app package app zip file was not created.")
 
         console.log(f"Packaged Python app {self.emojis['checkmark']}")
 

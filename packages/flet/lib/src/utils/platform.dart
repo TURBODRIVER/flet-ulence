@@ -3,13 +3,6 @@ import 'enums.dart';
 
 import '../models/control.dart';
 
-/// Checks if the current platform is a desktop platform.
-bool isDesktopPlatform() {
-  return defaultTargetPlatform == TargetPlatform.windows ||
-          defaultTargetPlatform == TargetPlatform.macOS ||
-          defaultTargetPlatform == TargetPlatform.linux;
-}
-
 /// Checks if the current platform is Windows desktop.
 bool isWindowsDesktop() {
   return defaultTargetPlatform == TargetPlatform.windows;

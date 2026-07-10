@@ -1,22 +1,18 @@
 """Provide the current Flet version."""
 
 import json
-import subprocess as sp
 import sys
 from pathlib import Path
 from typing import Optional
-
-from flet.utils import is_windows, which
 
 __all__ = [
     "find_repo_root",
     "flet_version",
     "flutter_version",
-    "from_git",
 ]
 
 # set by CI
-flet_version = "0.85.2"
+flet_version = "0.86.0"
 """
 The Flet version in use.
 
@@ -35,36 +31,6 @@ This value is set explicitly in CI for released packages. When running from
 source and no version is provided, it is resolved from the repository's
 `.fvmrc` file when available.
 """
-
-
-def from_git() -> Optional[str]:
-    """Try to get the version from Git tags."""
-    repo_root = find_repo_root(Path(__file__).resolve().parent)
-    if not repo_root:
-        return None
-
-    git_cmd = "git.exe" if is_windows() else "git"
-    if not which(git_cmd):
-        return None
-
-    try:
-        result = sp.run(
-            [git_cmd, "describe", "--tags", "--abbrev=0"],
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        tag = result.stdout.strip()
-        return tag[1:] if tag.startswith("v") else tag
-
-    except sp.CalledProcessError as e:
-        # Git is present but no tags / not a valid repo state
-        print(f"Error getting Git version: {e}", file=sys.stderr)
-    except OSError as e:
-        print(f"Error running Git: {e}", file=sys.stderr)
-
-    return None
 
 
 def find_repo_root(start_path: Path) -> Optional[Path]:
@@ -88,16 +54,10 @@ def get_flet_version() -> str:
     if flet_version:
         return flet_version
 
-    # Only try to get the version from Git if the pre-set version is empty.
-    # This is more likely to happen in a development/source environment.
-    git_version = from_git()
-    if git_version:
-        return git_version  # Use Git version if available
-
     # If 'flet_version' is still empty after the above (e.g., in a built package
     # where CI didn't replace it), fall back to the default version.
     # CI replacement is the standard way for packaged versions.
-    return "0.1.0"
+    return "0.86.0"
 
 
 def get_flutter_version() -> str:

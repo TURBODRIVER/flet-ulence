@@ -1,10 +1,9 @@
-from typing import Optional, Union
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
-from flet.controls.types import Url
 from flet.utils.validation import V, ValidationRules
 
 __all__ = ["TextSpan"]
@@ -44,7 +43,7 @@ class TextSpan(Control):
         the `text` takes precedence.
     """
 
-    url: Optional[Union[str, Url]] = None
+    url: Optional[str] = None
     """
     The URL to open when this button is clicked.
 

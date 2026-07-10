@@ -22,7 +22,6 @@ import 'protocol/register_client_request_body.dart';
 import 'protocol/register_client_response_body.dart';
 import 'protocol/session_crashed_body.dart';
 import 'protocol/update_control_body.dart';
-import 'testing/tester.dart';
 import 'transport/flet_backend_channel.dart';
 import 'utils/desktop.dart';
 import 'utils/images.dart';
@@ -40,14 +39,11 @@ class FletBackend extends ChangeNotifier {
   final WeakReference<FletBackend>? _parentFletBackend;
   final Uri pageUri;
   final String assetsDir;
-  final bool? showAppStartupScreen;
-  final String? appStartupScreenMessage;
   final String? appErrorMessage;
   final int? controlId;
   final FletAppErrorsHandler? errorsHandler;
   late final List<FletExtension> extensions;
   final Map<String, dynamic>? args;
-  final Tester? tester;
   final Map<String, GlobalKey> globalKeys = {};
 
   final WeakValueMap<int, Control> controlsIndex = WeakValueMap<int, Control>();
@@ -76,6 +72,7 @@ class FletBackend extends ChangeNotifier {
     viewPadding: PaddingData(EdgeInsets.zero),
     viewInsets: PaddingData(EdgeInsets.zero),
     devicePixelRatio: 0,
+    orientation: Orientation.portrait,
     alwaysUse24HourFormat: false,
   );
   TargetPlatform platform = defaultTargetPlatform;
@@ -88,12 +85,9 @@ class FletBackend extends ChangeNotifier {
       int? reconnectIntervalMs,
       int? reconnectTimeoutMs,
       this.errorsHandler,
-      this.showAppStartupScreen,
-      this.appStartupScreenMessage,
       this.appErrorMessage,
       this.controlId,
       this.args,
-      this.tester,
       required extensions,
       FletBackend? parentFletBackend})
       : _parentFletBackend =
@@ -108,7 +102,6 @@ class FletBackend extends ChangeNotifier {
       "_c": "Page",
       "_i": 1,
       "debug": kDebugMode,
-      "test": tester != null,
       "window": {
         "_c": "Window",
         "_i": 2,
@@ -184,11 +177,10 @@ class FletBackend extends ChangeNotifier {
             action: MessageAction.registerClient,
             payload: RegisterClientRequestBody(
                 sessionId: SessionStore.getSessionId(),
-                pageName: "",
+                pageName: getWebPageName(pageUri),
                 page: {
                   "route": page.get("route"),
                   "debug": page.get("debug"),
-                  "test": page.get("test"),
                   "platform_brightness": page.get("platform_brightness"),
                   "width": page.get("width"),
                   "height": page.get("height"),
@@ -307,13 +299,11 @@ class FletBackend extends ChangeNotifier {
       triggerControlEventById(ctrl.id, "resize", newProps);
     }
 
-    if (isDesktopPlatform()) {
-      var windowState = await getWindowState();
-      debugPrint("Window state updated: $windowState");
-      var window = page.child("window", visibleOnly: false)!;
-      updateControl(window.id, windowState.toMap());
-      triggerControlEvent(window, "event", {"type": "resized"});
-    }
+    var windowState = await getWindowState();
+    debugPrint("Window state updated: $windowState");
+    var window = page.child("window", visibleOnly: false)!;
+    updateControl(window.id, windowState.toMap());
+    triggerControlEvent(window, "event", {"type": "resized"});
 
     if (!pageSizeUpdated.isCompleted) {
       pageSizeUpdated.complete();
@@ -411,8 +401,7 @@ class FletBackend extends ChangeNotifier {
   void _onPythonOutput(PythonOutputBody body) {
     // Nested FletApp: bubble the line to the outer backend so the
     // host page can render it (same shape as errorsHandler bubbling
-    // at lines 135-148). Root FletApp: nothing to bubble to, so fall
-    // back to the browser console.
+    // at lines 135-148).
     if (controlId != null && _parentFletBackend != null) {
       _parentFletBackend?.target?.triggerControlEventById(
         controlId!,

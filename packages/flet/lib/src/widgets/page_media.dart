@@ -59,6 +59,7 @@ class _PageMediaState extends State<PageMedia> {
         viewPadding: PaddingData(MediaQuery.viewPaddingOf(context)),
         viewInsets: PaddingData(MediaQuery.viewInsetsOf(context)),
         devicePixelRatio: MediaQuery.devicePixelRatioOf(context),
+        orientation: MediaQuery.orientationOf(context),
         alwaysUse24HourFormat: MediaQuery.alwaysUse24HourFormatOf(context),
       );
 

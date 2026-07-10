@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  screen_retriever_windows
   serious_python_windows
   window_manager
 )

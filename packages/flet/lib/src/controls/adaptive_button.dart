@@ -16,8 +16,7 @@ class AdaptiveButtonControl extends StatelessWidget with FletStoreMixin {
     debugPrint("AdaptiveButton build: ${control.id}");
 
     return withPagePlatform((context, platform) {
-      if (control.adaptive == true &&
-          (platform == TargetPlatform.macOS)) {
+      if (control.adaptive == true && platform == TargetPlatform.macOS) {
         return (control.parent?.type == "AlertDialog" ||
                 control.parent?.type == "CupertinoAlertDialog")
             ? CupertinoDialogActionControl(

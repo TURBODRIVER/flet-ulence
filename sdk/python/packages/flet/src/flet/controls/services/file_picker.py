@@ -224,7 +224,6 @@ class FilePicker(Service):
 
         Returns:
             The selected directory path or `None` if the dialog was cancelled.
-
         """
         return await self._invoke_method(
             "get_directory_path",
@@ -263,7 +262,6 @@ class FilePicker(Service):
                 `file_type` is
                 :attr:`flet.FilePickerFileType.CUSTOM`.
         """
-
         return await self._invoke_method(
             "save_file",
             {

@@ -6,14 +6,11 @@ import 'flet_app_errors_handler.dart';
 import 'flet_backend.dart';
 import 'flet_extension.dart';
 import 'models/control.dart';
-import 'testing/tester.dart';
 
 /// FletApp - The top-level widget that initializes everything
 class FletApp extends StatefulWidget {
   final String pageUrl;
   final String assetsDir;
-  final bool? showAppStartupScreen;
-  final String? appStartupScreenMessage;
   final String? appErrorMessage;
   final int? controlId;
   final String? title;
@@ -22,14 +19,11 @@ class FletApp extends StatefulWidget {
   final int? reconnectTimeoutMs;
   final List<FletExtension>? extensions;
   final Map<String, dynamic>? args;
-  final Tester? tester;
 
   const FletApp(
       {super.key,
       required this.pageUrl,
       required this.assetsDir,
-      this.showAppStartupScreen,
-      this.appStartupScreenMessage,
       this.appErrorMessage,
       this.controlId,
       this.title,
@@ -37,8 +31,7 @@ class FletApp extends StatefulWidget {
       this.reconnectIntervalMs,
       this.reconnectTimeoutMs,
       this.extensions,
-      this.args,
-      this.tester});
+      this.args});
 
   @override
   State<FletApp> createState() => _FletAppState();
@@ -58,8 +51,6 @@ class _FletAppState extends State<FletApp> {
     return ChangeNotifierProvider<FletBackend>(
       create: (context) {
         return FletBackend(
-            showAppStartupScreen: widget.showAppStartupScreen,
-            appStartupScreenMessage: widget.appStartupScreenMessage,
             appErrorMessage: widget.appErrorMessage,
             controlId: widget.controlId,
             reconnectIntervalMs: widget.reconnectIntervalMs,
@@ -69,7 +60,6 @@ class _FletAppState extends State<FletApp> {
             errorsHandler: widget.errorsHandler,
             extensions: widget.extensions ?? [],
             args: widget.args,
-            tester: widget.tester,
             parentFletBackend:
                 Provider.of<FletBackend?>(context, listen: false));
       },

@@ -310,7 +310,7 @@ class NavigationRail(LayoutControl):
     If `None`, defaults to
     :attr:`flet.NavigationRailTheme.use_indicator`.
     If that is also `None`, defaults to :attr:`flet.Theme.use_material3`.
-    """  # noqa: E501
+    """
 
     on_change: Optional[ControlEventHandler["NavigationRail"]] = None
     """

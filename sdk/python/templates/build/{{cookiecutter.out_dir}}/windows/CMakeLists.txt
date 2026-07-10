@@ -59,16 +59,24 @@ add_subdirectory("runner")
 include(flutter/generated_plugins.cmake)
 
 # Rename plugin DLLs
+if(TARGET pasteboard_windows_plugin)
+  set_target_properties(pasteboard_windows_plugin PROPERTIES OUTPUT_NAME "clipboard_lib")
+endif()
+
 if(TARGET serious_python_windows_plugin)
   set_target_properties(serious_python_windows_plugin PROPERTIES OUTPUT_NAME "python_lib")
 endif()
 
 if(TARGET screen_retriever_windows_plugin)
-  set_target_properties(screen_retriever_windows_plugin PROPERTIES OUTPUT_NAME "screen_lib")
+  set_target_properties(screen_retriever_windows_plugin PROPERTIES OUTPUT_NAME "display_lib")
+endif()
+
+if(TARGET window_to_front_plugin)
+  set_target_properties(window_to_front_plugin PROPERTIES OUTPUT_NAME "window_lib")
 endif()
 
 if(TARGET window_manager_plugin)
-  set_target_properties(window_manager_plugin PROPERTIES OUTPUT_NAME "windowmgr_lib")
+  set_target_properties(window_manager_plugin PROPERTIES OUTPUT_NAME "os_lib")
 endif()
 
 # === Installation ===

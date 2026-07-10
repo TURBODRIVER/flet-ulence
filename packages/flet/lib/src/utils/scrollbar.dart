@@ -29,17 +29,15 @@ class ScrollbarConfiguration {
   });
 
   factory ScrollbarConfiguration.fromScrollMode(ScrollMode mode) {
-    final defaultThickness = null;
-
     switch (mode) {
       case ScrollMode.auto:
-        return ScrollbarConfiguration(thickness: defaultThickness);
+        return const ScrollbarConfiguration(thickness: null);
       case ScrollMode.adaptive:
-        return ScrollbarConfiguration(
-            thumbVisibility: false, thickness: defaultThickness);
+        return const ScrollbarConfiguration(
+            thumbVisibility: true, thickness: null);
       case ScrollMode.always:
-        return ScrollbarConfiguration(
-            thumbVisibility: true, thickness: defaultThickness);
+        return const ScrollbarConfiguration(
+            thumbVisibility: true, thickness: null);
       case ScrollMode.hidden:
         return const ScrollbarConfiguration(thickness: 0);
     }

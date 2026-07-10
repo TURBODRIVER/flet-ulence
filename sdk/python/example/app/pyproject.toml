@@ -6,6 +6,7 @@ authors = [
 version = "1.0.0"
 dependencies = [
     "flet",
+    "Pillow",
 ]
 
 [tool.flet]
@@ -30,11 +31,9 @@ build_args = [
 ]
 
 [tool.flet.app]
-product = "Name of App"
 module = "app"
 path = "app_package"
 exclude = ["*.toml", "*.bat", "*.txt", ".venv", ".idea", "assets"]
-asset_path = "app/app.zip"
 hide_window_on_start = false
 boot_screen.message = "Preparing the App..."
 

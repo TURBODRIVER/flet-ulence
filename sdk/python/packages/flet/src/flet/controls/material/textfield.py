@@ -98,12 +98,12 @@ class KeyboardType(str, Enum):
     NAME = "name"
     """
     Optimized for a person's name.
-    """  # noqa: E501
+    """
 
     STREET_ADDRESS = "streetAddress"
     """
     Optimized for postal mailing addresses.
-    """  # noqa: E501
+    """
 
     WEB_SEARCH = "webSearch"
     """
@@ -132,7 +132,6 @@ class TextCapitalization(str, Enum):
     CHARACTERS = "characters"
     """
     Uppercase keyboard for each character.
-
     """
 
     WORDS = "words"
@@ -143,7 +142,6 @@ class TextCapitalization(str, Enum):
     SENTENCES = "sentences"
     """
     Uppercase keyboard for the first letter of each sentence.
-
     """
 
     NONE = "none"
@@ -397,16 +395,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     Whether to show input suggestions as the user types.
     """
 
-    smart_dashes_type: bool = True
-    """
-    Whether to allow the platform to automatically format dashes.
-    """
-
-    smart_quotes_type: bool = True
-    """
-    Whether to allow the platform to automatically format quotes.
-    """
-
     show_cursor: bool = True
     """
     Whether the field's cursor is to be shown.
@@ -476,11 +464,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
 
     enable_stylus_handwriting: bool = True
-    """
-    TBD
-    """
-
-    animate_cursor_opacity: Optional[bool] = None
     """
     TBD
     """

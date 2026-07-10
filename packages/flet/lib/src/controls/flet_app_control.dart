@@ -34,10 +34,6 @@ class _FletAppControlState extends State<FletAppControl> {
     }
     var reconnectIntervalMs = widget.control.getInt("reconnect_interval_ms");
     var reconnectTimeoutMs = widget.control.getInt("reconnect_timeout_ms");
-    var showAppStartupScreen =
-        widget.control.getBool("show_app_startup_screen");
-    var appStartupScreenMessage =
-        widget.control.getString("app_startup_screen_message");
     var appErrorMessage = widget.control.getString("app_error_message");
 
     return LayoutControl(
@@ -46,8 +42,6 @@ class _FletAppControlState extends State<FletAppControl> {
         controlId: widget.control.id,
         reconnectIntervalMs: reconnectIntervalMs,
         reconnectTimeoutMs: reconnectTimeoutMs,
-        showAppStartupScreen: showAppStartupScreen,
-        appStartupScreenMessage: appStartupScreenMessage,
         appErrorMessage: appErrorMessage,
         pageUrl: url,
         assetsDir: widget.control.getString("assets_dir") ?? "",

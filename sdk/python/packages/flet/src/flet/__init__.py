@@ -118,7 +118,7 @@ from flet.controls.core.drag_target import (
     DragWillAcceptEvent,
 )
 from flet.controls.core.draggable import Draggable
-from flet.controls.core.flet_app import FletApp, FletAppOutputEvent
+from flet.controls.core.flet_app import FletApp
 from flet.controls.core.gesture_detector import GestureDetector
 from flet.controls.core.grid_view import GridView
 from flet.controls.core.hero import Hero
@@ -217,6 +217,12 @@ from flet.controls.cupertino.cupertino_timer_picker import (
     CupertinoTimerPickerMode,
 )
 from flet.controls.cupertino.cupertino_tinted_button import CupertinoTintedButton
+from flet.controls.device_info import (
+    DeviceInfo,
+    LinuxDeviceInfo,
+    MacOsDeviceInfo,
+    WindowsDeviceInfo,
+)
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import (
     DateTimeValue,
@@ -405,7 +411,6 @@ from flet.controls.page import (
     AppLifecycleStateChangeEvent,
     KeyboardEvent,
     LocaleChangeEvent,
-    LoginEvent,
     Page,
     PlatformBrightnessChangeEvent,
     RouteChangeEvent,
@@ -430,6 +435,7 @@ from flet.controls.scrollable_control import (
     ScrollDirection,
     ScrollType,
 )
+from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.file_picker import (
     FilePicker,
     FilePickerFile,
@@ -437,7 +443,7 @@ from flet.controls.services.file_picker import (
     FilePickerUploadEvent,
     FilePickerUploadFile,
 )
-from flet.controls.services.semantics_service import Assertiveness, SemanticsService
+from flet.controls.services.semantics_service import SemanticsService
 from flet.controls.services.service import Service
 from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.template_route import TemplateRoute
@@ -482,6 +488,7 @@ from flet.controls.types import (
     MouseCursor,
     NotchShape,
     Number,
+    Orientation,
     PagePlatform,
     PointerDeviceType,
     ResponsiveNumber,
@@ -493,8 +500,6 @@ from flet.controls.types import (
     SupportsStr,
     TextAlign,
     ThemeMode,
-    Url,
-    UrlTarget,
     VerticalAlignment,
     VisualDensity,
 )
@@ -569,7 +574,6 @@ __all__ = [
     "AppLifecycleState",
     "AppLifecycleStateChangeEvent",
     "AppView",
-    "Assertiveness",
     "AutoComplete",
     "AutoCompleteSelectEvent",
     "AutoCompleteSuggestion",
@@ -623,6 +627,7 @@ __all__ = [
     "CircleBorder",
     "CircularRectangleNotchShape",
     "ClipBehavior",
+    "Clipboard",
     "ColorFilter",
     "ColorScheme",
     "ColorValue",
@@ -688,6 +693,7 @@ __all__ = [
     "DateRangePicker",
     "DateTimeValue",
     "DecorationImage",
+    "DeviceInfo",
     "DialogControl",
     "DialogTheme",
     "DismissDirection",
@@ -732,7 +738,6 @@ __all__ = [
     "FilledTonalIconButton",
     "FilterQuality",
     "FletApp",
-    "FletAppOutputEvent",
     "FletException",
     "FletPageDisconnectedException",
     "FletUnimplementedPlatformException",
@@ -775,6 +780,7 @@ __all__ = [
     "LayoutControl",
     "LayoutSizeChangeEvent",
     "LinearGradient",
+    "LinuxDeviceInfo",
     "ListTile",
     "ListTileStyle",
     "ListTileTheme",
@@ -784,11 +790,11 @@ __all__ = [
     "LocaleChangeEvent",
     "LocaleConfiguration",
     "LocationInfo",
-    "LoginEvent",
     "LongPressDownEvent",
     "LongPressEndEvent",
     "LongPressMoveUpdateEvent",
     "LongPressStartEvent",
+    "MacOsDeviceInfo",
     "MainAxisAlignment",
     "Margin",
     "MarginValue",
@@ -823,6 +829,7 @@ __all__ = [
     "OffsetValue",
     "OnReorderEvent",
     "OnScrollEvent",
+    "Orientation",
     "OutlinedBorder",
     "OutlinedButton",
     "OutlinedButtonTheme",
@@ -975,8 +982,6 @@ __all__ = [
     "Transform",
     "TransparentPointer",
     "UnderlineTabIndicator",
-    "Url",
-    "UrlTarget",
     "Value",
     "ValueKey",
     "VerticalAlignment",
@@ -990,6 +995,7 @@ __all__ = [
     "WindowEvent",
     "WindowEventType",
     "WindowResizeEdge",
+    "WindowsDeviceInfo",
     "__version__",
     "alignment",
     "app",

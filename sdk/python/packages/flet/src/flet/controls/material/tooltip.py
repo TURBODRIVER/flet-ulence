@@ -104,10 +104,6 @@ class Tooltip:
     padding: Optional[PaddingValue] = None
     """
     The amount of space by which to inset the tooltip's content.
-
-    It has the following default values based on the current platform:
-
-    - On desktop platforms: `Padding.symmetric(horizontal=8.0, vertical=4.0)`
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -195,12 +191,6 @@ class Tooltip:
     size_constraints: Optional[BoxConstraints] = None
     """
     Defines the constraints on the size of this tooltip.
-
-    If `None`, :attr:`flet.TooltipTheme.size_constraints` is used.
-    If that's is also `None`, then a default value will be picked
-    based on the current platform:
-
-    - on desktop platforms: `BoxConstraints(min_height=24.0)`
     """
 
 

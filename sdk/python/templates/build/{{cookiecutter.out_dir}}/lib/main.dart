@@ -11,15 +11,15 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:serious_python/serious_python.dart';
 import 'package:window_manager/window_manager.dart';
 
-import "python.dart";
+import 'python.dart';
 
 {% for dep in cookiecutter.flutter.dependencies %}
 import 'package:{{ dep }}/{{ dep }}.dart' as {{ dep }};
 {% endfor %}
 
 /*
-{% set python_asset_path = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.asset_path")
-                        or get_pyproject("tool.flet.app.asset_path") %}
+{% set python_asset_path = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.asset_zip_path")
+                        or get_pyproject("tool.flet.app.asset_zip_path") %}
 {% set boot_screen_message = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.boot_screen.message")
                         or get_pyproject("tool.flet.app.boot_screen.message") %}
 {% set hide_window_on_start = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.hide_window_on_start")
@@ -53,15 +53,20 @@ String appDir = "";
 Map<String, String> environmentVariables = Map.from(Platform.environment);
 
 void main(List<String> args) async {
+  FletDeepLinkingBootstrap.install();
+
+  // final output_path = await path_provider.getApplicationDocumentsDirectory();
+  // final output_file = File('${output_path.path}/flutter_log.txt');
+  // debugPrint = (String? message, {int? wrapWidth}) {
+  //   output_file.writeAsStringSync('$message\n', mode: FileMode.append);
+  // };
+  debugPrint = (String? message, {int? wrapWidth}) => null;
 
   _args = List<String>.from(args);
 
   for (var ext in extensions) {
     ext.ensureInitialized();
   }
-
-  // TODO: Add project toml variables for base theme
-  // TODO: Add project toml variable to force theme mode
 
   final ThemeData _appBaseTheme = ThemeData(
     brightness: Brightness.light,
@@ -80,9 +85,6 @@ void main(List<String> args) async {
       bodyMedium: TextStyle(color: Color(0xFF797876)),
     ),
   );
-
-  // TODO: Add project toml variables for light theme
-  // TODO: Add project toml variables for dark theme
 
   runApp(Theme(
     data: _appBaseTheme,
@@ -115,7 +117,6 @@ void main(List<String> args) async {
       ),
     ),
   ));
-
 }
 
 class _PythonAppLoader extends StatefulWidget {
@@ -171,14 +172,14 @@ class _PythonAppLoaderState extends State<_PythonAppLoader> {
 Future prepareApp() async {
   if (!_args.contains("--debug") && isRelease) {
     // ignore: avoid_returning_null_for_void
-    debugPrint = (String? message, {int? wrapWidth}) => null;
+    // debugPrint = (String? message, {int? wrapWidth}) => null;
   } else {
     _args.remove("--debug");
   }
 
   await setupDesktop(hideWindowOnStart: hideWindowOnStart);
 
-  if (_args.isNotEmpty && isDesktopPlatform()) {
+  if (_args.isNotEmpty) {
     // developer mode
     debugPrint("Flet app is running in Developer mode");
     pageUrl = _args[0];
@@ -195,26 +196,21 @@ Future prepareApp() async {
   } else {
     // production mode
     // extract app from asset
-    final supportDir = await path_provider.getApplicationSupportDirectory();
-    final targetPath = Directory(path.normalize(path.join(supportDir.path, 'flet'))).path;
-    appDir = await extractAssetZip(assetPath, targetPath: targetPath, checkHash: true);
-
-    // set current directory to app path
+    appDir = await extractAssetZip(assetPath, checkHash: true);
     Directory.current = appDir;
-
     assetsDir = path.join(appDir, "assets");
 
     // configure apps DATA and TEMP directories
     WidgetsFlutterBinding.ensureInitialized();
 
-    environmentVariables.putIfAbsent("FLET_APP_STORAGE_DATA", () => appDir);
-    environmentVariables.putIfAbsent("FLET_APP_STORAGE_TEMP", () => appDir);
+    var appTempPath = (await path_provider.getApplicationCacheDirectory()).path;
+
+    environmentVariables.putIfAbsent("FLET_APP_STORAGE_DATA", () => appTempPath);
+    environmentVariables.putIfAbsent("FLET_APP_STORAGE_TEMP", () => appTempPath);
 
     outLogFilename = path.join(appDir, "console.log");
     environmentVariables.putIfAbsent("FLET_APP_CONSOLE", () => outLogFilename);
-
-    environmentVariables.putIfAbsent(
-        "FLET_PLATFORM", () => defaultTargetPlatform.name.toLowerCase());
+    environmentVariables.putIfAbsent("FLET_PLATFORM", () => defaultTargetPlatform.name.toLowerCase());
 
     if (defaultTargetPlatform == TargetPlatform.windows) {
       // use TCP on Windows
@@ -252,16 +248,14 @@ Future<String?> runPythonApp(List<String> args) async {
   if (defaultTargetPlatform == TargetPlatform.windows) {
     var tcpAddr = "127.0.0.1";
     outSocketServer = await ServerSocket.bind(tcpAddr, 0);
-    debugPrint(
-        'Python output TCP Server is listening on port ${outSocketServer.port}');
+    debugPrint('Python output TCP Server is listening on port ${outSocketServer.port}');
     socketAddr = "$tcpAddr:${outSocketServer.port}";
   } else {
     socketAddr = "stdout_$pid.sock";
     if (await File(socketAddr).exists()) {
       await File(socketAddr).delete();
     }
-    outSocketServer = await ServerSocket.bind(
-        InternetAddress(socketAddr, type: InternetAddressType.unix), 0);
+    outSocketServer = await ServerSocket.bind(InternetAddress(socketAddr, type: InternetAddressType.unix), 0);
     debugPrint('Python output Socket Server is listening on $socketAddr');
   }
 
@@ -327,6 +321,19 @@ class ErrorScreen extends StatelessWidget {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleMedium,
+                ),
+                TextButton.icon(
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: text));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Copied to clipboard')),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.copy,
+                    size: 16,
+                  ),
+                  label: const Text("Copy"),
                 )
               ],
             ),

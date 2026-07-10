@@ -138,12 +138,11 @@ class Switch(LayoutControl, AdaptiveControl):
 
     On macOS, a :class:`~flet.CupertinoSwitch` is created,
     which has matching functionality and presentation as `Switch`,
-    and the graphics as expected on iOS. On other platforms,
-    a Material Switch is created.
+    and the graphics as expected. On other platforms, a Material Switch is created.
 
     Defaults to `False`. See the example of usage
     [here](https://flet.dev/docs/controls/cupertinoswitch/#cupertino-material-and-adaptive-switches).
-    """  # noqa: E501
+    """
 
     hover_color: Optional[ColorValue] = None
     """

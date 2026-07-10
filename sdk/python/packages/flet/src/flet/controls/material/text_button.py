@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -10,7 +10,6 @@ from flet.controls.types import (
     ColorValue,
     IconDataOrControl,
     StrOrControl,
-    Url,
 )
 
 __all__ = ["TextButton"]
@@ -60,7 +59,7 @@ class TextButton(LayoutControl, AdaptiveControl):
     added to the page will get focus.
     """
 
-    url: Optional[Union[str, Url]] = None
+    url: Optional[str] = None
     """
     The URL to open when this button is clicked.
 

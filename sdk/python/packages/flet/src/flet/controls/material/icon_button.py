@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Annotated, Optional, Union
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
@@ -14,7 +14,6 @@ from flet.controls.types import (
     IconDataOrControl,
     MouseCursor,
     Number,
-    Url,
     VisualDensity,
 )
 from flet.utils.validation import V
@@ -168,7 +167,7 @@ class IconButton(LayoutControl, AdaptiveControl):
     Whether detected gestures should provide acoustic and/or haptic feedback.
     """
 
-    url: Optional[Union[str, Url]] = None
+    url: Optional[str] = None
     """
     The URL to open when this button is clicked.
 

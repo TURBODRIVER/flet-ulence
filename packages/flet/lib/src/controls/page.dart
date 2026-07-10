@@ -24,13 +24,13 @@ import '../routing/router_delegate.dart';
 import '../services/service_binding.dart';
 import '../services/service_registry.dart';
 import '../utils/animations.dart';
+import '../utils/device_info.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
 import '../utils/theme.dart';
 import '../utils/time.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
-import '../widgets/loading_page.dart';
 import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
 import 'control_widget.dart';
@@ -253,18 +253,9 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
           final frameDelaysMs =
               List<int>.from(args["frame_delays_ms"] ?? const []);
           final frames = <Uint8List>[];
-          // In integration tests the scheduler doesn't advance animations on
-          // its own during Future.delayed — WidgetTester.pump is what drives
-          // the clock. Use it when available so in-flight animations progress
-          // between captures; fall back to Future.delayed outside test mode.
-          final tester = FletBackend.of(context).tester;
           for (final delayMs in frameDelaysMs) {
             final delay = Duration(milliseconds: delayMs);
-            if (tester != null) {
-              await tester.pump(duration: delay);
-            } else {
-              await Future.delayed(delay);
-            }
+            await Future.delayed(delay);
             final ctx = _rootKey.currentContext;
             if (ctx == null || !ctx.mounted) return frames;
             final boundary = ctx.findRenderObject() as RenderRepaintBoundary?;
@@ -284,6 +275,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       case "push_route":
         _routeState.route = args["route"];
         break;
+      case "get_device_info":
+        return await getDeviceInfo();
 
       default:
         throw Exception("Unknown Page method: $name");
@@ -549,15 +542,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       BuildContext context, GlobalKey<NavigatorState> navigatorKey) {
     debugPrint("Page navigator build: ${widget.control.id}");
 
-    var backend = FletBackend.of(context);
-    var showAppStartupScreen = backend.showAppStartupScreen ?? false;
-    var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
-
-    var appStatus =
-        context.select<FletBackend, ({bool isLoading, String error})>(
-            (backend) => (isLoading: backend.isLoading, error: backend.error));
-    var formattedErrorMessage = backend.formatAppErrorMessage(appStatus.error);
-
     var views = widget.control.children("views");
     final viewRouteValues = views
         .map((v) => v.getString("route", v.id.toString()))
@@ -577,22 +561,13 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     List<Page<dynamic>> pages = [];
     if (effectiveViews.isEmpty) {
-      pages.add(AnimatedTransitionPage(
+      pages.add(const AnimatedTransitionPage(
           fadeTransition: true,
           duration: Duration.zero,
-          child: showAppStartupScreen
-              ? Stack(children: [
-                  const PageMedia(),
-                  LoadingPage(
-                    isLoading: appStatus.isLoading,
-                    message: appStatus.isLoading
-                        ? appStartupScreenMessage
-                        : formattedErrorMessage,
-                  )
-                ])
-              : const Scaffold(
-                  body: PageMedia(),
-                )));
+          child: Scaffold(
+              body: PageMedia(),
+          )
+      ));
     } else {
       String viewRoutes = effectiveViews
           .map((v) => v.getString("route", v.id.toString()))

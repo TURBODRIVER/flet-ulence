@@ -140,8 +140,6 @@ class Scrollbar:
     """
     Controls the cross-axis size of the scrollbar in logical pixels.
     The thickness of the scrollbar in the cross axis of the scrollable.
-
-    If `None`, the default value :attr:`flet.ScrollbarTheme.thickness`.
     """
 
     radius: Optional[Number] = None
@@ -150,8 +148,6 @@ class Scrollbar:
     pixels. If `None`, platform defaults are used.
 
     The radius of the scrollbar thumb's rounded rectangle corners.
-
-    If `None`, the default value is `8.0` pixels.
     """
 
     interactive: Optional[bool] = None

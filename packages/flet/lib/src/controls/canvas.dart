@@ -462,7 +462,7 @@ class FletCustomPainter extends CustomPainter {
     // Gapless playback: if we have a cached image, draw it even when the hash
     // is stale. Without this, src updates leave a blank frame on screen while
     // the new bytes decode asynchronously, causing visible flicker during
-    // rapid updates (e.g. matplotlib animations).
+    // rapid updates.
     if (img != null) {
       final srcRect =
           Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble());

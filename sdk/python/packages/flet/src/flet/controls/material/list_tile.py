@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional, Union
+from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -14,7 +14,6 @@ from flet.controls.types import (
     MouseCursor,
     Number,
     StrOrControl,
-    Url,
     VisualDensity,
 )
 
@@ -237,7 +236,7 @@ class ListTile(LayoutControl, AdaptiveControl):
     The minimum padding on the top and bottom of the `title` and `subtitle` controls.
     """
 
-    url: Optional[Union[str, Url]] = None
+    url: Optional[str] = None
     """
     The URL to open when this button is clicked.
 

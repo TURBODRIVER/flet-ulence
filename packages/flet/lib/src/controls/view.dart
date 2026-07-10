@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 
 import '../controls/control_widget.dart';
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../models/page_design.dart';
 import '../utils/alignment.dart';
@@ -16,8 +14,6 @@ import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/numbers.dart';
-import '../utils/theme.dart';
-import '../widgets/loading_page.dart';
 import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
 import 'app_bar.dart';
@@ -186,17 +182,6 @@ class _ViewControlState extends State<ViewControl> {
       ...overlayWidgets
     ]);
 
-    var materialTheme = pageData?.themeMode == ThemeMode.light ||
-            ((pageData?.themeMode == null ||
-                    pageData?.themeMode == ThemeMode.system) &&
-                pageData?.brightness == Brightness.light)
-        ? parseTheme(control.parent!.get("theme"), context, Brightness.light)
-        : control.parent!.getString("dark_theme") != null
-            ? parseTheme(
-                control.parent!.get("dark_theme"), context, Brightness.dark)
-            : parseTheme(
-                control.parent!.get("theme"), context, Brightness.dark);
-
     Widget scaffold = Scaffold(
       key: _materialScaffoldKey,
       backgroundColor: control.getColor("bgcolor", context) ??
@@ -225,18 +210,6 @@ class _ViewControlState extends State<ViewControl> {
           FloatingActionButtonLocation.endFloat),
     );
 
-    var systemOverlayStyle =
-        materialTheme.extension<SystemUiOverlayStyleTheme>();
-
-    if (systemOverlayStyle != null &&
-        systemOverlayStyle.systemUiOverlayStyle != null &&
-        appBarWidget == null) {
-      scaffold = AnnotatedRegion<SystemUiOverlayStyle>(
-        value: systemOverlayStyle.systemUiOverlayStyle!,
-        child: scaffold,
-      );
-    }
-
     if (appBarWidget is CupertinoAppBarControl) {
       scaffold = CupertinoPageScaffold(
           key: _cupertinoPageScaffoldKey,
@@ -245,33 +218,10 @@ class _ViewControlState extends State<ViewControl> {
           child: scaffold);
     }
 
-    var backend = FletBackend.of(context);
-    var showAppStartupScreen = backend.showAppStartupScreen ?? false;
-    var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
-
-    var appStatus =
-        context.select<FletBackend, ({bool isLoading, String error})>(
-            (backend) => (isLoading: backend.isLoading, error: backend.error));
-    var formattedErrorMessage = backend.formatAppErrorMessage(appStatus.error);
-
-    Widget? loadingPage;
-    if ((appStatus.isLoading || appStatus.error != "") &&
-        showAppStartupScreen) {
-      loadingPage = LoadingPage(
-        isLoading: appStatus.isLoading,
-        message: appStatus.isLoading
-            ? appStartupScreenMessage
-            : formattedErrorMessage,
-      );
-    }
-
     Widget result = Directionality(
         textDirection: textDirection,
-        child: loadingPage != null
-            ? Stack(
-                children: [scaffold, loadingPage],
-              )
-            : scaffold);
+        child: scaffold
+    );
 
     var backgroundDecoration = control.getBoxDecoration("decoration", context);
     var foregroundDecoration =

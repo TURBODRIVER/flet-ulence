@@ -4,7 +4,6 @@ import contextlib
 import inspect
 import logging
 import os
-import signal
 import traceback
 from collections.abc import Awaitable
 from pathlib import Path
@@ -14,7 +13,7 @@ from flet.controls.context import _context_page, context
 from flet.controls.page import Page
 from flet.controls.types import AppView
 from flet.messaging.session import Session
-from flet.utils import get_current_script_dir
+from flet.utils import get_current_script_dir, is_embedded
 from flet.utils.deprecated import deprecated
 from flet.utils.pip import ensure_flet_desktop_package_installed
 
@@ -49,6 +48,7 @@ def app_async(*args, **kwargs):
 def run(
     main: AppCallable,
     before_main: Optional[AppCallable] = None,
+    port: int = 0,
     view: Optional[AppView | str] = AppView.FLET_APP,
     assets_dir: Optional[str] = "assets",
     target=None,
@@ -60,18 +60,16 @@ def run(
         main: Application entry point. Handler (function or coroutine) must
             have 1 parameter of instance :class:`~flet.Page`.
         before_main: Called after `Page` is created but before `main`.
+        port: TCP port to bind. If `0`, an available port is chosen when needed.
         view: Preferred app presentation mode.
         assets_dir: A path to app's assets directory.
         target: Deprecated alias for `main`.
-
-    Returns:
-        Runs the app and returns `None`.
     """
-
     return asyncio.run(
         run_async(
             main=main or target,
             before_main=before_main,
+            port=port,
             view=view,
             assets_dir=assets_dir,
         )
@@ -81,28 +79,31 @@ def run(
 async def run_async(
     main: AppCallable,
     before_main: Optional[AppCallable] = None,
+    port: int = 0,
     view: Optional[AppView | str] = AppView.FLET_APP,
     assets_dir: Optional[str] = "assets",
     target=None,
 ):
     """
-    Asynchronously run a Flet app using socket.
+    Asynchronously run a Flet app using socket transport.
 
     Args:
         main: Application entry point. Handler (function or coroutine) must
             have 1 parameter of instance :class:`~flet.Page`.
         before_main: Called after `Page` is created but before `main`.
+        port: TCP port to bind. If `0`, default/free port is selected.
         view: Preferred app presentation mode.
         assets_dir: Path to app assets directory.
         target: Deprecated alias for `main`.
     """
-
     if isinstance(view, str):
         view = AppView(view)
 
-    assets_dir = __get_assets_dir_path(assets_dir)
+    env_port = os.getenv("FLET_SERVER_PORT")
+    if env_port is not None and env_port:
+        port = int(env_port)
 
-    is_socket_server = view in [AppView.FLET_APP, AppView.FLET_APP_HIDDEN, None]
+    assets_dir = __get_assets_dir_path(assets_dir)
 
     url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
 
@@ -122,34 +123,20 @@ async def run_async(
         else:
             logger.info("App URL: %s", page_url)
 
-    loop = asyncio.get_running_loop()
-
     terminate = asyncio.Event()
-
-    def exit_gracefully(*_):
-        """
-        Signal handler that requests graceful app termination.
-        """
-
-        logger.debug("Gracefully terminating Flet app...")
-        loop.call_soon_threadsafe(terminate.set)
-        signal.signal(signal.SIGINT, signal.SIG_DFL)
-        signal.signal(signal.SIGTERM, signal.SIG_DFL)
-
-    signal.signal(signal.SIGINT, exit_gracefully)
-    signal.signal(signal.SIGTERM, exit_gracefully)
-
     conn = await __run_socket_server(
-            main=main or target,
-            before_main=before_main,
-            blocking=False,
-        )
+        port=port,
+        main=main or target,
+        before_main=before_main,
+        blocking=is_embedded(),
+    )
 
     logger.info("Flet app has started...")
 
     try:
         if (
             (view in [AppView.FLET_APP, AppView.FLET_APP_HIDDEN])
+            and not is_embedded()
             and url_prefix is None
         ):
             ensure_flet_desktop_package_installed()
@@ -167,9 +154,13 @@ async def run_async(
 
             close_flet_view(pid_file)
 
-        elif url_prefix and is_socket_server:
+        elif url_prefix:
             on_app_startup(conn.page_url)
 
+            with contextlib.suppress(KeyboardInterrupt):
+                await terminate.wait()
+
+        elif view is None:
             with contextlib.suppress(KeyboardInterrupt):
                 await terminate.wait()
 

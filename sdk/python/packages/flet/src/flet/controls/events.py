@@ -545,11 +545,7 @@ class PointerEvent(Event[EventControlType]):
     The area of the screen being pressed.
 
     This value is scaled to a range between 0 and 1.
-    It can be used to determine fat touch events. This value is only
-    set on Android and is a device specific approximation within the range
-    of detectable values. So, for example, the value of 0.1 could mean a
-    touch with the tip of the finger, 0.2 a touch with full finger,
-    and 0.3 the full palm.
+    It can be used to determine fat touch events.
     """
 
     radius_major: float = field(metadata={"data_field": "rMj"})

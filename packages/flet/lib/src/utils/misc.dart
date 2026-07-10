@@ -95,11 +95,6 @@ PopupMenuPosition? parsePopupMenuPosition(String? value,
   return parseEnum(PopupMenuPosition.values, value, defaultValue);
 }
 
-Assertiveness? parseAssertiveness(String? value,
-    [Assertiveness? defaultValue]) {
-  return parseEnum(Assertiveness.values, value, defaultValue);
-}
-
 ListTileTitleAlignment? parseListTileTitleAlignment(String? value,
     [ListTileTitleAlignment? defaultValue]) {
   return parseEnum(ListTileTitleAlignment.values, value, defaultValue);
@@ -199,11 +194,6 @@ extension MiscParsers on Control {
   PopupMenuPosition? getPopupMenuPosition(String propertyName,
       [PopupMenuPosition? defaultValue]) {
     return parsePopupMenuPosition(get(propertyName), defaultValue);
-  }
-
-  Assertiveness? getAssertiveness(String propertyName,
-      [Assertiveness? defaultValue]) {
-    return parseAssertiveness(get(propertyName), defaultValue);
   }
 
   ListTileTitleAlignment? getListTileTitleAlignment(String propertyName,

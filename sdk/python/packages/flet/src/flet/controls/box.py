@@ -226,7 +226,7 @@ class BoxFit(str, Enum):
     The source image is not resized.
 
     ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_none.png)
-    """  # noqa: E501
+    """
 
     CONTAIN = "contain"
     """
@@ -234,21 +234,21 @@ class BoxFit(str, Enum):
     target box.
 
     ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_contain.png)
-    """  # noqa: E501
+    """
 
     COVER = "cover"
     """
     As small as possible while still covering the entire target box.
 
     ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_cover.png)
-    """  # noqa: E501
+    """
 
     FILL = "fill"
     """
     Fill the target box by distorting the source's aspect ratio.
 
     ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_fill.png)
-    """  # noqa: E501
+    """
 
     FIT_HEIGHT = "fitHeight"
     """
@@ -256,7 +256,7 @@ class BoxFit(str, Enum):
     whether this means the source overflows the target box horizontally.
 
     ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_fitHeight.png)
-    """  # noqa: E501
+    """
 
     FIT_WIDTH = "fitWidth"
     """
@@ -264,7 +264,7 @@ class BoxFit(str, Enum):
     whether this means the source overflows the target box vertically.
 
     ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_fitWidth.png)
-    """  # noqa: E501
+    """
 
     SCALE_DOWN = "scaleDown"
     """
@@ -275,7 +275,7 @@ class BoxFit(str, Enum):
     is the same as :attr:`NONE`.
 
     ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_scaleDown.png)
-    """  # noqa: E501
+    """
 
 
 @value

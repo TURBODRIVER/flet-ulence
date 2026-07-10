@@ -10,8 +10,7 @@ __all__ = ["AdaptiveControl"]
 class AdaptiveControl(Control):
     """
     Base class for controls that support adaptive behavior, which allows them to \
-    adjust their appearance and behavior based on the target platform (ex: Material \
-    design on Windows/Linux, Cupertino design on macOS).
+    adjust their appearance and behavior based on the target platform..
 
     The :attr:`adaptive` property is applicable in two common scenarios:
 

@@ -102,9 +102,6 @@ class CupertinoPicker(LayoutControl):
     """
     A control overlaid on the picker to highlight the selected entry, centered and \
     matching the height of the center row.
-
-    Defaults to a rounded rectangle in iOS 14 style with
-    :attr:`default_selection_overlay_bgcolor` as background color.
     """
 
     default_selection_overlay_bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL

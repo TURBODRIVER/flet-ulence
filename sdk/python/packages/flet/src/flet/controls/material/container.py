@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
@@ -25,7 +25,6 @@ from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     ThemeMode,
-    Url,
 )
 
 __all__ = ["Container"]
@@ -174,7 +173,7 @@ class Container(LayoutControl, AdaptiveControl):
     The shadow(s) below this container.
     """
 
-    url: Optional[Union[str, Url]] = None
+    url: Optional[str] = None
     """
     The URL to open when this container is clicked.
 

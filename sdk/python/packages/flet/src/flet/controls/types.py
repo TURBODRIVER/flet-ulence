@@ -28,49 +28,6 @@ class AppView(str, Enum):
     FLET_APP_HIDDEN = "flet_app_hidden"
 
 
-class UrlTarget(str, Enum):
-    """
-    Specifies where to open a URL.
-    """
-
-    BLANK = "blank"
-    """
-    Opens the URL in a new browser tab or window.
-    """
-
-    SELF = "_self"
-    """
-    Opens in the same browsing context (i.e., same tab).
-    """
-
-    PARENT = "_parent"
-    """
-    Opens in the parent frame, useful with nested iframes.
-    """
-
-    TOP = "_top"
-    """
-    Opens in the topmost frame, breaking out of any iframe.
-    """
-
-
-@value
-class Url:
-    """
-    URL descriptor used by APIs that open links in a browser context.
-    """
-
-    url: str
-    """
-    The url to open.
-    """
-
-    target: Optional[Union[UrlTarget, str]] = None
-    """
-    Where to open URL.
-    """
-
-
 class FontWeight(str, Enum):
     """
     The thickness of the glyphs used to draw the text.
@@ -427,42 +384,16 @@ class ScrollMode(str, Enum):
     AUTO = "auto"
     """
     Scrolling is enabled and scroll bar is only shown when scrolling occurs.
-
-    :class:`~flet.Scrollbar` equivalent:
-
-    ```python
-    ft.Scrollbar(
-        thickness=None,
-    )
-    ```
     """
 
     ADAPTIVE = "adaptive"
     """
-    Scrolling is enabled and scroll bar is always shown when running app as desktop.
-
-    :class:`~flet.Scrollbar` equivalent:
-
-    ```python
-    ft.Scrollbar(
-        thumb_visibility=False,
-        thickness=None,
-    )
-    ```
+    Scrolling is enabled and scroll bar is always shown when running app.
     """
 
     ALWAYS = "always"
     """
     Scrolling is enabled and scroll bar is always shown.
-
-    :class:`~flet.Scrollbar` equivalent:
-
-    ```python
-    ft.Scrollbar(
-        thumb_visibility=True,
-        thickness=None,
-    )
-    ```
     """
 
     HIDDEN = "hidden"
@@ -537,8 +468,7 @@ class ImageRepeat(str, Enum):
 
 class PagePlatform(str, Enum):
     """
-    Supported platforms for a page. Each platform corresponds to a specific 
-    operating system or environment.
+    Supported platforms for a page. Each platform corresponds to a specific operating system or environment.
     """
 
     MACOS = "macos"
@@ -547,14 +477,7 @@ class PagePlatform(str, Enum):
 
     def is_apple(self) -> bool:
         """Whether this PagePlatform instance is an Apple (macOS) platform."""
-        return self in {PagePlatform.MACOS,}
-
-    def is_desktop(self) -> bool:
-        """
-        Whether this PagePlatform instance is a desktop (macOS, Windows, Linux) \
-        platform.
-        """
-        return self in {PagePlatform.MACOS, PagePlatform.WINDOWS, PagePlatform.LINUX}
+        return self == PagePlatform.MACOS
 
 
 class ThemeMode(str, Enum):
@@ -601,13 +524,29 @@ class Brightness(str, Enum):
     """
 
 
+class Orientation(str, Enum):
+    """
+    Represents the layout orientation.
+    """
+
+    PORTRAIT = "portrait"
+    """
+    Orientation with greater height than width.
+    """
+
+    LANDSCAPE = "landscape"
+    """
+    Orientation with greater width than height.
+    """
+
+
 class FloatingActionButtonLocation(str, Enum):
     """
     Defines a position for the :class:`~flet.FloatingActionButton`.
 
     See [FloatingActionButtonLocation](https://api.flutter.dev/flutter/material/FloatingActionButtonLocation-class.html)
     from Flutter documentation for placement location examples.
-    """  # noqa: E501
+    """
 
     CENTER_DOCKED = "centerDocked"
     CENTER_FLOAT = "centerFloat"
@@ -639,7 +578,7 @@ class AppLifecycleState(str, Enum):
     """
     The application is shown.
 
-    On desktop platforms, this is just before the application is shown after being
+    This is just before the application is shown after being
     minimized or otherwise made to show at least one view of the application.
     """
 
@@ -653,7 +592,7 @@ class AppLifecycleState(str, Enum):
     """
     The application is hidden.
 
-    On desktop platforms, this is just before the application is hidden by being
+    This is just before the application is hidden by being
     minimized or otherwise hiding all views of the application.
     """
 
@@ -661,25 +600,8 @@ class AppLifecycleState(str, Enum):
     """
     The application loses input focus.
 
-    On desktop platforms, this is when all views in an application have lost input
+    This is when all views in an application have lost input
     focus but at least one view of the application is still visible.
-    """
-
-    PAUSE = "pause"
-    """
-    The application is paused.
-    """
-
-    DETACH = "detach"
-    """
-    The application has exited, and detached all host views from the engine.
-    """
-
-    RESTART = "restart"
-    """
-    The application is resumed after being paused.
-
-    On desktop platforms, this function is not called.
     """
 
 
@@ -1055,7 +977,7 @@ class Locale:
 
     When there is no language subtag, this parameter should be set
     to `"und"` (the default), which represents an undefined language code.
-    """  # noqa: E501
+    """
 
     country_code: Optional[str] = None
     """
@@ -1070,7 +992,7 @@ class Locale:
 
     Locales may also be defined without this, to specify a generic fallback for a
     particular script.
-    """  # noqa: E501
+    """
 
     script_code: Optional[str] = None
     """
@@ -1081,7 +1003,7 @@ class Locale:
     Its value must be a valid Unicode Language Identifier script subtag as listed in
     [Unicode CLDR supplemental
     data](https://github.com/unicode-org/cldr/blob/master/common/validity/script.xml).
-    """  # noqa: E501
+    """
 
     def __post_init__(self):
         if self.language_code == "":
@@ -1182,7 +1104,7 @@ class LocaleConfiguration:
             zh_Hant_HK
         ]
         ```
-    """  # noqa: E501
+    """
 
     current_locale: Optional[Locale] = None
     """

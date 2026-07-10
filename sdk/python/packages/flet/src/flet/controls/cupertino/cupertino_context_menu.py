@@ -42,8 +42,3 @@ class CupertinoContextMenu(AdaptiveControl):
     Raises:
         ValueError: If it does not contain at least one visible `Control`.
     """
-
-    enable_haptic_feedback: bool = True
-    """
-    Whether a click on the :attr:`actions` should produce haptic feedback.
-    """

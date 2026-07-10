@@ -12,8 +12,7 @@ from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     MainAxisAlignment,
     Number,
-    TextAlign,
-    UrlTarget,
+    TextAlign
 )
 
 __all__ = [
@@ -983,11 +982,6 @@ class Markdown(LayoutControl):
     and the leading spaces in the immediately following the line of text.
     """
 
-    auto_follow_links_target: Optional[UrlTarget | str] = None
-    """
-    Where to open URL in the web mode.
-    """
-
     image_error_content: Optional[Control] = None
     """
     The control to display when an image fails to load.
@@ -1037,4 +1031,4 @@ class Markdown(LayoutControl):
 
     Example:
     https://github.com/flet-dev/examples/blob/main/python/controls/information-displays/markdown/markdown-event-example.py
-    """  # noqa: E501
+    """

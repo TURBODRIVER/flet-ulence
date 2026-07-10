@@ -1,6 +1,6 @@
 from dataclasses import field
 from enum import Enum
-from typing import Annotated, Optional, Union
+from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
@@ -15,7 +15,6 @@ from flet.controls.types import (
     MouseCursor,
     Number,
     StrOrControl,
-    Url,
 )
 from flet.utils.validation import V
 
@@ -131,7 +130,7 @@ class CupertinoButton(LayoutControl):
     The radius of the button's corners when it has a background color.
     """
 
-    url: Optional[Union[str, Url]] = None
+    url: Optional[str] = None
     """
     The URL to open when this button is clicked.
 

@@ -15,8 +15,7 @@ class AdaptiveRadioControl extends StatelessWidget with FletStoreMixin {
     debugPrint("AdaptiveRadioControl build: ${control.id}");
 
     return withPagePlatform((context, platform) {
-      if (control.adaptive == true &&
-          (platform == TargetPlatform.macOS)) {
+      if (control.adaptive == true && platform == TargetPlatform.macOS) {
         return CupertinoRadioControl(control: control);
       } else {
         return RadioControl(control: control);

@@ -15,8 +15,7 @@ class AdaptiveSliderControl extends StatelessWidget with FletStoreMixin {
     debugPrint("AdaptiveSlider build: ${control.id}");
 
     return withPagePlatform((context, platform) {
-      if (control.adaptive == true &&
-          (platform == TargetPlatform.macOS)) {
+      if (control.adaptive == true && platform == TargetPlatform.macOS) {
         return CupertinoSliderControl(control: control);
       } else {
         return SliderControl(control: control);

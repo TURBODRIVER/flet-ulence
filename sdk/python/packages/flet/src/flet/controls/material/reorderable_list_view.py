@@ -154,7 +154,7 @@ class ReorderableListView(ListView):
                 rlv.controls.insert(e.new_index, moved_item)  # Insert the reordered item into its new position
                 rlv.update()
         ```
-    """  # noqa: E501
+    """
 
     on_reorder_start: Optional[EventHandler[OnReorderEvent]] = None
     """

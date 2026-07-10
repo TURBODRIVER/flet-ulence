@@ -58,7 +58,7 @@ class Scale:
     Whether to apply the transformation when performing hit tests.
     """
 
-    filter_quality: Optional["FilterQuality" | str] = None
+    filter_quality: Optional["FilterQuality | str"] = None
     """
     The filter quality with which to apply this transform as a bitmap operation.
     """
@@ -72,7 +72,7 @@ class Scale:
         alignment: Optional[Alignment | str] = None,
         origin: Optional["Offset"] = None,
         transform_hit_tests: Optional[bool] = None,
-        filter_quality: Optional["FilterQuality" | str] = None,
+        filter_quality: Optional["FilterQuality | str"] = None,
     ) -> "Scale":
         """
         Returns a copy of this object with the specified properties overridden.
@@ -121,7 +121,7 @@ class Rotate:
     Whether to apply the transformation when performing hit tests.
     """
 
-    filter_quality: Optional["FilterQuality" | str] = None
+    filter_quality: Optional["FilterQuality | str"] = None
     """
     The filter quality with which to apply this transform as a bitmap operation.
     """
@@ -133,7 +133,7 @@ class Rotate:
         alignment: Optional[Alignment | str] = None,
         origin: Optional["Offset"] = None,
         transform_hit_tests: Optional[bool] = None,
-        filter_quality: Optional["FilterQuality" | str] = None,
+        filter_quality: Optional["FilterQuality | str"] = None,
     ) -> "Rotate":
         """
         Returns a copy of this object with the specified properties overridden.
@@ -174,7 +174,7 @@ class Offset:
     Whether to apply the transformation when performing hit tests.
     """
 
-    filter_quality: Optional["FilterQuality" | str] = None
+    filter_quality: Optional["FilterQuality | str"] = None
     """
     The filter quality with which to apply this transform as a bitmap operation.
     """
@@ -190,7 +190,7 @@ class Offset:
         x: Optional[Number] = None,
         y: Optional[Number] = None,
         transform_hit_tests: Optional[bool] = None,
-        filter_quality: Optional["FilterQuality" | str] = None,
+        filter_quality: Optional["FilterQuality | str"] = None,
     ) -> "Offset":
         """
         Returns a copy of this object with the specified properties overridden.
@@ -237,7 +237,7 @@ class Flip:
     Whether to apply the transformation when performing hit tests.
     """
 
-    filter_quality: Optional["FilterQuality" | str] = None
+    filter_quality: Optional["FilterQuality | str"] = None
     """
     The filter quality with which to apply this transform as a bitmap operation.
     """
@@ -434,7 +434,7 @@ class Transform:
     Whether to apply the transformation when performing hit tests.
     """
 
-    filter_quality: Optional["FilterQuality" | str] = None
+    filter_quality: Optional["FilterQuality | str"] = None
     """
     The filter quality with which to apply this transform as a bitmap operation.
     """

@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -12,7 +12,6 @@ from flet.controls.types import (
     ColorValue,
     IconDataOrControl,
     StrOrControl,
-    Url,
 )
 from flet.utils.validation import V, ValidationRules
 
@@ -67,7 +66,7 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     The content will be clipped (or not) according to this option.
     """
 
-    url: Optional[Union[str, Url]] = None
+    url: Optional[str] = None
     """
     The URL to open when this button is clicked.
 

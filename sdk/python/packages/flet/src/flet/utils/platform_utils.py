@@ -1,5 +1,6 @@
 import asyncio
 import os
+import platform
 
 from flet.controls.exceptions import FletUnsupportedPlatformException
 
@@ -32,58 +33,33 @@ def is_asyncio():
         return False
 
 
-import platform
+def is_embedded():
+    """
+    Indicates whether a platform is explicitly provided by the embedding runtime.
+
+    Returns:
+        `True` when `FLET_PLATFORM` is set, otherwise `False`.
+    """
+    return os.getenv("FLET_PLATFORM") is not None
 
 
 def is_windows():
     """
-    Indicates whether the current platform is Windows.
-
-    Returns:
-        `True` on Windows hosts, otherwise `False`.
+    Indicates whether the current host platform is Windows.
     """
     return platform.system() == "Windows"
 
 
 def is_linux():
     """
-    Indicates whether the current platform is Linux.
-
-    Returns:
-        `True` on Linux hosts, otherwise `False`.
+    Indicates whether the current host platform is Linux.
     """
     return platform.system() == "Linux"
 
 
-def is_linux_server():
-    """
-    Indicates whether the current environment is a headless Linux server.
-
-    The environment is considered a Linux server when:
-    - the host platform is Linux;
-    - it is not Windows Subsystem for Linux (WSL);
-    - the `DISPLAY` environment variable is not set.
-
-    Returns:
-        `True` for headless Linux server environments, otherwise `False`.
-    """
-    if platform.system() == "Linux":
-        # check if it's WSL
-        p = "/proc/version"
-        if os.path.exists(p):
-            with open(p, encoding="utf-8") as file:
-                if "microsoft" in file.read():
-                    return False  # it's WSL, not a server
-        return os.environ.get("DISPLAY") is None
-    return False
-
-
 def is_macos():
     """
-    Indicates whether the current platform is macOS.
-
-    Returns:
-        `True` on macOS hosts, otherwise `False`.
+    Indicates whether the current host platform is macOS.
     """
     return platform.system() == "Darwin"
 
@@ -100,7 +76,7 @@ def get_platform():
             unsupported.
     """
     p = platform.system()
-    if is_windows():
+    if p == "Windows":
         return "windows"
     elif p == "Linux":
         return "linux"

@@ -21,40 +21,10 @@ import 'menu.dart';
 import 'misc.dart';
 import 'mouse.dart';
 import 'numbers.dart';
-import 'overlay_style.dart';
 import 'text.dart';
 import 'time.dart';
 import 'tooltip.dart';
 import 'widget_state.dart';
-
-class SystemUiOverlayStyleTheme
-    extends ThemeExtension<SystemUiOverlayStyleTheme> {
-  final SystemUiOverlayStyle? systemUiOverlayStyle;
-  SystemUiOverlayStyleTheme(this.systemUiOverlayStyle);
-
-  @override
-  SystemUiOverlayStyleTheme copyWith() {
-    return SystemUiOverlayStyleTheme(systemUiOverlayStyle);
-  }
-
-  @override
-  SystemUiOverlayStyleTheme lerp(
-      covariant SystemUiOverlayStyleTheme? other, double t) {
-    if (other is! SystemUiOverlayStyleTheme) {
-      return this;
-    }
-    return other;
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return systemUiOverlayStyle ==
-        (other as SystemUiOverlayStyleTheme).systemUiOverlayStyle;
-  }
-
-  @override
-  int get hashCode => systemUiOverlayStyle.hashCode;
-}
 
 CupertinoThemeData parseCupertinoTheme(
     dynamic value, BuildContext context, Brightness? brightness,
@@ -104,12 +74,6 @@ ThemeData parseTheme(
       parseDividerTheme(value?["divider_theme"], theme);
 
   theme = theme.copyWith(
-    extensions: {
-      SystemUiOverlayStyleTheme(value?["system_overlay_style"] != null
-          ? parseSystemUiOverlayStyle(
-              value?["system_overlay_style"], theme, brightness)
-          : null)
-    },
     visualDensity:
         parseVisualDensity(value?["visual_density"], theme.visualDensity)!,
     pageTransitionsTheme: parsePageTransitions(
@@ -1160,15 +1124,6 @@ extension ThemeParsers on Control {
   PageTransitionsTheme? getPageTransitionsTheme(String propertyName,
       [PageTransitionsTheme? defaultValue]) {
     return parsePageTransitions(get(propertyName), defaultValue);
-  }
-
-  SystemUiOverlayStyleTheme getSystemUiOverlayStyleTheme(
-      String propertyName, ThemeData theme, Brightness? brightness) {
-    return SystemUiOverlayStyleTheme(
-      get(propertyName) != null
-          ? parseSystemUiOverlayStyle(get(propertyName), theme, brightness)
-          : null,
-    );
   }
 
   ElevatedButtonThemeData? getButtonTheme(String propertyName, ThemeData theme,

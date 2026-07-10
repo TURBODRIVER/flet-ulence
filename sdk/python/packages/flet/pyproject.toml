@@ -1,6 +1,6 @@
 [project]
 name = "flet"
-version = "0.1.0"
+version = "0.86.0"
 description = "Flet for Python - easily build interactive multi-platform apps in Python"
 authors = [{name = "Appveyor Systems Inc.", email = "hello@flet.dev"}]
 license = "Apache-2.0"
@@ -8,11 +8,8 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "flet-cli; extra == 'cli'",
-    "oauthlib >=3.2.2",
-    "httpx >=0.28.1",
     "repath >=0.9.0",
-    "msgpack >=1.1.0",
-    "typing-extensions; python_version < '3.11'"
+    "msgpack >=1.1.0"
 ]
 
 [project.urls]
@@ -26,9 +23,30 @@ all = [
     "flet-desktop",
 ]
 cli = ["flet-cli"]
-desktop = [
-    "flet-desktop",
-]
+desktop = ["flet-desktop"]
 
 [project.scripts]
 flet = "flet.cli:main"
+
+[dependency-groups]
+extensions = []
+dev = [
+    "tomlkit >=0.11.6",
+    "numpy >=2.2.0",
+    "ruff >=0.13.1",
+]
+all = [
+    { include-group = 'dev' },
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+flet = [
+    "controls/material/icons.json",
+    "controls/material/icons.pyi",
+    "controls/cupertino/cupertino_icons.json",
+    "controls/cupertino/cupertino_icons.pyi",
+]

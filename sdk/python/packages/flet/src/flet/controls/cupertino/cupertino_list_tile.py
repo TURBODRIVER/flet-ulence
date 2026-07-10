@@ -1,4 +1,4 @@
-from typing import Annotated, Optional, Union
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
@@ -9,7 +9,6 @@ from flet.controls.types import (
     IconDataOrControl,
     Number,
     StrOrControl,
-    Url,
 )
 from flet.utils.validation import V
 
@@ -85,7 +84,7 @@ class CupertinoListTile(LayoutControl):
     :attr:`trailing` controls.
     """
 
-    url: Optional[Union[str, Url]] = None
+    url: Optional[str] = None
     """
     The URL to open when this button is clicked.
 

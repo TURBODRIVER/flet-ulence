@@ -15,8 +15,7 @@ class AdaptiveAppBarControl extends StatelessWidget with FletStoreMixin {
     debugPrint("AdaptiveAppBarControl build: ${control.id}");
 
     return withPagePlatform((context, platform) {
-      if (control.adaptive == true &&
-          (platform == TargetPlatform.macOS)) {
+      if (control.adaptive == true && platform == TargetPlatform.macOS) {
         return CupertinoAppBarControl(control: control);
       } else {
         return AppBarControl(control: control);
