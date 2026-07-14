@@ -51,6 +51,7 @@ def run(
     port: int = 0,
     view: Optional[AppView | str] = AppView.FLET_APP,
     assets_dir: Optional[str] = "assets",
+    debug=False,
     target=None,
 ):
     """
@@ -63,6 +64,7 @@ def run(
         port: TCP port to bind. If `0`, an available port is chosen when needed.
         view: Preferred app presentation mode.
         assets_dir: A path to app's assets directory.
+        debug: Debug mode to output debug logs.
         target: Deprecated alias for `main`.
     """
 
@@ -73,6 +75,7 @@ def run(
             port=port,
             view=view,
             assets_dir=assets_dir,
+            debug=debug
         )
     )
 
@@ -83,6 +86,7 @@ async def run_async(
     port: int = 0,
     view: Optional[AppView | str] = AppView.FLET_APP,
     assets_dir: Optional[str] = "assets",
+    debug=False,
     target=None,
 ):
     """
@@ -95,6 +99,7 @@ async def run_async(
         port: TCP port to bind. If `0`, default/free port is selected.
         view: Preferred app presentation mode.
         assets_dir: Path to app assets directory.
+        debug: Debug mode to output debug logs.
         target: Deprecated alias for `main`.
     """
 
@@ -149,6 +154,7 @@ async def run_async(
             fvp, pid_file = await open_flet_view_async(
                 conn.page_url,
                 assets_dir,
+                debug,
                 view == AppView.FLET_APP_HIDDEN,
             )
             with contextlib.suppress(Exception):

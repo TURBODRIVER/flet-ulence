@@ -10,6 +10,7 @@ import '../utils/animations.dart';
 import '../utils/colors.dart';
 import '../utils/numbers.dart';
 import '../utils/time.dart';
+import '../widgets/error.dart';
 import 'base_controls.dart';
 
 class _ChildSize extends StatefulWidget {
@@ -63,6 +64,8 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
   Size? _viewportSize;
   double? _scale;
   VoidCallback _animationListener = (){};
+  int _interactionUpdateInterval = 200;
+  int _interactionUpdateTimestamp = DateTime.now().millisecondsSinceEpoch;
 
   @override
   void initState() {
@@ -72,65 +75,6 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
     _horizontalScrollController.addListener(_onScroll);
     _verticalScrollController.addListener(_onScroll);
     widget.control.addInvokeMethodListener(_invokeMethod);
-  }
-
-  double _maxScrollX(double scale) {
-    if (_childSize == null || _viewportSize == null) return 0.0;
-    return math.max(0.0, _childSize!.width * scale - _viewportSize!.width);
-  }
-
-  double _maxScrollY(double scale) {
-    if (_childSize == null || _viewportSize == null) return 0.0;
-    return math.max(0.0, _childSize!.height * scale - _viewportSize!.height);
-  }
-
-  double _clampOffsetX(double offsetX, double scale) {
-    final maxScrollX = _maxScrollX(scale);
-    final screenScrollX = clampDouble(offsetX * scale, 0.0, maxScrollX);
-    return screenScrollX / scale;
-  }
-
-  double _clampOffsetY(double offsetY, double scale) {
-    final maxScrollY = _maxScrollY(scale);
-    final screenScrollY = clampDouble(offsetY * scale, 0.0, maxScrollY);
-    return screenScrollY / scale;
-  }
-
-  double _offsetXFromMatrix(Matrix4 matrix, double scale) {
-    return -matrix.getTranslation().x / scale;
-  }
-
-  double _offsetYFromMatrix(Matrix4 matrix, double scale) {
-    return -matrix.getTranslation().y / scale;
-  }
-
-  Matrix4 _matrixFromOffset(double offsetX, double offsetY, double scale) {
-    final screenScrollX = offsetX * scale;
-    final screenScrollY = offsetY * scale;
-    return Matrix4.identity()
-      ..scaleByDouble(scale, scale, scale, 1.0)
-      ..translateByDouble(-screenScrollX / scale, -screenScrollY / scale, 0.0, 1.0);
-  }
-
-  Offset _matrixTransformPoint(Matrix4 matrix, Offset point) {
-    return MatrixUtils.transformPoint(matrix, point);
-  }
-
-  Offset _viewportPointForOffset(double offsetX, double offsetY, double scale) {
-    final screenScrollX = offsetX * scale;
-    final screenScrollY = offsetY * scale;
-    return Offset(-screenScrollX, -screenScrollY);
-  }
-
-  Matrix4 _matrixFromFocalPoint({
-    required Offset scenePoint,
-    required Offset viewportPoint,
-    required double scale,
-  }) {
-    return Matrix4.identity()
-      ..translateByDouble(viewportPoint.dx, viewportPoint.dy, 0.0, 1.0)
-      ..scaleByDouble(scale, scale, scale, 1.0)
-      ..translateByDouble(-scenePoint.dx, -scenePoint.dy, 0.0, 1.0);
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
@@ -241,11 +185,16 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
       });
     }
 
-    widget.control.triggerEvent("interaction_update", {
-      "offset_x": clampedOffsetX,
-      "offset_y": clampedOffsetY,
-      "scale": scale,
-    });
+    var now = DateTime.now().millisecondsSinceEpoch;
+    if (now - _interactionUpdateTimestamp > _interactionUpdateInterval) {
+      _interactionUpdateTimestamp = now;
+      widget.control.triggerEvent("interaction_update", {
+        "offset_x": clampedOffsetX,
+        "offset_y": clampedOffsetY,
+        "scale": scale,
+      });
+    }
+
     _ignoreScroll = false;
   }
 
@@ -270,11 +219,16 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
     _ignoreTransformationChange = true;
     _transformationController.value = _matrixFromOffset(offsetX, offsetY, scale);
 
-    widget.control.triggerEvent("interaction_update", {
-      "offset_x": offsetX,
-      "offset_y": offsetY,
-      "scale": scale,
-    });
+    var now = DateTime.now().millisecondsSinceEpoch;
+    if (now - _interactionUpdateTimestamp > _interactionUpdateInterval) {
+      _interactionUpdateTimestamp = now;
+      widget.control.triggerEvent("interaction_update", {
+        "offset_x": offsetX,
+        "offset_y": offsetY,
+        "scale": scale,
+      });
+    }
+
     _ignoreTransformationChange = false;
   }
 
@@ -305,19 +259,13 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
   Widget build(BuildContext context) {
     debugPrint("TurboInteractiveViewer build: ${widget.control.id}");
 
-    List<Widget> contentItems = widget.control.buildWidgets("content");
-
-    // Placeholder shown when no content is provided.
-    if (contentItems.isEmpty) {
-      contentItems = [
-        const Center(
-          child: Text(
-            "No content provided to show!",
-            style: TextStyle(fontSize: 16, color: Colors.red),
-          ),
-        ),
-      ];
+    List<Widget> contents = widget.control.buildWidgets("content");
+    if (contents.isEmpty) {
+      return const ErrorControl(
+          "InteractiveViewer.content must be provided and visible");
     }
+
+    _interactionUpdateInterval = widget.control.getInt("interaction_update_interval", 200)!;
 
     ScrollbarThemeData scrollbarTheme = ScrollbarThemeData(
       mainAxisMargin: 2.0,
@@ -346,7 +294,7 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
           constrained: widget.control.getBool("constrained", false)!,
           child: _ChildSize(
             onSizeChanged: _onChildSizeChanged,
-            child: contentItems.first,
+            child: contents.first,
           ),
         );
       },
@@ -425,4 +373,64 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
 
     return LayoutControl(control: widget.control, child: themedFei);
   }
+
+  double _maxScrollX(double scale) {
+    if (_childSize == null || _viewportSize == null) return 0.0;
+    return math.max(0.0, _childSize!.width * scale - _viewportSize!.width);
+  }
+
+  double _maxScrollY(double scale) {
+    if (_childSize == null || _viewportSize == null) return 0.0;
+    return math.max(0.0, _childSize!.height * scale - _viewportSize!.height);
+  }
+
+  double _clampOffsetX(double offsetX, double scale) {
+    final maxScrollX = _maxScrollX(scale);
+    final screenScrollX = clampDouble(offsetX * scale, 0.0, maxScrollX);
+    return screenScrollX / scale;
+  }
+
+  double _clampOffsetY(double offsetY, double scale) {
+    final maxScrollY = _maxScrollY(scale);
+    final screenScrollY = clampDouble(offsetY * scale, 0.0, maxScrollY);
+    return screenScrollY / scale;
+  }
+
+  double _offsetXFromMatrix(Matrix4 matrix, double scale) {
+    return -matrix.getTranslation().x / scale;
+  }
+
+  double _offsetYFromMatrix(Matrix4 matrix, double scale) {
+    return -matrix.getTranslation().y / scale;
+  }
+
+  Matrix4 _matrixFromOffset(double offsetX, double offsetY, double scale) {
+    final screenScrollX = offsetX * scale;
+    final screenScrollY = offsetY * scale;
+    return Matrix4.identity()
+      ..scaleByDouble(scale, scale, scale, 1.0)
+      ..translateByDouble(-screenScrollX / scale, -screenScrollY / scale, 0.0, 1.0);
+  }
+
+  Offset _matrixTransformPoint(Matrix4 matrix, Offset point) {
+    return MatrixUtils.transformPoint(matrix, point);
+  }
+
+  Offset _viewportPointForOffset(double offsetX, double offsetY, double scale) {
+    final screenScrollX = offsetX * scale;
+    final screenScrollY = offsetY * scale;
+    return Offset(-screenScrollX, -screenScrollY);
+  }
+
+  Matrix4 _matrixFromFocalPoint({
+    required Offset scenePoint,
+    required Offset viewportPoint,
+    required double scale,
+  }) {
+    return Matrix4.identity()
+      ..translateByDouble(viewportPoint.dx, viewportPoint.dy, 0.0, 1.0)
+      ..scaleByDouble(scale, scale, scale, 1.0)
+      ..translateByDouble(-scenePoint.dx, -scenePoint.dy, 0.0, 1.0);
+  }
+
 }

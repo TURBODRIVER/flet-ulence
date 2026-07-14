@@ -110,6 +110,13 @@ class Command(BaseCommand):
             "used by the app (e.g. images, fonts)",
         )
         parser.add_argument(
+            "--debug",
+            dest="debug",
+            action="store_true",
+            default=False,
+            help="Start the application in debug mode",
+        )
+        parser.add_argument(
             "--ignore-dirs",
             dest="ignore_dirs",
             type=str,
@@ -199,6 +206,7 @@ class Command(BaseCommand):
             uds_path=uds_path,
             hidden=options.hidden,
             assets_dir=assets_dir,
+            debug=options.debug,
             ignore_dirs=ignore_dirs,
             flet_app_data_dir=str(flet_app_data_dir),
             flet_app_temp_dir=str(flet_app_temp_dir),
@@ -240,6 +248,7 @@ class Handler(FileSystemEventHandler):
         uds_path,
         hidden,
         assets_dir,
+        debug,
         ignore_dirs,
         flet_app_data_dir,
         flet_app_temp_dir,
@@ -254,6 +263,7 @@ class Handler(FileSystemEventHandler):
         self.uds_path = uds_path
         self.hidden = hidden
         self.assets_dir = assets_dir
+        self.debug = debug
         self.ignore_dirs = ignore_dirs
         self.last_time = time.time()
         self.is_running = False
@@ -368,7 +378,7 @@ class Handler(FileSystemEventHandler):
         from flet_desktop import open_flet_view
 
         self.fvp, self.pid_file = open_flet_view(
-            self.page_url, self.assets_dir, self.hidden
+            self.page_url, self.assets_dir, self.debug, self.hidden
         )
         self.fvp.wait()
         self._process.send_signal(signal.SIGTERM)

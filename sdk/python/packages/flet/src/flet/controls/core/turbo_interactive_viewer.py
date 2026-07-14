@@ -45,10 +45,12 @@ class TurboViewerUpdateEvent(Event["TurboInteractiveViewer"]):
     """
     The X offset of the content in the Interactive Viewer.
     """
+
     offset_y: float
     """
     The Y offset of the content in the Interactive Viewer.
     """
+
     scale: float
     """
     The scale of the content in the Interactive Viewer.
@@ -75,26 +77,32 @@ class TurboInteractiveViewer(LayoutControl):
     Raises:
         ValueError: If it is not visible.
     """
+
     x_scroll_enabled: bool = True
     """
     Whether X scrollbar should appear or not.
     """
+
     y_scroll_enabled: bool = True
     """
     Whether Y scrollbar should appear or not.
     """
+
     over_zoom_enabled: bool = False
     """
     Whether it should be possible to zoom beyond the content's native resolution.
     """
+
     interactive_scroll_enabled: bool = True
     """
     Whether the scrollbars are interactive or serve only as a visual position indicator.
     """
+
     pan_enabled: bool = True
     """
     Whether panning is enabled.
     """
+
     max_scale: Annotated[
         Number,
         V.gt(0),
@@ -108,6 +116,7 @@ class TurboInteractiveViewer(LayoutControl):
         ValueError: If it is not strictly greater than `0`.
         ValueError: If it is not greater than or equal to `min_scale`.
     """
+
     min_scale: Annotated[
         Number,
         V.gt(0),
@@ -121,10 +130,12 @@ class TurboInteractiveViewer(LayoutControl):
         ValueError: If it is not strictly greater than `0`.
         ValueError: If it is not less than or equal to `max_scale`.
     """
+
     scale_enabled: bool = True
     """
     Whether scaling is enabled.
     """
+
     scale_factor: Number = 200.0
     """
     The amount of scale to be performed per pointer scroll.
@@ -136,6 +147,7 @@ class TurboInteractiveViewer(LayoutControl):
     Note:
         Has effect only on pointer device scrolling, not pinch to zoom.
     """
+
     constrained: bool = False
     """
     Whether the normal size constraints at this point in the control tree are applied \
@@ -153,10 +165,18 @@ class TurboInteractiveViewer(LayoutControl):
     receptive to user gestures, make sure `constrained` is `False` and the content
     is sized properly.
     """
+
+    interaction_update_interval: int = 200
+    """
+    The interval (in milliseconds) at which the :attr:`on_interaction_update` event is \
+    fired.
+    """
+
     on_interaction_update: Optional[EventHandler[TurboViewerUpdateEvent]] = None
     """
     Called when the user interacts with the viewer.
     """
+
     # scrollbarTheme
     thumbs_color: Optional[ColorValue] = None
     """

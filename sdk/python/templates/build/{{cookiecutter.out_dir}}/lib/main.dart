@@ -52,14 +52,17 @@ Map<String, String> environmentVariables = Map.from(Platform.environment);
 void main(List<String> args) async {
   FletDeepLinkingBootstrap.install();
 
-  // final outputPath = await path_provider.getApplicationDocumentsDirectory();
-  // final outputFile = File('${outputPath.path}/flutter_log.txt');
-  // debugPrint = (String? message, {int? wrapWidth}) {
-  //   outputFile.writeAsStringSync('$message\n', mode: FileMode.append);
-  // };
-  debugPrint = (String? message, {int? wrapWidth}) => null;
-
   _args = List<String>.from(args);
+
+  if (_args.contains("debug")) {
+    final outputPath = await path_provider.getApplicationDocumentsDirectory();
+    final outputFile = File('${outputPath.path}\\flutter_logs.txt');
+    debugPrint = (String? message, {int? wrapWidth}) {
+      outputFile.writeAsStringSync('$message\n', mode: FileMode.append);
+    };
+  } else {
+    debugPrint = (String? message, {int? wrapWidth}) => null;
+  }
 
   for (var ext in extensions) {
     ext.ensureInitialized();
@@ -170,11 +173,11 @@ class _PythonAppLoaderState extends State<_PythonAppLoader> {
 }
 
 Future prepareApp() async {
-  if (!_args.contains("--debug") && isRelease) {
+  if (!_args.contains("debug") && isRelease) {
     // ignore: avoid_returning_null_for_void
-    // debugPrint = (String? message, {int? wrapWidth}) => null;
+    debugPrint = (String? message, {int? wrapWidth}) => null;
   } else {
-    _args.remove("--debug");
+    _args.remove("debug");
   }
 
   await setupDesktop(hideWindowOnStart: hideWindowOnStart);
