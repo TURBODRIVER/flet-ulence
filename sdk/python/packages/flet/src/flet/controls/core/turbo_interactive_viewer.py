@@ -1,8 +1,7 @@
-# https://github.com/PraiseTheDarkFlo/flet-extended-interactive-viewer
-
 from dataclasses import dataclass
 from typing import Optional, Annotated
 
+from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
@@ -12,26 +11,25 @@ from flet.controls.types import ColorValue, Number
 from flet.utils.validation import V
 
 __all__ = [
-    "ExtendedInteractiveViewer",
-    "ViewerUpdateEvent",
+    "TurboInteractiveViewer",
+    "TurboViewerUpdateEvent",
 ]
 
 
 @dataclass
-class ViewerUpdateEvent(Event["ExtendedInteractiveViewer"]):
+class TurboViewerUpdateEvent(Event["TurboInteractiveViewer"]):
     """
-    Event raised when the user interacts with the viewer.
+    Event raised when the viewer changes offset or scale.
 
     Example:
         ```python
         import flet as ft
-        from flet_extended_interactive_viewer import ExtendedInteractiveViewer, ViewerUpdateEvent
 
         def main(page: ft.Page):
-            def on_update(e: ViewerUpdateEvent):
+            def on_update(e: ft.TurboViewerUpdateEvent):
                 print(e.offset_x, e.offset_y, e.scale)
 
-            fei = ExtendedInteractiveViewer(
+            fei = ft.TurboInteractiveViewer(
                 content=ft.Container(width=900, height=800, gradient=ft.LinearGradient(
                     colors=[ft.Colors.PINK, ft.Colors.ORANGE_700],
                 )),
@@ -57,10 +55,11 @@ class ViewerUpdateEvent(Event["ExtendedInteractiveViewer"]):
     """
 
 
-@control("ExtendedInteractiveViewer")
-class ExtendedInteractiveViewer(LayoutControl):
+@control("TurboInteractiveViewer")
+class TurboInteractiveViewer(LayoutControl):
     """
-    A powerful 2D navigation control for [Flet](https://flet.dev/) that adds synchronized scrollbars and enhanced transformation control to the standard InteractiveViewer.
+    A powerful 2D navigation control for [Flet](https://flet.dev/) that adds synchronized scrollbars and dedicated transformation control to the standard InteractiveViewer.
+    Originally based on the ExtendedInteractiveViewer: https://github.com/PraiseTheDarkFlo/flet-extended-interactive-viewer
 
     Key Features:
         - **Synchronized XY Scrollbars:** Real-time visual feedback and manual scrolling for both axes, perfectly synced with panning and zoom.
@@ -154,7 +153,7 @@ class ExtendedInteractiveViewer(LayoutControl):
     receptive to user gestures, make sure `constrained` is `False` and the content
     is sized properly.
     """
-    on_interaction_update: Optional[EventHandler[ViewerUpdateEvent]] = None
+    on_interaction_update: Optional[EventHandler[TurboViewerUpdateEvent]] = None
     """
     Called when the user interacts with the viewer.
     """
@@ -164,7 +163,7 @@ class ExtendedInteractiveViewer(LayoutControl):
     Defines the color of the thumbs when interacting with the viewer.
     """
 
-    async def get_transformation_data(self) -> tuple[float, float, float]:
+    async def get_transformation(self) -> tuple[float, float, float]:
         """
         Gets the transformation data for this viewer.
 
@@ -176,8 +175,12 @@ class ExtendedInteractiveViewer(LayoutControl):
         data = await self._invoke_method("get_transformation_data", {})
         return data["offset_x"], data["offset_y"], data["scale"]
 
-    async def set_transformation_data(self, offset_x: Optional[Number] = None, offset_y: Optional[Number] = None,
-                                      scale: Optional[Number] = None, animation_duration: Optional[DurationValue] = None):
+    async def set_transformation(
+        self,
+        offset_x: Optional[Number] = None, offset_y: Optional[Number] = None,
+        scale: Optional[Number] = None,
+        animation_duration: Optional[DurationValue] = None, animation_curve: Optional[AnimationCurve | str] = None
+    ):
         """
         Translate the current transformation matrix.
         By default, the translation is with no animation (immediately).
@@ -187,45 +190,15 @@ class ExtendedInteractiveViewer(LayoutControl):
             offset_y: The vertical translation of the content.
             scale: The scale factor.
             animation_duration: The duration of the animation. If `None`, the reset is applied immediately.
+            animation_curve: The curve to apply to the animation.
         """
         await self._invoke_method(
             "set_transformation_data",
             arguments={
-                "offSetX": offset_x,
-                "offSetY": offset_y,
-                "scale": scale,
-                "duration": animation_duration
+                "offsetX" : offset_x,
+                "offsetY" : offset_y,
+                "scale"   : scale,
+                "duration": animation_duration,
+                "curve"   : animation_curve
             },
         )
-
-    async def reset(self, animation_duration: Optional[DurationValue] = None):
-        """
-        Reset the viewer transformation matrix.
-        By default, the translation is with no animation (immediately).
-
-        Args:
-            animation_duration: Animation duration for the reset transition. If `None`, the reset is applied immediately.
-        """
-        await self._invoke_method(
-            "reset", arguments={
-                "duration": animation_duration
-            }
-        )
-
-    async def zoom(self, factor: Number):
-        """
-        Applies multiplicative zoom to the current transform.
-
-        Args:
-            factor: Scale multiplier relative to the current scale.
-                Values greater than `1` zoom in, values between `0` and `1`
-                zoom out.
-
-        Note:
-            The resulting scale is NOT clamped to `min_scale` or `max_scale`.
-            The only restriction applied is based on `over_zoom_enabled`
-            to prevent the content from shrinking smaller than the viewport.
-        """
-        await self._invoke_method("zoom", arguments={
-            "factor": factor
-        })

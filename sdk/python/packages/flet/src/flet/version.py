@@ -12,7 +12,7 @@ __all__ = [
 ]
 
 # set by CI
-flet_version = "0.86.0"
+flet_version = "0.85.99"
 """
 The Flet version in use.
 
@@ -57,7 +57,7 @@ def get_flet_version() -> str:
     # If 'flet_version' is still empty after the above (e.g., in a built package
     # where CI didn't replace it), fall back to the default version.
     # CI replacement is the standard way for packaged versions.
-    return "0.86.0"
+    return "0.85.99"
 
 
 def get_flutter_version() -> str:

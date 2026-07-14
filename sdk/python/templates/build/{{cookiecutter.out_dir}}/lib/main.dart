@@ -18,21 +18,18 @@ import 'package:{{ dep }}/{{ dep }}.dart' as {{ dep }};
 {% endfor %}
 
 /*
-{% set python_asset_path = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.asset_zip_path")
-                        or get_pyproject("tool.flet.app.asset_zip_path") %}
 {% set boot_screen_message = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.boot_screen.message")
                         or get_pyproject("tool.flet.app.boot_screen.message") %}
 {% set hide_window_on_start = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.hide_window_on_start")
                         or get_pyproject("tool.flet.app.hide_window_on_start") %}
 
-python_asset_path : {{ python_asset_path }}
 boot_screen_message: {{ boot_screen_message }}
 hide_window_on_start: {{ hide_window_on_start }}
 */
 
 const bool isRelease = bool.fromEnvironment('dart.vm.product');
 
-const assetPath = '{{ python_asset_path | default("app/app.zip", true) }}';
+const appZipPath = "{{ cookiecutter.app_zip_path }}";
 const pythonModuleName = "{{ cookiecutter.python_module_name }}";
 const appBootScreenMessage = '{{ boot_screen_message | default("Preparing the App...", true) }}';
 final hideWindowOnStart = bool.tryParse("{{ hide_window_on_start }}".toLowerCase()) ?? false;
@@ -55,10 +52,10 @@ Map<String, String> environmentVariables = Map.from(Platform.environment);
 void main(List<String> args) async {
   FletDeepLinkingBootstrap.install();
 
-  // final output_path = await path_provider.getApplicationDocumentsDirectory();
-  // final output_file = File('${output_path.path}/flutter_log.txt');
+  // final outputPath = await path_provider.getApplicationDocumentsDirectory();
+  // final outputFile = File('${outputPath.path}/flutter_log.txt');
   // debugPrint = (String? message, {int? wrapWidth}) {
-  //   output_file.writeAsStringSync('$message\n', mode: FileMode.append);
+  //   outputFile.writeAsStringSync('$message\n', mode: FileMode.append);
   // };
   debugPrint = (String? message, {int? wrapWidth}) => null;
 
@@ -68,7 +65,7 @@ void main(List<String> args) async {
     ext.ensureInitialized();
   }
 
-  final ThemeData _appBaseTheme = ThemeData(
+  final ThemeData appBaseTheme = ThemeData(
     brightness: Brightness.light,
     scaffoldBackgroundColor: const Color(0xFFFFFFFF),
     cardColor: const Color(0xFFFFFFFF),
@@ -87,10 +84,10 @@ void main(List<String> args) async {
   );
 
   runApp(Theme(
-    data: _appBaseTheme,
+    data: appBaseTheme,
     child: MaterialApp(
-      theme: _appBaseTheme,
-      darkTheme: _appBaseTheme,
+      theme: appBaseTheme,
+      darkTheme: appBaseTheme,
       themeMode: ThemeMode.light,
       builder: (context, child) {
         return MediaQuery(
@@ -111,7 +108,7 @@ void main(List<String> args) async {
                 text: snapshot.error.toString()
             );
           } else {
-            return BootScreen();
+            return const BootScreen();
           }
         }
       ),
@@ -128,15 +125,17 @@ class _PythonAppLoader extends StatefulWidget {
 }
 
 class _PythonAppLoaderState extends State<_PythonAppLoader> {
-  late final Future<String?> _pythonFuture;
+  Future<String?>? _pythonFuture;
   bool _showFlet = false;
+  bool _isEmbedded = true;
 
   @override
   void initState() {
     super.initState();
-    _pythonFuture = runPythonApp(widget.args).then((result) {
-      return result;
-    });
+    _isEmbedded = !widget.args.isNotEmpty;
+    if (_isEmbedded) {
+      _pythonFuture = runPythonApp(widget.args);
+    }
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) setState(() => _showFlet = true);
     });
@@ -144,25 +143,26 @@ class _PythonAppLoaderState extends State<_PythonAppLoader> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_isEmbedded) {
+      if (_showFlet) {
+        return FletApp(pageUrl: pageUrl, assetsDir: assetsDir, extensions: extensions);
+      } else {
+        return const BootScreen();
+      }
+    }
+
     return FutureBuilder<String?>(
       future: _pythonFuture,
       builder: (context, snapshot) {
-
         if (snapshot.hasData || snapshot.hasError) {
           return ErrorScreen(
             title: "Error running app",
             text: snapshot.data ?? snapshot.error.toString(),
           );
         }
-
         if (_showFlet) {
-          return FletApp(
-            pageUrl: pageUrl,
-            assetsDir: assetsDir,
-            extensions: extensions,
-          );
+          return FletApp(pageUrl: pageUrl, assetsDir: assetsDir, extensions: extensions);
         }
-
         return const BootScreen();
       },
     );
@@ -185,24 +185,25 @@ Future prepareApp() async {
     pageUrl = _args[0];
     if (_args.length > 1) {
       var pidFilePath = _args[1];
-      debugPrint("Args contain a path to PID file: $pidFilePath}");
+      debugPrint("Args contain a path to PID file: $pidFilePath");
       var pidFile = await File(pidFilePath).create();
       await pidFile.writeAsString("$pid");
     }
     if (_args.length > 2) {
       assetsDir = _args[2];
-      debugPrint("Args contain a path assets directory: $assetsDir}");
+      debugPrint("Args contain a path assets directory: $assetsDir");
     }
   } else {
     // production mode
     // extract app from asset
-    appDir = await extractAssetZip(assetPath, checkHash: true);
+    appDir = await extractAssetZip(appZipPath, checkHash: true);
+
     Directory.current = appDir;
     assetsDir = path.join(appDir, "assets");
 
-    // configure apps DATA and TEMP directories
     WidgetsFlutterBinding.ensureInitialized();
 
+    // configure apps DATA and TEMP directories
     var appTempPath = (await path_provider.getApplicationCacheDirectory()).path;
 
     environmentVariables.putIfAbsent("FLET_APP_STORAGE_DATA", () => appTempPath);

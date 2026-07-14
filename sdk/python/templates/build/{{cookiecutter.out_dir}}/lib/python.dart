@@ -42,7 +42,15 @@ def initialize_ctypes():
 
 initialize_ctypes()
 
-out_file = open("{outLogFilename}", "w+", buffering=1)
+out_file = open(
+    "{outLogFilename}",
+    "w+", 
+    buffering=1, 
+    encoding="utf-8",
+    errors="backslashreplace",  # prevents encoding failures
+)
+
+sys.stdout = sys.stderr = out_file
 
 callback_socket_addr = os.getenv("FLET_PYTHON_CALLBACK_SOCKET_ADDR")
 if ":" in callback_socket_addr:
@@ -52,8 +60,6 @@ if ":" in callback_socket_addr:
 else:
     callback_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     callback_socket.connect(callback_socket_addr)
-
-sys.stdout = sys.stderr = out_file
 
 def flet_exit(code=0):
     callback_socket.sendall(str(code).encode())

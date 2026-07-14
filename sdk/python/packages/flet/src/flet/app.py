@@ -65,6 +65,7 @@ def run(
         assets_dir: A path to app's assets directory.
         target: Deprecated alias for `main`.
     """
+
     return asyncio.run(
         run_async(
             main=main or target,
@@ -96,6 +97,7 @@ async def run_async(
         assets_dir: Path to app assets directory.
         target: Deprecated alias for `main`.
     """
+
     if isinstance(view, str):
         view = AppView(view)
 
@@ -239,9 +241,7 @@ async def __run_socket_server(
     from flet.messaging.flet_socket_server import FletSocketServer
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
-
     executor = concurrent.futures.ThreadPoolExecutor()
-
     conn = FletSocketServer(
         loop=asyncio.get_running_loop(),
         port=port,

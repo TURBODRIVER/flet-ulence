@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
 
-from flet.controls.animation import AnimationCurve
+from flet.controls.animation import AnimationCurve, AnimationValue
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
@@ -56,8 +56,8 @@ class ScrollType(str, Enum):
     """
     Viewport was overscrolled.
 
-    See :attr:`~flet.OnScrollEvent.overscroll` and
-    :attr:`~flet.OnScrollEvent.velocity` are available.
+    See :attr:`flet.OnScrollEvent.overscroll` and
+    :attr:`flet.OnScrollEvent.velocity` are available.
     """
 
 
@@ -140,6 +140,8 @@ class Scrollbar:
     """
     Controls the cross-axis size of the scrollbar in logical pixels.
     The thickness of the scrollbar in the cross axis of the scrollable.
+
+    If `None`, the default value is :attr:`flet.ScrollbarTheme.thickness`.
     """
 
     radius: Optional[Number] = None
@@ -148,6 +150,8 @@ class Scrollbar:
     pixels. If `None`, platform defaults are used.
 
     The radius of the scrollbar thumb's rounded rectangle corners.
+
+    If `None`, the default value is `8.0` pixels.
     """
 
     interactive: Optional[bool] = None
@@ -339,11 +343,26 @@ class ScrollableControl(Control):
 
     auto_scroll: bool = False
     """
-    Whether the scrollbar should automatically move its position to the end when \
-    children updated.
+    Whether to automatically move the scroll position to the end when the content
+    changes.
+
+    This keeps the view pinned to the end as new children are added *and* as
+    existing content grows in place (e.g. text streamed into an existing child).
+    Pinning is suspended while the user has scrolled away from the end, and
+    resumes once they scroll back.
 
     Note:
         Must be `False` for :meth:`scroll_to` method to work.
+    """
+
+    auto_scroll_animation: Optional[AnimationValue] = None
+    """
+    Animation used when :attr:`auto_scroll` moves the view to the end.
+
+    Accepts an :class:`~flet.Animation` (duration + curve), an `int` duration in
+    milliseconds, or `True`. Defaults to a 1 second `ease` animation; set a
+    duration of `0` for an instant jump (recommended when following fast,
+    token-by-token streaming so the view stays tightly pinned).
     """
 
     scroll_interval: Number = 10

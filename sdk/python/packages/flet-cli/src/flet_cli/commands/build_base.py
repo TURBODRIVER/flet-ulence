@@ -59,7 +59,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.python_module_name = None
         self.get_pyproject = None
         self.python_app_path = None
-        self.asset_zip_path = None
+        self.app_zip_path = None
         self.build_dir = None
         self.flutter_dir: Optional[Path] = None
         self.flutter_packages_dir = None
@@ -172,8 +172,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             "; can be used multiple times",
         )
         parser.add_argument(
-            "--asset-zip-path",
-            dest="asset_zip_path",
+            "--app-zip-path",
+            dest="app_zip_path",
             required=False,
             help="Relative path to app python zip file.",
         )
@@ -510,9 +510,9 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.python_app_path
         assert self.get_pyproject
 
-        self.asset_zip_path = (
-            self.options.asset_zip_path
-            or self.get_pyproject("tool.flet.app.asset_zip_path")
+        self.app_zip_path = (
+            self.options.app_zip_path
+            or self.get_pyproject("tool.flet.app.app_zip_path")
             or "app/app.zip"
         )
         project_name_raw = (
@@ -622,7 +622,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "out_dir": self.flutter_dir.name,
             "sep": os.sep,
             "python_module_name": self.python_module_name,
-            "asset_zip_path": self.asset_zip_path,
+            "app_zip_path": self.app_zip_path,
             "project_name": project_name,
             "project_name_slug": project_name_slug,
             "artifact_name": artifact_name,
@@ -1217,9 +1217,9 @@ class BaseBuildCommand(BaseFlutterCommand):
         hash.commit()
 
         # make sure app zip file exists
-        app_zip_path = self.flutter_dir.joinpath(self.asset_zip_path)
+        app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
         if not os.path.exists(app_zip_path):
-            self.cleanup(1, "Flet app package app zip file was not created.")
+            self.cleanup(1, "Flet app package app/app.zip was not created.")
 
         console.log(f"Packaged Python app {self.emojis['checkmark']}")
 

@@ -54,6 +54,7 @@ import 'controls/dropdown.dart';
 import 'controls/dropdownm2.dart';
 import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
+import 'controls/turbo_interactive_viewer.dart';
 import 'controls/flet_app_control.dart';
 import 'controls/floating_action_button.dart';
 import 'controls/gesture_detector.dart';
@@ -242,6 +243,8 @@ class FletCoreExtension extends FletExtension {
         return ExpansionPanelListControl(key: key, control: control);
       case "ExpansionTile":
         return ExpansionTileControl(key: key, control: control);
+      case "TurboInteractiveViewer":
+        return TurboInteractiveViewerControl(key: key, control: control);
       case "FletApp":
         return FletAppControl(key: key, control: control);
       case "FloatingActionButton":

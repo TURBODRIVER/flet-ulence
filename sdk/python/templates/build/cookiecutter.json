@@ -1,6 +1,7 @@
 {
     "out_dir": "",
     "python_module_name": "main",
+    "app_zip_path": "app/app.zip",
     "project_name": "",
     "project_name_slug": "",
     "project_description": "",
