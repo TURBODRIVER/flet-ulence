@@ -5,6 +5,7 @@
 import FlutterMacOS
 import Foundation
 
+import macos_haptic_feedback
 import path_provider_foundation
 import record_darwin
 import screen_retriever_macos
@@ -13,6 +14,7 @@ import window_manager
 import window_to_front
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
+  MacosHapticFeedbackPlugin.register(with: registry.registrar(forPlugin: "MacosHapticFeedbackPlugin"))
   PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
   RecordPlugin.register(with: registry.registrar(forPlugin: "RecordPlugin"))
   ScreenRetrieverMacosPlugin.register(with: registry.registrar(forPlugin: "ScreenRetrieverMacosPlugin"))

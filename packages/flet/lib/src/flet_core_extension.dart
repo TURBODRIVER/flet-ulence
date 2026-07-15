@@ -111,6 +111,7 @@ import 'flet_extension.dart';
 import 'flet_service.dart';
 import 'models/control.dart';
 import 'services/clipboard.dart';
+import 'services/desktop_haptic_feedback.dart';
 import 'services/file_picker.dart';
 import 'services/semantics_service.dart';
 import 'services/storage_paths.dart';
@@ -378,6 +379,8 @@ class FletCoreExtension extends FletExtension {
         return ClipboardService(control: control);
       case "FilePicker":
         return FilePickerService(control: control);
+      case "DesktopHapticFeedback":
+        return DesktopHapticFeedbackService(control: control);
       case "SemanticsService":
         return SemanticsServiceControl(control: control);
       case "StoragePaths":

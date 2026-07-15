@@ -56,7 +56,7 @@ void main(List<String> args) async {
 
   if (_args.contains("debug")) {
     final outputPath = await path_provider.getApplicationDocumentsDirectory();
-    final outputFile = File('${outputPath.path}\\flutter_logs.txt');
+    final outputFile = File(path.join(outputPath.path, 'flutter_logs.txt'));
     debugPrint = (String? message, {int? wrapWidth}) {
       outputFile.writeAsStringSync('$message\n', mode: FileMode.append);
     };

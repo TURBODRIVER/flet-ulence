@@ -29,11 +29,12 @@ dependencies:
   flutter_svg: ^2.2.1
   highlight: ^0.7.0
   http: ^1.5.0
+  macos_haptic_feedback: ^1.0.0
   markdown: ^7.3.0
   msgpack_dart: ^1.0.1
+  pasteboard: ^0.4.0
   path: ^1.9.0
   path_provider: ^2.1.5
-  pasteboard: ^0.4.0
   provider: ^6.1.2
   screenshot: ^3.0.0
   shimmer: ^3.0.0

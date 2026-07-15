@@ -305,9 +305,9 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                 widget.control.getBool("trackpad_scroll_causes_scale", false)!,
             supportedDevices: () {
               var supportedDevices =
-                  widget.control.get<List<String?>>("allowed_devices");
+                  widget.control.get<List<dynamic>>("allowed_devices");
               return supportedDevices
-                  ?.map((d) => parsePointerDeviceKind(d))
+                  ?.map((d) => parsePointerDeviceKind(d?.toString()))
                   .nonNulls
                   .toSet();
             }(),

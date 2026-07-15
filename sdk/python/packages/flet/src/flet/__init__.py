@@ -437,6 +437,7 @@ from flet.controls.scrollable_control import (
     ScrollType,
 )
 from flet.controls.services.clipboard import Clipboard
+from flet.controls.services.desktop_haptic_feedback import DesktopHapticFeedback
 from flet.controls.services.file_picker import (
     FilePicker,
     FilePickerFile,
@@ -694,6 +695,7 @@ __all__ = [
     "DateRangePicker",
     "DateTimeValue",
     "DecorationImage",
+    "DesktopHapticFeedback",
     "DeviceInfo",
     "DialogControl",
     "DialogTheme",

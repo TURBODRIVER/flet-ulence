@@ -74,9 +74,6 @@ class Command(BaseBuildCommand):
         )
         with Live(Group(self.status, self.progress), console=console) as self.live:
             self.initialize_command()
-            if self.options.show_devices:
-                self.live.update("", refresh=True)
-                return
             self.validate_target_platform()
             self.validate_entry_point()
             self.setup_template_data()
