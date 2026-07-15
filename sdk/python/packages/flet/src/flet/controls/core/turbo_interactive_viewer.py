@@ -13,6 +13,7 @@ from flet.utils.validation import V
 __all__ = [
     "TurboInteractiveViewer",
     "TurboViewerUpdateEvent",
+    "TurboClickEvent",
 ]
 
 
@@ -55,6 +56,14 @@ class TurboViewerUpdateEvent(Event["TurboInteractiveViewer"]):
     """
     The scale of the content in the Interactive Viewer.
     """
+
+
+@dataclass
+class TurboClickEvent(Event["TurboInteractiveViewer"]):
+    local_x: float
+    local_y: float
+    global_x: float
+    global_y: float
 
 
 @control("TurboInteractiveViewer")
@@ -175,6 +184,11 @@ class TurboInteractiveViewer(LayoutControl):
     on_interaction_update: Optional[EventHandler[TurboViewerUpdateEvent]] = None
     """
     Called when the user interacts with the viewer.
+    """
+
+    on_click: Optional[EventHandler[TurboClickEvent]] = None
+    """
+    Called when the user taps/clicks on the viewer's content.
     """
 
     # scrollbarTheme

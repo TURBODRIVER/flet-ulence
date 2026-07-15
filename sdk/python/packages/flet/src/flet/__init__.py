@@ -118,7 +118,7 @@ from flet.controls.core.drag_target import (
     DragWillAcceptEvent,
 )
 from flet.controls.core.draggable import Draggable
-from flet.controls.core.turbo_interactive_viewer import TurboInteractiveViewer, TurboViewerUpdateEvent
+from flet.controls.core.turbo_interactive_viewer import TurboInteractiveViewer, TurboViewerUpdateEvent, TurboClickEvent
 from flet.controls.core.flet_app import FletApp
 from flet.controls.core.gesture_detector import GestureDetector
 from flet.controls.core.grid_view import GridView
@@ -727,7 +727,6 @@ __all__ = [
     "ExpansionPanelListChangeEvent",
     "ExpansionTile",
     "ExpansionTileTheme",
-    "TurboInteractiveViewer",
     "FilePicker",
     "FilePickerFile",
     "FilePickerFileType",
@@ -983,6 +982,9 @@ __all__ = [
     "TooltipValue",
     "Transform",
     "TransparentPointer",
+    "TurboClickEvent",
+    "TurboInteractiveViewer",
+    "TurboViewerUpdateEvent",
     "UnderlineTabIndicator",
     "Value",
     "ValueKey",
@@ -990,7 +992,6 @@ __all__ = [
     "VerticalDivider",
     "View",
     "ViewPopEvent",
-    "TurboViewerUpdateEvent",
     "ViewsPopUntilEvent",
     "VisualDensity",
     "Window",

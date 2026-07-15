@@ -64,8 +64,12 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
   Size? _viewportSize;
   double? _scale;
   VoidCallback _animationListener = (){};
+
   int _interactionUpdateInterval = 200;
   int _interactionUpdateTimestamp = DateTime.now().millisecondsSinceEpoch;
+  double? _lastEmittedOffsetX;
+  double? _lastEmittedOffsetY;
+  double? _lastEmittedScale;
 
   @override
   void initState() {
@@ -155,7 +159,6 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
     }
   }
 
-  // Keeps the scrollbars in sync whenever the transformation matrix changes.
   void _onTransformationChanged() {
     if (_ignoreTransformationChange) return;
     if (_viewportSize == null || _childSize == null) return;
@@ -185,20 +188,10 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
       });
     }
 
-    var now = DateTime.now().millisecondsSinceEpoch;
-    if (now - _interactionUpdateTimestamp > _interactionUpdateInterval) {
-      _interactionUpdateTimestamp = now;
-      widget.control.triggerEvent("interaction_update", {
-        "offset_x": clampedOffsetX,
-        "offset_y": clampedOffsetY,
-        "scale": scale,
-      });
-    }
-
+    _triggerInteractionUpdate(clampedOffsetX, clampedOffsetY, scale);
     _ignoreScroll = false;
   }
 
-  // Handle scrollbar drags.
   void _onScroll() {
     if (_ignoreScroll) return;
     if (_viewportSize == null || _childSize == null) return;
@@ -218,21 +211,44 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
 
     _ignoreTransformationChange = true;
     _transformationController.value = _matrixFromOffset(offsetX, offsetY, scale);
-
-    var now = DateTime.now().millisecondsSinceEpoch;
-    if (now - _interactionUpdateTimestamp > _interactionUpdateInterval) {
-      _interactionUpdateTimestamp = now;
-      widget.control.triggerEvent("interaction_update", {
-        "offset_x": offsetX,
-        "offset_y": offsetY,
-        "scale": scale,
-      });
-    }
-
+    _triggerInteractionUpdate(offsetX, offsetY, scale);
     _ignoreTransformationChange = false;
   }
 
-  // Update when child render size changes.
+  void _triggerInteractionUpdate(double offsetX, double offsetY, double scale) {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    if (now - _interactionUpdateTimestamp < _interactionUpdateInterval) return;
+
+    const epsilon = 1e-6;
+    final unchanged = _lastEmittedOffsetX != null &&
+        _lastEmittedOffsetY != null &&
+        _lastEmittedScale != null &&
+        (offsetX - _lastEmittedOffsetX!).abs() < epsilon &&
+        (offsetY - _lastEmittedOffsetY!).abs() < epsilon &&
+        (scale - _lastEmittedScale!).abs() < epsilon;
+    if (unchanged) return;
+
+    _interactionUpdateTimestamp = now;
+    _lastEmittedOffsetX = offsetX;
+    _lastEmittedOffsetY = offsetY;
+    _lastEmittedScale = scale;
+
+    widget.control.triggerEvent("interaction_update", {
+      "offset_x": offsetX,
+      "offset_y": offsetY,
+      "scale": scale,
+    });
+  }
+
+  void _onTapUp(TapUpDetails details) {
+    widget.control.triggerEvent("click", {
+      "local_x": details.localPosition.dx,
+      "local_y": details.localPosition.dy,
+      "global_x": details.globalPosition.dx,
+      "global_y": details.globalPosition.dy,
+    });
+  }
+
   void _onChildSizeChanged(Size size) {
     if (size != _childSize) {
       setState(() {
@@ -292,9 +308,13 @@ class _TurboInteractiveViewerControlState extends State<TurboInteractiveViewerCo
           scaleEnabled: widget.control.getBool("scale_enabled", true)!,
           scaleFactor: widget.control.getDouble("scale_factor", 200)!,
           constrained: widget.control.getBool("constrained", false)!,
-          child: _ChildSize(
-            onSizeChanged: _onChildSizeChanged,
-            child: contents.first,
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTapUp: _onTapUp,
+            child: _ChildSize(
+              onSizeChanged: _onChildSizeChanged,
+              child: contents.first,
+            ),
           ),
         );
       },
