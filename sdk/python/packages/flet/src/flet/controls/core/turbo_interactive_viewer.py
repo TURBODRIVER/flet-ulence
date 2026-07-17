@@ -229,8 +229,8 @@ class TurboInteractiveViewer(LayoutControl):
         await self._invoke_method(
             "set_transformation_data",
             arguments={
-                "offsetX" : offset_x,
-                "offsetY" : offset_y,
+                "offset_x" : offset_x,
+                "offset_y" : offset_y,
                 "scale"   : scale,
                 "duration": animation_duration,
                 "curve"   : animation_curve
