@@ -199,7 +199,7 @@ Future prepareApp() async {
   } else {
     // production mode
     // extract app from asset
-    appDir = await extractAssetZip(appZipPath, checkHash: true);
+    appDir = await extractAssetZip(appZipPath, targetPath: "", checkHash: true);
 
     Directory.current = appDir;
     assetsDir = path.join(appDir, "assets");
