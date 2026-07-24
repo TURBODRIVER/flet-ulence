@@ -17,7 +17,6 @@ import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
-import '../utils/theme.dart';
 import 'base_controls.dart';
 
 class CupertinoTextFieldControl extends StatefulWidget {
@@ -163,7 +162,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
     var readOnly = widget.control.getBool("read_only", false)!;
     var password = widget.control.getBool("password", false)!;
-    var onChange = widget.control.getBool("on_change", false)!;
+    var onChange = widget.control.hasEventHandler("change");
 
     var cursorColor = widget.control.getColor("cursor_color", context);
     var selectionColor = widget.control.getColor("selection_color", context);
@@ -334,13 +333,10 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         obscuringCharacter:
             widget.control.getString("obscuring_character", '•')!,
         expands: fitParentSize,
-        enableIMEPersonalizedLearning:
-            widget.control.getBool("enable_ime_personalized_learning", true)!,
         clipBehavior:
             widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
         cursorColor: cursorColor,
         autofillHints: widget.control.getAutofillHints("autofill_hints"),
-        keyboardAppearance: widget.control.getBrightness("keyboard_brightness"),
         enableInteractiveSelection:
             widget.control.getBool("enable_interactive_selection"),
         clearButtonMode: widget.control.getOverlayVisibilityMode("clear_button_visibility_mode", OverlayVisibilityMode.never)!,
@@ -348,7 +344,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         onTap: () => widget.control.triggerEvent("click"),
         controller: _controller,
         focusNode: focusNode,
-        onTapOutside: widget.control.getBool("on_tap_outside", false)!
+        onTapOutside: widget.control.hasEventHandler("tap_outside")
             ? (PointerDownEvent? event) {
                 widget.control.triggerEvent("tap_outside");
               }

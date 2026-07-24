@@ -10,7 +10,6 @@ from flet.controls.material.form_field_control import FormFieldControl
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import StrutStyle
 from flet.controls.types import (
-    Brightness,
     ClipBehavior,
     ColorValue,
     MouseCursor,
@@ -173,8 +172,6 @@ class InputFilter:
     replacement_string: str = ""
     """
     A string used to replace banned/denied patterns.
-
-    Defaults to an empty string.
     """
 
     multiline: bool = False
@@ -231,7 +228,9 @@ class TextOnlyInputFilter(InputFilter):
         super().__init__(regex_string=r"^[a-zA-Z]*$", allow=True, replacement_string="")
 
 
-@control("TextField")
+@control(
+    "TextField", categories=("input", "form"), tags=("text", "editable", "validation")
+)
 class TextField(FormFieldControl, AdaptiveControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an \
@@ -258,7 +257,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     Setting this property visually updates the field's selection to match the given
     value, and hence leads to the :attr:`on_selection_change` event being triggered.
     To ensure the selection is visible and the event is fired, the text field must
-    be focused. Call :meth:`~flet.FormFieldControl.focus`
+    be focused. Call :meth:`flet.FormFieldControl.focus`
     on the field before setting this property.
     """
 
@@ -336,9 +335,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     Displays a toggle icon button that allows revealing the entered password. Is shown \
     if both :attr:`password` and `can_reveal_password` are `True`.
 
-    The icon is displayed in the same location as :attr:`~flet.FormFieldControl.suffix`
+    The icon is displayed in the same location as :attr:`flet.FormFieldControl.suffix`
     and in case both `can_reveal_password`/:attr:`password` and `suffix` are
-    provided, then the :attr:`~flet.FormFieldControl.suffix` won't be shown.
+    provided, then the :attr:`flet.FormFieldControl.suffix` won't be shown.
     """
 
     read_only: bool = False
@@ -407,7 +406,10 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     cursor_error_color: Optional[ColorValue] = None
     """
-    TBD
+    The color of the text cursor while the field is showing an error.
+
+    If not set, the cursor color falls back to the error text style and then to the
+    theme's error color.
     """
 
     cursor_width: Number = 2.0
@@ -440,62 +442,83 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     obscuring_character: str = "•"
     """
-    TBD
+    The single character used to mask the text when :attr:`password` is `True`.
     """
 
     enable_interactive_selection: bool = True
     """
-    TBD
-    """
+    Whether interactive text selection is enabled.
 
-    enable_ime_personalized_learning: bool = True
-    """
-    TBD
+    When enabled, users can move the caret, select text, and use the cut/copy/paste
+    menu. When disabled, selection cannot be adjusted interactively and editing
+    shortcuts for cut/copy/paste are suppressed.
     """
 
     can_request_focus: bool = True
     """
-    TBD
+    Whether this field can request focus.
+
+    If set to `False`, the field does not request focus when tapped or when its
+    context menu is shown, and it cannot be reached with keyboard focus traversal.
     """
 
     ignore_pointers: bool = False
     """
-    TBD
+    Whether this field ignores pointer events.
     """
 
     enable_stylus_handwriting: bool = True
     """
-    TBD
+    Whether this field supports stylus handwriting input.
+
+    On supported devices, the user can write directly on top of the field with a
+    stylus instead of typing from the keyboard.
+    """
+
+    animate_cursor_opacity: Optional[bool] = None
+    """
+    Whether the text cursor animates between transparent and opaque during each blink.
+
+    If not set, the default follows the platform behavior used by Flet.
     """
 
     always_call_on_tap: bool = False
     """
-    TBD
+    Whether :attr:`on_click` should be called for every tap.
+
+    By default, only the first tap in a tap sequence triggers :attr:`on_click`.
+    When enabled, consecutive taps trigger it as well.
     """
 
     scroll_padding: PaddingValue = 20
     """
-    TBD
+    Padding to keep around the field when a surrounding scrollable scrolls it into view.
+
+    When the field receives focus and is partly hidden, for example by the onscreen
+    keyboard, this padding helps keep space between the field and the edges of the
+    surrounding scrollable after scrolling.
     """
 
     clip_behavior: ClipBehavior | str = ClipBehavior.HARD_EDGE
     """
-    TBD
-    """
+    How the field's contents should be clipped.
 
-    keyboard_brightness: Optional[Brightness | str] = None
-    """
-    TBD
+    See :class:`~flet.ClipBehavior` for the available clipping modes.
     """
 
     mouse_cursor: Optional[MouseCursor | str] = None
     """
-    TBD
+    The mouse pointer to show while hovering over the field.
+
+    If not set, the standard text cursor is used.
     """
 
     strut_style: Optional[StrutStyle] = None
     """
-    TBD
+    The :class:`~flet.StrutStyle` used for vertical text layout.
+
+    Strut style establishes a predictable minimum line height, which is useful when
+    entered text may vary in font metrics or script.
     """
 
     autofill_hints: Optional[Union[AutofillHint, list[AutofillHint], str, list[str]]] = None
@@ -523,7 +546,10 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     on_click: Optional[ControlEventHandler["TextField"]] = None
     """
-    TBD
+    Called when the field is tapped.
+
+    If :attr:`always_call_on_tap` is `True`, this event is also triggered for
+    consecutive taps.
     """
 
     on_submit: Optional[ControlEventHandler["TextField"]] = None
@@ -543,7 +569,13 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     on_tap_outside: Optional[ControlEventHandler["TextField"]] = None
     """
-    TBD
+    Called when a pointer-down event occurs outside the field while it is focused.
+
+    Use this to react when the user taps away from the field.
+
+    Note:
+        This callback is a notification only and does not include the pointer event
+        details.
     """
 
     def _migrate_state(self, other: BaseControl):

@@ -79,7 +79,7 @@ def value_equal(a, b) -> bool:
             return True
     except Exception:
         pass
-    # Treat NaN == NaN as equal (like JS Object.is)
+    # Treat NaN == NaN as equal
     return (
         isinstance(a, float)
         and isinstance(b, float)

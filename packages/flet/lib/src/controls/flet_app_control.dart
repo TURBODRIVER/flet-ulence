@@ -26,14 +26,18 @@ class _FletAppControlState extends State<FletAppControl> {
 
     var url = widget.control.getString("url", "")!;
     // Multiple embedded FletApps on the same page (e.g. a Preview inside
-    // another Flet app) each leave `url` empty, which collides in the
-    // JS-side worker registry keyed on `address`. Synthesize a unique
+    // another Flet app) each leave `url` empty. Synthesize a unique
     // address from the control id so each backend channel is its own.
     if (url.isEmpty) {
       url = "embedded:${widget.control.id}";
     }
     var reconnectIntervalMs = widget.control.getInt("reconnect_interval_ms");
     var reconnectTimeoutMs = widget.control.getInt("reconnect_timeout_ms");
+    var bootScreenName = widget.control.getString("boot_screen_name", "flet")!;
+    var rawBootScreenOptions = widget.control.get("boot_screen_options");
+    var bootScreenOptions = rawBootScreenOptions is Map
+        ? Map<String, dynamic>.from(rawBootScreenOptions)
+        : <String, dynamic>{};
     var appErrorMessage = widget.control.getString("app_error_message");
 
     return LayoutControl(
@@ -42,9 +46,11 @@ class _FletAppControlState extends State<FletAppControl> {
         controlId: widget.control.id,
         reconnectIntervalMs: reconnectIntervalMs,
         reconnectTimeoutMs: reconnectTimeoutMs,
+        bootScreenName: bootScreenName,
+        bootScreenOptions: bootScreenOptions,
         appErrorMessage: appErrorMessage,
         pageUrl: url,
-        assetsDir: widget.control.getString("assets_dir") ?? "",
+        assetsDir: widget.control.getString("assets_dir", "")!,
         errorsHandler: _errorsHandler,
         extensions: FletBackend.of(context).extensions,
         args: widget.control.get("args") != null

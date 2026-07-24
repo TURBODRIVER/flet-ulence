@@ -269,7 +269,7 @@ class ClientMessage:
     Messages are serialized as a two-item sequence: `[action_code, body]`.
     """
 
-    action: ClientAction
+    action: ClientAction | int
     """
     Action discriminator for this message.
     """

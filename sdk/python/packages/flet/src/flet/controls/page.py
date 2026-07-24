@@ -13,10 +13,10 @@ from typing import (
     Any,
     Callable,
     Optional,
+    ParamSpec,
     TypeVar,
 )
 
-from flet.components.component import Renderer
 from flet.components.public_utils import unwrap_component
 from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import BasePage
@@ -38,9 +38,7 @@ from flet.controls.device_info import (
 )
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
-from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.service import Service
-from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.types import (
     AppLifecycleState,
     Brightness,
@@ -55,11 +53,6 @@ from flet.utils.strings import random_string
 if TYPE_CHECKING:
     from flet.messaging.session import Session
     from flet.pubsub.pubsub_client import PubSubClient
-
-try:
-    from typing import ParamSpec
-except ImportError:
-    from typing_extensions import ParamSpec
 
 
 logger = logging.getLogger("flet")
@@ -385,8 +378,7 @@ class Page(BasePage):
     """
     Called when the locale preferences/settings of the host platform have changed.
 
-    For example, when the user updates device language
-    settings or browser preferred languages.
+    For example, when the user updates device language settings.
     """
 
     on_app_lifecycle_state_change: Optional[
@@ -398,8 +390,7 @@ class Page(BasePage):
 
     on_route_change: Optional[EventHandler[RouteChangeEvent]] = None
     """
-    Called when page route changes either programmatically, by editing application URL \
-    or using browser Back/Forward buttons.
+    Called when page route changes either programmatically or by editing application URL.
     """
 
     on_view_pop: Optional[EventHandler[ViewPopEvent]] = None
@@ -443,6 +434,14 @@ class Page(BasePage):
         self.__session = weakref.ref(sess)
         self.__last_route = None
         self.__query: QueryString = QueryString(self)
+        # App/window visibility, driven by `on_app_lifecycle_state_change`.
+        # Producer loops (e.g. `RawImage.render`) await `wait_until_visible`
+        # to park while the tab is backgrounded instead of streaming frames a
+        # suspended client can only pile up. Starts visible; the event is set
+        # while visible and cleared while hidden.
+        self.__app_visible = True
+        self.__app_visible_event = asyncio.Event()
+        self.__app_visible_event.set()
 
     def get_control(self, id: int) -> Optional[BaseControl]:
         """
@@ -476,6 +475,8 @@ class Page(BasePage):
             **kwargs: Keyword arguments passed to `component`.
         """
 
+        from flet.components.component import Renderer
+
         logger.debug("Page.render()")
         self._notify = self.__notify
         self.views[0].controls = Renderer().render(component, *args, **kwargs)
@@ -498,6 +499,8 @@ class Page(BasePage):
             *args: Positional arguments passed to `component`.
             **kwargs: Keyword arguments passed to `component`.
         """
+
+        from flet.components.component import Renderer
 
         logger.debug("Page.render_views()")
         self._notify = self.__notify
@@ -584,7 +587,49 @@ class Page(BasePage):
                     e.view = v
                     break
 
+        elif isinstance(e, AppLifecycleStateChangeEvent):
+            # `HIDE` is the only states where the client cannot
+            # display frames (minimized window).
+            self.__set_app_visible(
+                e.state != AppLifecycleState.HIDE
+            )
+
         return super().before_event(e)
+
+    def __set_app_visible(self, visible: bool) -> None:
+        self.__app_visible = visible
+        if visible:
+            self.__app_visible_event.set()
+        else:
+            self.__app_visible_event.clear()
+
+    @property
+    def app_visible(self) -> bool:
+        """
+        Whether the app window is currently visible.
+        Driven by `on_app_lifecycle_state_change`: `False` while the
+        state is `HIDE` or `PAUSE`, `True` otherwise. Distinct from the
+        control-level `visible` property, which hides the page itself.
+        """
+        return self.__app_visible
+
+    async def wait_until_visible(self) -> None:
+        """
+        Suspend until the app window is visible.
+        Returns immediately when already visible. While hidden, the client's
+        render pipeline is suspended, so a producer loop that keeps pushing
+        frames only builds a backlog that floods the client on resume.
+        Awaiting this at the top of such a loop parks the producer until the
+        tab returns:
+        ```python
+        while True:
+            await page.wait_until_visible()
+            await raw_image.render(produce_frame())
+        ```
+        The streaming controls (`RawImage`, `MatplotlibChart`) already gate
+        their sends on this internally.
+        """
+        await self.__app_visible_event.wait()
 
     def run_task(
         self,
@@ -685,7 +730,6 @@ class Page(BasePage):
 
     async def push_route(self, route: str, **kwargs: Any) -> None:
         """
-        Pushes a new navigation route to the browser history stack.
         Changing route will fire [`page.on_route_change`](#on_route_change) event
         handler.
 
@@ -926,6 +970,7 @@ class Page(BasePage):
         """
         The Clipboard service for the current page.
         """
+        from flet.controls.services.clipboard import Clipboard
 
         return Clipboard()
 
@@ -940,6 +985,7 @@ class Page(BasePage):
         """
         The StoragePaths service for the current page.
         """
+        from flet.controls.services.storage_paths import StoragePaths
 
         return StoragePaths()
 

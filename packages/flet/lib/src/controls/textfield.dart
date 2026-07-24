@@ -14,7 +14,6 @@ import '../utils/numbers.dart';
 import '../utils/platform.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
-import '../utils/theme.dart';
 import 'base_controls.dart';
 
 class TextFieldControl extends StatefulWidget {
@@ -120,7 +119,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
     _selection = selection;
 
     if (!selection.isValid ||
-        !widget.control.getBool("on_selection_change", false)!) {
+        !widget.control.hasEventHandler("selection_change")) {
       return;
     }
 
@@ -180,7 +179,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
         .getTextCapitalization("capitalization", TextCapitalization.none)!;
 
     FilteringTextInputFormatter? inputFilter =
-        parseInputFilter(widget.control.get("input_filter"));
+        widget.control.getTextInputFormatter("input_filter");
 
     List<TextInputFormatter>? inputFormatters = [];
     // add non-null input formatters
@@ -275,9 +274,6 @@ class _TextFieldControlState extends State<TextFieldControl> {
             widget.control.getBool("enable_stylus_handwriting", true)!,
         scrollPadding: widget.control
             .getPadding("scroll_padding", const EdgeInsets.all(20.0))!,
-        keyboardAppearance: widget.control.getBrightness("keyboard_brightness"),
-        enableIMEPersonalizedLearning:
-            widget.control.getBool("enable_ime_personalized_learning", true)!,
         obscuringCharacter:
             widget.control.getString("obscuring_character", '•')!,
         mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
@@ -286,7 +282,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
         onTap: () {
           widget.control.triggerEvent("click");
         },
-        onTapOutside: widget.control.getBool("on_tap_outside", false)!
+        onTapOutside: widget.control.hasEventHandler("tap_outside")
             ? (PointerDownEvent? event) {
                 widget.control.triggerEvent("tap_outside");
               }
@@ -294,7 +290,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
         onChanged: (String value) {
           _value = value;
           widget.control.updateProperties({"value": value});
-          if (widget.control.getBool("on_change", false)!) {
+          if (widget.control.hasEventHandler("change")) {
             widget.control.triggerEvent("change", value);
           }
         });

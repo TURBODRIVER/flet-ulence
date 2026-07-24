@@ -19,14 +19,13 @@ from flet.utils import (
 logger = logging.getLogger(flet_desktop.__name__)
 
 
-def open_flet_view(page_url, assets_dir, debug, hidden):
+def open_flet_view(page_url, assets_dir, hidden):
     """
     Start a desktop view process and return the process object and PID file path.
 
     Args:
         page_url: Page endpoint the desktop client should open.
         assets_dir: Optional assets directory passed to the client process.
-        debug: Whether to output flutter logger.
         hidden: Whether the window should start hidden.
 
     Returns:
@@ -36,19 +35,18 @@ def open_flet_view(page_url, assets_dir, debug, hidden):
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
-        page_url, assets_dir, hidden, debug
+        page_url, assets_dir, hidden
     )
     return subprocess.Popen(args, env=flet_env), pid_file
 
 
-async def open_flet_view_async(page_url, assets_dir, debug, hidden):
+async def open_flet_view_async(page_url, assets_dir, hidden):
     """
     Asynchronously start a desktop view process.
 
     Args:
         page_url: Page endpoint the desktop client should open.
         assets_dir: Optional assets directory passed to the client process.
-        debug: Whether to output flutter logger.
         hidden: Whether the window should start hidden.
 
     Returns:
@@ -58,7 +56,7 @@ async def open_flet_view_async(page_url, assets_dir, debug, hidden):
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
-        page_url, assets_dir, debug, hidden
+        page_url, assets_dir, hidden
     )
     return (
         await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env),
@@ -91,7 +89,7 @@ def close_flet_view(pid_file):
             os.remove(pid_file)
 
 
-def __locate_and_unpack_flet_view(page_url, assets_dir, debug, hidden):
+def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
     """
     Resolve desktop client executable, prepare launch arguments, and environment.
 
@@ -106,7 +104,6 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, debug, hidden):
     Args:
         page_url: Page endpoint the desktop client should open.
         assets_dir: Optional assets directory passed to the client process.
-        debug: Whether to output flutter logger.
         hidden: Whether to set `FLET_HIDE_WINDOW_ON_START=true` in process env.
 
     Returns:
@@ -227,9 +224,6 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, debug, hidden):
 
     if assets_dir:
         args.append(assets_dir)
-
-    if debug:
-        args.append("debug")
 
     if hidden:
         flet_env["FLET_HIDE_WINDOW_ON_START"] = "true"

@@ -1,12 +1,35 @@
 import argparse
+import json
 import sys
 
 import flet.version
 import flet_cli.commands.build
+import flet_cli.commands.clean
 import flet_cli.commands.create
-import flet_cli.commands.debug
 import flet_cli.commands.doctor
 import flet_cli.commands.run
+from flet_cli.utils.linux_deps import linux_dependencies
+
+
+def _version_info() -> dict:
+    """Build the machine-readable `flet --version --json` document.
+
+    Exposes Flet/Flutter versions and the Linux build dependencies. The
+    supported Python set is no longer surfaced here — it now comes from
+    python-build's manifest (see `flet_cli.utils.python_versions`).
+    """
+    return {
+        "flet": flet.version.flet_version,
+        "flutter": flet.version.flutter_version,
+        "linux_dependencies": list(linux_dependencies),
+    }
+
+
+def _render_version(as_json: bool) -> str:
+    """Render `flet --version` output as JSON or the human-readable text block."""
+    if as_json:
+        return json.dumps(_version_info(), indent=2)
+    return f"Flet: {flet.version.flet_version}\nFlutter: {flet.version.flutter_version}"
 
 
 # Source https://stackoverflow.com/a/26379693
@@ -64,15 +87,17 @@ def get_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
-    # add version flag
+    # add version flags
     parser.add_argument(
         "--version",
         "-V",
-        action="version",
-        version=(
-            f"Flet: {flet.version.flet_version}\n"
-            f"Flutter: {flet.version.flutter_version}"
-        ),
+        action="store_true",
+        help="show version information and exit",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="with --version, output version information as JSON",
     )
 
     sp = parser.add_subparsers(dest="command")
@@ -81,7 +106,7 @@ def get_parser() -> argparse.ArgumentParser:
     flet_cli.commands.create.Command.register_to(sp, "create")
     flet_cli.commands.run.Command.register_to(sp, "run")
     flet_cli.commands.build.Command.register_to(sp, "build")
-    flet_cli.commands.debug.Command.register_to(sp, "debug")
+    flet_cli.commands.clean.Command.register_to(sp, "clean")
     flet_cli.commands.doctor.Command.register_to(sp, "doctor")
 
     # set "run" as the default subparser
@@ -100,6 +125,11 @@ def main():
 
     # parse arguments
     args = parser.parse_args()
+
+    # handle `flet --version [--json]` (no subcommand/handler is set)
+    if getattr(args, "version", False):
+        print(_render_version(args.json))
+        sys.exit(0)
 
     # execute command
     args.handler(args)

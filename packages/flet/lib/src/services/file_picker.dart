@@ -35,6 +35,7 @@ class FilePickerService extends FletService {
         ?.map((e) => e.toString())
         .toList();
     var withData = parseBool(args["with_data"], false)!;
+    var compressionQuality = parseInt(args["compression_quality"], 0)!;
     var srcBytes = args["src_bytes"];
 
     if (allowedExtensions != null && allowedExtensions.isNotEmpty) {
@@ -47,12 +48,13 @@ class FilePickerService extends FletService {
           uploadFiles(files, control.backend.pageUri);
         }
       case "pick_files":
-        _files = (await FilePicker.platform.pickFiles(
+        _files = (await FilePicker.pickFiles(
                 dialogTitle: dialogTitle,
                 initialDirectory: initialDirectory,
                 lockParentWindow: true,
                 type: fileType,
                 allowedExtensions: allowedExtensions,
+                compressionQuality: compressionQuality,
                 allowMultiple: args["allow_multiple"],
                 withData: withData,
                 withReadStream: !withData))
@@ -69,7 +71,7 @@ class FilePickerService extends FletService {
               }).toList()
             : [];
       case "save_file":
-        return await FilePicker.platform.saveFile(
+        return await FilePicker.saveFile(
             dialogTitle: dialogTitle,
             fileName: args["file_name"] ?? "new-file",
             initialDirectory: initialDirectory,
@@ -78,7 +80,7 @@ class FilePickerService extends FletService {
             allowedExtensions: allowedExtensions,
             bytes: srcBytes);
       case "get_directory_path":
-        return await FilePicker.platform.getDirectoryPath(
+        return await FilePicker.getDirectoryPath(
           dialogTitle: dialogTitle,
           initialDirectory: initialDirectory,
           lockParentWindow: true,

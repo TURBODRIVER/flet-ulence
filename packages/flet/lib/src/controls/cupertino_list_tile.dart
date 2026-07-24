@@ -35,7 +35,7 @@ class CupertinoListTileControl extends StatelessWidget {
     var leadingSize = control.getDouble("leading_size", notched ? 30.0 : 28.0)!;
     var leadingToTitle =
         control.getDouble("leading_to_title", notched ? 12.0 : 16.0)!;
-    var onclick = control.getBool("on_click", false)!;
+    var onclick = control.hasEventHandler("click");
     var toggleInputs = control.getBool("toggle_inputs", false)!;
 
     Function()? onPressed =

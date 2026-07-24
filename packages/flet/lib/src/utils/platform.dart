@@ -18,11 +18,6 @@ bool isLinuxDesktop() {
   return defaultTargetPlatform == TargetPlatform.linux;
 }
 
-/// Checks if the current platform is an Apple platform (macOS).
-bool isApplePlatform() {
-  return defaultTargetPlatform == TargetPlatform.macOS;
-}
-
 TargetPlatform? parseTargetPlatform(String? value,
     [TargetPlatform? defaultValue]) {
   return parseEnum(TargetPlatform.values, value, defaultValue);

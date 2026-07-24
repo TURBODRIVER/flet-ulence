@@ -1,4 +1,7 @@
 import argparse
+import os
+import shutil
+from pathlib import Path
 
 from rich.console import Group
 from rich.live import Live
@@ -13,7 +16,7 @@ class Command(BaseBuildCommand):
     with a wide range of customization options for metadata, assets, splash screens,
     and signing.
 
-    Detailed guide with usage examples: https://flet.dev/docs/publish
+    Detailed usage guide: https://flet.dev/docs/publish
     """
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
@@ -137,6 +140,22 @@ class Command(BaseBuildCommand):
             f"[bold blue]Building [cyan]"
             f"{self.platforms[self.target_platform]['status_text']}[/cyan]..."
         )
+
+        # Clear the build output directories of artifacts from previous runs. Flutter
+        # only ever adds files to them, and copy_build_output harvests them wholesale —
+        # so without this, a previous build with different options (e.g. --arch,
+        # --split-per-abi, or a renamed product) would leak its artifacts into the
+        # user's output directory.
+        assert self.flutter_dir
+        flutter_dir = self.flutter_dir.resolve()
+        for output in self.platforms[self.target_platform]["outputs"]:
+            output_dir = Path(
+                os.path.dirname(self.resolve_output_path(output))
+            ).resolve()
+            # only delete directories that are strictly inside the generated Flutter
+            # project (and never the project directory itself).
+            if output_dir != flutter_dir and output_dir.is_relative_to(flutter_dir):
+                shutil.rmtree(output_dir, ignore_errors=True)
 
         self._run_flutter_command()
 

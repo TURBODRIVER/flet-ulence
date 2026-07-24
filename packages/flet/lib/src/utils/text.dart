@@ -62,11 +62,11 @@ List<TextSpan> parseTextSpans(List<Control> spans, ThemeData theme,
 TextSpan? parseInlineSpan(Control span, ThemeData theme,
     [void Function(Control, String, [dynamic eventData])? sendControlEvent]) {
   span.notifyParent = true;
-  var onClick = span.getBool("on_click", false)!;
+  var onClick = span.hasEventHandler("click");
 
   return TextSpan(
     text: span.getString("text"),
-    style: parseTextStyle(span.get("style"), theme),
+    style: span.getTextStyle("style", theme),
     spellOut: span.getBool("spell_out"),
     semanticsLabel: span.getString("semantics_label"),
     children: parseTextSpans(span.children("spans"), theme, sendControlEvent),
@@ -80,12 +80,12 @@ TextSpan? parseInlineSpan(Control span, ThemeData theme,
                 if (onClick) sendControlEvent(span, "click");
               })
             : null,
-    onEnter: span.getBool("on_enter", false)! &&
+    onEnter: span.hasEventHandler("enter") &&
             !span.disabled &&
             sendControlEvent != null
         ? (event) => sendControlEvent(span, "enter")
         : null,
-    onExit: span.getBool("on_exit", false)! &&
+    onExit: span.hasEventHandler("exit") &&
             !span.disabled &&
             sendControlEvent != null
         ? (event) => sendControlEvent(span, "exit")

@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../controls/control_widget.dart';
 import '../extensions/control.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
 import '../models/page_design.dart';
 import '../utils/alignment.dart';
@@ -14,6 +16,7 @@ import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/numbers.dart';
+import '../widgets/boot_screen.dart';
 import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
 import 'app_bar.dart';
@@ -132,7 +135,7 @@ class _ViewControlState extends State<ViewControl> {
       child: column,
     );
 
-    if (control.getBool("on_scroll", false)!) {
+    if (control.hasEventHandler("scroll")) {
       child = ScrollNotificationControl(control: control, child: child);
     }
 
@@ -218,10 +221,29 @@ class _ViewControlState extends State<ViewControl> {
           child: scaffold);
     }
 
+    var backend = FletBackend.of(context);
+
+    var appStatus =
+        context.select<FletBackend, ({bool isLoading, String error})>(
+            (backend) => (isLoading: backend.isLoading, error: backend.error));
+
+    Widget? loadingPage;
+    if (appStatus.isLoading || appStatus.error != "") {
+      loadingPage = resolveBootScreen(
+        name: backend.bootScreenName,
+        options: backend.bootScreenOptions,
+        extensions: backend.extensions,
+        status: backend.bootStatus,
+      );
+    }
+
     Widget result = Directionality(
         textDirection: textDirection,
-        child: scaffold
-    );
+        child: loadingPage != null
+            ? Stack(
+                children: [scaffold, loadingPage],
+              )
+            : scaffold);
 
     var backgroundDecoration = control.getBoxDecoration("decoration", context);
     var foregroundDecoration =
@@ -237,7 +259,7 @@ class _ViewControlState extends State<ViewControl> {
     result = PopScope(
         canPop: _allowPop || control.getBool("can_pop", true)!,
         onPopInvokedWithResult: (didPop, result) {
-          if (didPop || !control.getBool("on_confirm_pop", false)!) {
+          if (didPop || !control.hasEventHandler("confirm_pop")) {
             return;
           }
           debugPrint("Page.onPopInvokedWithResult()");

@@ -3,10 +3,13 @@ name = "Name of App"
 authors = [
     { name = "Author Name" }
 ]
+requires-python = ">=3.14,<3.15"
 version = "1.0.0"
 dependencies = [
-    "flet",
-    "Pillow",
+    "flet==0.86.99",
+    "flet-cli==0.86.99",
+    "flet-desktop==0.86.99",
+    "pillow",
 ]
 
 [tool.flet]
@@ -17,6 +20,16 @@ bundle_id = "bundle.id.of.app"
 company = "Company"
 copyright = "Copyright © 2026 Author Name"
 permissions = []
+
+[tool.flet.windows.dev_packages]
+flet = "C:/Path/To/flet-ulence/sdk/python/packages/flet"
+flet-cli = "C:/Path/To/flet-ulence/sdk/python/packages/flet-cli"
+flet-desktop = "C:/Path/To/flet-ulence/sdk/python/packages/flet-desktop"
+
+[tool.flet.macos.dev_packages]
+flet = "/Path/To/flet-ulence/sdk/python/packages/flet"
+flet-cli = "/Path/To/flet-ulence/sdk/python/packages/flet-cli"
+flet-desktop = "/Path/To/flet-ulence/sdk/python/packages/flet-desktop"
 
 [tool.flet.compile]
 app = true
@@ -33,21 +46,48 @@ build_args = [
 [tool.flet.app]
 module = "app"
 path = "app_package"
-exclude = ["*.toml", "*.bat", "*.txt", ".venv", ".idea", "assets"]
+exclude = ["*.toml", "*.bat", "*.txt", ".venv", ".idea"]
 hide_window_on_start = false
 boot_screen.message = "Preparing the App..."
 
-[tool.flet.desktop]
-window_width = 1100
-window_height = 800
+[tool.flet.boot_screen]
+name = "flet"
+
+[tool.flet.boot_screen.flet]
+startup_message = "Preparing the App..."
+fade_out_duration = 200
 
 [tool.flet.cleanup]
 app = true
 packages = true
 package_files = [
+    "*.exe",
     "*.dist-info*",
-    "*/flet.exe",
-    "flet/cli.**",
+    "_yaml",
+    "arrow",
+    "bin",
+    "binaryornot",
+    "certifi",
+    "charset_normalizer",
+    "click",
+    "cookiecutter",
+    "dateutil",
+    "flet_cli",
+    "flet_desktop",
+    "idna",
+    "jinja2",
+    "markdown_it",
+    "markupsafe",
+    "mdurl",
     "msgpack/_cmsgpack.*",
-    "typing_extensions*",
+    "numpy",
+    "oauthlib",
+    "packaging",
+    "pygments",
+    "rich",
+    "slugify",
+    "text_unidecode",
+    "typing_extensions",
+    "tzdata",
+    "yaml",
 ]

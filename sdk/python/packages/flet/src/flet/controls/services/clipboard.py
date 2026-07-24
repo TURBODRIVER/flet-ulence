@@ -68,6 +68,5 @@ class Clipboard(Service):
 
         Returns:
             A list of file references available in the clipboard.
-
         """
         return await self._invoke_method("get_files")

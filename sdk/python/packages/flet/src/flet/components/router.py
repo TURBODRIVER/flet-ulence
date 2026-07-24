@@ -607,6 +607,10 @@ def Router(
     Navigation is done via :meth:`~flet.Page.push_route` or
     :meth:`~flet.Page.navigate`.
 
+    When `manage_views` is `True`, the Router returns a list of
+    :class:`~flet.View` objects (one per path level) instead of a single
+    component tree.
+
     Args:
         routes: List of top-level :class:`~flet.Route` definitions.
         not_found: Optional component to render when no route matches (404).

@@ -66,8 +66,7 @@ class _IconButtonControlState extends State<IconButtonControl>
     debugPrint("IconButton build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      if (widget.control.adaptive == true &&
-          (platform == TargetPlatform.macOS)) {
+      if (widget.control.adaptive == true && platform == TargetPlatform.macOS) {
         return CupertinoButtonControl(
           control: widget.control,
         );

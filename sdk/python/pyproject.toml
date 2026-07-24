@@ -1,6 +1,6 @@
 [project]
 name = "flet-project"
-version = "0.85.99"
+version = "0.86.99"
 description = ""
 authors = [{name = "Appveyor Systems Inc.", email ="hello@flet.dev"}]
 license = "Apache-2.0"
@@ -69,5 +69,5 @@ line-ending = "auto"
 docstring-code-format = true
 docstring-code-line-length = 80
 
-[setuptools.packages.find]
+[tool.setuptools.packages.find]
 include = ["packages*"]

@@ -11,8 +11,7 @@ def _install_with_pip(package_spec: str) -> int:
     Installs a package using `pip`.
 
     Args:
-        package_spec: Package requirement specifier to install (for example,
-            `flet-web==0.27.0`).
+        package_spec: Package requirement specifier to install.
 
     Returns:
         The `pip` process return code. Returns `1` when `pip` cannot be imported.
@@ -37,8 +36,7 @@ def _install_with_uv(package_spec: str) -> int:
     Installs a package using `uv pip install`.
 
     Args:
-        package_spec: Package requirement specifier to install (for example,
-            `flet-web==0.27.0`).
+        package_spec: Package requirement specifier to install.
 
     Returns:
         The `uv` process return code. Returns `1` when `uv` is not installed.

@@ -17,7 +17,7 @@ class TransparentPointer(LayoutControl):
     :class:`~flet.GestureDetector` then tapping on
     a button won't be "visible" to a gesture detector behind it. With
     `TransparentPointer` a tapping event doesn't stop on a button, but goes up to the
-    parent, similar to event bubbling in HTML/JS.
+    parent.
     """
 
     content: Optional[Control] = None

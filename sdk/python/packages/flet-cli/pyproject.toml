@@ -1,6 +1,6 @@
 [project]
 name = "flet-cli"
-version = "0.85.99"
+version = "0.86.99"
 description = "Flet CLI"
 authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
 license = "Apache-2.0"
@@ -13,7 +13,7 @@ dependencies = [
     "tomli >= 1.1.0 ; python_version < '3.11'",
     "cookiecutter >=2.6.0",
     "pyyaml",
-    "rich",
+    "rich >=13.0.0"
 ]
 
 [project.urls]

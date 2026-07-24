@@ -4,9 +4,7 @@ enum MessageAction {
   controlEvent(3),
   updateControl(4),
   invokeControlMethod(5),
-  sessionCrashed(6),
-  // Worker → dart: one line of stdout/stderr.
-  pythonOutput(7);
+  sessionCrashed(6);
 
   final int value;
   const MessageAction(this.value);

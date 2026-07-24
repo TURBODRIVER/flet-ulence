@@ -78,7 +78,7 @@ class _PageletControlState extends State<PageletControl> {
       return const ErrorControl("Pagelet.content must be provided and visible");
     }
 
-    var widgetsDesign = widget.control.adaptive == true && isApplePlatform()
+    var widgetsDesign = widget.control.adaptive == true && isMacOSDesktop()
         ? PageDesign.cupertino
         : PageDesign.material;
 

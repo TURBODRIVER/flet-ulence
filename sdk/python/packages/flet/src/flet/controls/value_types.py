@@ -7,14 +7,8 @@ Kept separate from `base_control` to avoid circular imports: value types
 """
 
 import dataclasses
-import sys
 from dataclasses import dataclass
-from typing import Any, Optional
-
-if sys.version_info >= (3, 11):
-    from typing import dataclass_transform
-else:
-    from typing_extensions import dataclass_transform
+from typing import Any, dataclass_transform, Optional
 
 __all__ = [
     "Prop",

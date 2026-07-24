@@ -47,12 +47,12 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    The foreground color of the :attr:`~flet.IconButton.icon`.
+    The foreground color of the :attr:`flet.IconButton.icon`.
     """
 
     icon_size: Optional[Number] = None
     """
-    The :attr:`~flet.IconButton.icon`'s size in virtual pixels.
+    The :attr:`flet.IconButton.icon`'s size in virtual pixels.
 
     Defaults to `24`.
     """
@@ -62,8 +62,8 @@ class IconButton(LayoutControl, AdaptiveControl):
     The optional selection state of this button.
 
     If this property is not set, the button will behave as a normal push button,
-    otherwise, the button will toggle between showing :attr:`~flet.IconButton.icon`
-    (when `False`), and :attr:`~flet.IconButton.selected_icon` (when `True`).
+    otherwise, the button will toggle between showing :attr:`flet.IconButton.icon`
+    (when `False`), and :attr:`flet.IconButton.selected_icon` (when `True`).
     """
 
     selected_icon: Optional[IconDataOrControl] = None
@@ -97,9 +97,9 @@ class IconButton(LayoutControl, AdaptiveControl):
         - If :attr:`flet.Theme.use_material3` is `True`,
             any parameters defined in style will be overridden by the
             corresponding parameters in this button.
-            For example, if icon button :attr:`~flet.IconButton.visual_density`
+            For example, if icon button :attr:`flet.IconButton.visual_density`
             is set to :attr:`flet.VisualDensity.STANDARD` and
-            style's :attr:`~flet.ButtonStyle.visual_density` is
+            style's :attr:`flet.ButtonStyle.visual_density` is
             set to :attr:`flet.VisualDensity.COMPACT`, \
             :attr:`flet.VisualDensity.STANDARD`
             will be used.
@@ -171,7 +171,7 @@ class IconButton(LayoutControl, AdaptiveControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if :attr:`~flet.IconButton.on_click` event callback is provided,
+    Additionally, if :attr:`flet.IconButton.on_click` event callback is provided,
     it is fired after that.
     """
 

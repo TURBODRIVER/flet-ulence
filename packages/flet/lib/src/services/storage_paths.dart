@@ -27,7 +27,7 @@ class StoragePaths extends FletService {
       case "get_downloads_directory":
         return (await getDownloadsDirectory())?.path;
       case "get_library_directory":
-        return isApplePlatform() ? (await getLibraryDirectory()).path : null;
+        return isMacOSDesktop() ? (await getLibraryDirectory()).path : null;
       case "get_temporary_directory":
         return (await getTemporaryDirectory()).path;
       case "get_console_log_filename":

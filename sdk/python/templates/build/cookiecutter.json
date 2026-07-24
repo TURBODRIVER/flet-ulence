@@ -1,7 +1,6 @@
 {
     "out_dir": "",
     "python_module_name": "main",
-    "app_zip_path": "app/app.zip",
     "project_name": "",
     "project_name_slug": "",
     "project_description": "",
@@ -18,5 +17,6 @@
     "package_name": "{{ cookiecutter.bundle_id.rsplit('.', 1)[-1].replace('-', '_') if 'bundle_id' in cookiecutter else cookiecutter.project_name }}",
     "options": null,
     "pyproject": null,
+    "boot_screen": null,
     "_extensions": ["cookiecutter_extensions.FletExtension"]
 }

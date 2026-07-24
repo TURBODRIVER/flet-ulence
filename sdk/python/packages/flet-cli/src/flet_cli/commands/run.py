@@ -24,6 +24,8 @@ from flet_cli.utils.pyproject_toml import load_pyproject_toml
 class Command(BaseCommand):
     """
     Run a Flet application in hot reload mode.
+
+    Detailed usage guide: https://flet.dev/docs/getting-started/running-app
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -110,13 +112,6 @@ class Command(BaseCommand):
             "used by the app (e.g. images, fonts)",
         )
         parser.add_argument(
-            "--debug",
-            dest="debug",
-            action="store_true",
-            default=False,
-            help="Start the application in debug mode",
-        )
-        parser.add_argument(
             "--ignore-dirs",
             dest="ignore_dirs",
             type=str,
@@ -191,8 +186,67 @@ class Command(BaseCommand):
             else []
         )
 
-        flet_app_data_dir = project_dir / "storage" / "data"
-        flet_app_temp_dir = project_dir / "storage" / "temp"
+        # Dev-mode app storage under a hidden, Flet-namespaced `.flet/` dir so
+        # it stays out of the way and is git-ignored. Mirrors a built app: the
+        # data dir becomes the process cwd; data/cache/temp map to the three
+        # FLET_APP_STORAGE_* env vars.
+        flet_storage_dir = project_dir / ".flet" / "storage"
+        flet_app_data_dir = flet_storage_dir / "data"
+        flet_app_cache_dir = flet_storage_dir / "cache"
+        flet_app_temp_dir = flet_storage_dir / "temp"
+        for d in (flet_app_data_dir, flet_app_cache_dir, flet_app_temp_dir):
+            d.mkdir(parents=True, exist_ok=True)
+        # Self-ignore the whole `.flet/` dir in any repo, independent of the
+        # project's root .gitignore.
+        flet_dir = project_dir / ".flet"
+        flet_gitignore = flet_dir / ".gitignore"
+        if not flet_gitignore.exists():
+            flet_gitignore.write_text("*\n", encoding="utf-8")
+        # Drop a short note explaining what this dir is, next to .gitignore.
+        flet_readme = flet_dir / "README.md"
+        if not flet_readme.exists():
+            flet_readme.write_text(
+                "# `.flet/`\n"
+                "\n"
+                "This directory is created by `flet run` to hold per-project "
+                "development state. It is local to your machine, safe to delete "
+                "(it will be recreated on the next run), and git-ignored via the "
+                "`.gitignore` next to this file.\n"
+                "\n"
+                "While `flet run` is active, your app's working directory is "
+                "`storage/data` and the three storage locations are exposed to "
+                "your Python code through the `FLET_APP_STORAGE_*` environment "
+                "variables — matching how a packaged app behaves on a device.\n"
+                "\n"
+                "## `storage/`\n"
+                "\n"
+                "- **`data/`** (`FLET_APP_STORAGE_DATA`) — durable application "
+                "data: databases, settings, user files. This is also the "
+                "process current working directory, so relative paths "
+                '(e.g. `sqlite3.connect("my.db")`) land here. Persists across '
+                "runs; the equivalent of this dir is preserved across app "
+                "updates on a device.\n"
+                "- **`cache/`** (`FLET_APP_STORAGE_CACHE`) — regenerable cache "
+                "data. The OS may purge the equivalent dir on a device under "
+                "storage pressure, so only store things you can rebuild.\n"
+                "- **`temp/`** (`FLET_APP_STORAGE_TEMP`) — throwaway scratch "
+                "space. Python's `tempfile` is pointed here too. May be cleared "
+                "at any time.\n",
+                encoding="utf-8",
+            )
+        # On Windows a leading dot doesn't hide a dir (that's a POSIX
+        # convention); set the FILE_ATTRIBUTE_HIDDEN attribute explicitly so
+        # `.flet/` stays out of Explorer / file pickers like it does elsewhere.
+        if is_windows():
+            try:
+                import ctypes
+
+                FILE_ATTRIBUTE_HIDDEN = 0x02
+                ctypes.windll.kernel32.SetFileAttributesW(
+                    str(flet_dir), FILE_ATTRIBUTE_HIDDEN
+                )
+            except Exception:
+                pass
 
         my_event_handler = Handler(
             args=[sys.executable, "-u"]
@@ -206,9 +260,9 @@ class Command(BaseCommand):
             uds_path=uds_path,
             hidden=options.hidden,
             assets_dir=assets_dir,
-            debug=options.debug,
             ignore_dirs=ignore_dirs,
             flet_app_data_dir=str(flet_app_data_dir),
+            flet_app_cache_dir=str(flet_app_cache_dir),
             flet_app_temp_dir=str(flet_app_temp_dir),
         )
 
@@ -234,7 +288,7 @@ class Handler(FileSystemEventHandler):
 
     The handler starts the Python app process, watches for code changes, and
     restarts the process when relevant files change. It also handles launch of
-    desktop view or browser/QR output depending on runtime mode.
+    desktop view.
     """
 
     def __init__(
@@ -248,9 +302,9 @@ class Handler(FileSystemEventHandler):
         uds_path,
         hidden,
         assets_dir,
-        debug,
         ignore_dirs,
         flet_app_data_dir,
+        flet_app_cache_dir,
         flet_app_temp_dir,
     ) -> None:
         super().__init__()
@@ -263,7 +317,6 @@ class Handler(FileSystemEventHandler):
         self.uds_path = uds_path
         self.hidden = hidden
         self.assets_dir = assets_dir
-        self.debug = debug
         self.ignore_dirs = ignore_dirs
         self.last_time = time.time()
         self.is_running = False
@@ -272,9 +325,9 @@ class Handler(FileSystemEventHandler):
         self.page_url_prefix = f"PAGE_URL_{time.time()}"
         self.page_url = None
         self.flet_app_data_dir = flet_app_data_dir
+        self.flet_app_cache_dir = flet_app_cache_dir
         self.flet_app_temp_dir = flet_app_temp_dir
         self.terminate = threading.Event()
-        self._process = None
         self.start_process()
 
     def start_process(self):
@@ -297,17 +350,41 @@ class Handler(FileSystemEventHandler):
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
 
         p_env["FLET_APP_STORAGE_DATA"] = self.flet_app_data_dir
+        p_env["FLET_APP_STORAGE_CACHE"] = self.flet_app_cache_dir
         p_env["FLET_APP_STORAGE_TEMP"] = self.flet_app_temp_dir
+
+        # Point Python's temp machinery at the project-local temp dir so
+        # tempfile.gettempdir() agrees with FLET_APP_STORAGE_TEMP and dev scratch
+        # stays inside the git-ignored .flet/.
+        p_env["TMPDIR"] = self.flet_app_temp_dir
+        p_env["TEMP"] = self.flet_app_temp_dir
+        p_env["TMP"] = self.flet_app_temp_dir
+
+        # We launch the app with cwd = the data dir (matches a built app, where
+        # the app bundle is read-only and writes go to app-support). Keep the
+        # app importable by putting the original working directory — where
+        # `flet run` was invoked and where `-m` modules resolve — on PYTHONPATH.
+        invocation_cwd = os.getcwd()
+        existing_pythonpath = p_env.get("PYTHONPATH", "")
+        p_env["PYTHONPATH"] = (
+            invocation_cwd + os.pathsep + existing_pythonpath
+            if existing_pythonpath
+            else invocation_cwd
+        )
 
         p_env["PYTHONIOENCODING"] = "utf-8"
         p_env["PYTHONWARNINGS"] = "default::DeprecationWarning"
 
-        self._process = subprocess.Popen(
-            self.args, env=p_env, stdout=subprocess.PIPE, encoding="utf-8"
+        self.p = subprocess.Popen(
+            self.args,
+            env=p_env,
+            cwd=self.flet_app_data_dir,
+            stdout=subprocess.PIPE,
+            encoding="utf-8",
         )
 
         self.is_running = True
-        th = threading.Thread(target=self.print_output, args=[self._process], daemon=True)
+        th = threading.Thread(target=self.print_output, args=[self.p], daemon=True)
         th.start()
 
     def on_any_event(self, event):
@@ -378,14 +455,14 @@ class Handler(FileSystemEventHandler):
         from flet_desktop import open_flet_view
 
         self.fvp, self.pid_file = open_flet_view(
-            self.page_url, self.assets_dir, self.debug, self.hidden
+            self.page_url, self.assets_dir, self.hidden
         )
         self.fvp.wait()
-        self._process.send_signal(signal.SIGTERM)
+        self.p.send_signal(signal.SIGTERM)
         try:
-            self._process.wait(2)
+            self.p.wait(2)
         except subprocess.TimeoutExpired:
-            self._process.kill()
+            self.p.kill()
         self.terminate.set()
 
     def restart_program(self):
@@ -397,8 +474,8 @@ class Handler(FileSystemEventHandler):
         """
 
         self.is_running = False
-        self._process.send_signal(signal.SIGTERM)
-        self._process.wait()
+        self.p.send_signal(signal.SIGTERM)
+        self.p.wait()
         self.start_process()
 
     def clear_console(self):

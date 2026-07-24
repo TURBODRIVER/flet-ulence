@@ -1,8 +1,7 @@
 import inspect
 import logging
-import sys
 from dataclasses import InitVar, dataclass, field
-from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union, overload
+from typing import TYPE_CHECKING, Any, Callable, dataclass_transform, Optional, TypeVar, Union, overload
 
 from flet.controls.context import _context_page, context
 from flet.controls.control_event import ControlEvent, get_event_field_type
@@ -16,14 +15,8 @@ from flet.utils.validation import validate
 logger = logging.getLogger("flet")
 controls_log = logging.getLogger("flet_controls")
 
-if sys.version_info >= (3, 11):
-    from typing import dataclass_transform
-else:
-    from typing_extensions import dataclass_transform
-
 
 if TYPE_CHECKING:
-    from .base_page import BasePage
     from .keys import KeyValue
     from .page import Page
 
@@ -75,6 +68,8 @@ def control(
     *,
     isolated: Optional[bool] = None,
     post_init_args: int = 1,
+    categories: Optional[tuple[str, ...]] = None,
+    tags: Optional[tuple[str, ...]] = None,
     **dataclass_kwargs: Any,
 ) -> Callable[[type[T]], type[T]]:
     """
@@ -92,6 +87,8 @@ def control(
     *,
     isolated: Optional[bool] = None,
     post_init_args: int = 1,
+    categories: Optional[tuple[str, ...]] = None,
+    tags: Optional[tuple[str, ...]] = None,
     **dataclass_kwargs: Any,
 ) -> Union[type[T], Callable[[type[T]], type[T]]]:
     """
@@ -103,6 +100,8 @@ def control(
         isolated: If `True`, marks the control as isolated. An isolated control
             is excluded from page updates when its parent control is updated.
         post_init_args: Number of InitVar arguments to pass to __post_init__.
+        categories: MCP metadata — control categories (e.g. `("input", "form")`).
+        tags: MCP metadata — descriptive tags (e.g. `("text", "editable")`).
         dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
 
     Usage:
@@ -110,18 +109,32 @@ def control(
         - Supports `@control("WidgetName")` (with optional arguments)
         - Supports `@control("WidgetName", post_init_args=1, isolated=True)` to
             specify the number of `InitVar` arguments and isolation
+        - Supports `@control("WidgetName", categories=("input",), tags=("text",))`
+            to add MCP metadata for discovery
     """
 
     # Case 1: If used as `@control` (without parentheses)
     if isinstance(dart_widget_name, type):
         return _apply_control(
-            dart_widget_name, None, isolated, post_init_args, **dataclass_kwargs
+            dart_widget_name,
+            None,
+            isolated,
+            post_init_args,
+            categories=categories,
+            tags=tags,
+            **dataclass_kwargs,
         )
 
     # Case 2: If used as `@control("custom_type", post_init_args=N, isolated=True)`
     def wrapper(cls: type[T]) -> type[T]:
         return _apply_control(
-            cls, dart_widget_name, isolated, post_init_args, **dataclass_kwargs
+            cls,
+            dart_widget_name,
+            isolated,
+            post_init_args,
+            categories=categories,
+            tags=tags,
+            **dataclass_kwargs,
         )
 
     return wrapper
@@ -132,11 +145,19 @@ def _apply_control(
     type_name: Optional[str],
     isolated: Optional[bool],
     post_init_args: int,
+    categories: Optional[tuple[str, ...]] = None,
+    tags: Optional[tuple[str, ...]] = None,
     **dataclass_kwargs,
 ) -> type[T]:
     """Applies @control logic, ensuring compatibility with @dataclass."""
     cls = dataclass(**dataclass_kwargs)(cls)  # Apply @dataclass first
     _install_props(cls)  # Install Prop descriptors for sparse tracking
+
+    # Store MCP metadata for discovery by Flet MCP server
+    cls.__control_meta__ = {
+        "categories": tuple(categories) if categories else (),
+        "tags": tuple(tags) if tags else (),
+    }
 
     orig_post_init = getattr(cls, "__post_init__", lambda self, *args: None)
 
@@ -197,6 +218,9 @@ class BaseControl:
     """
 
     key: Optional["KeyValue"] = None
+    """
+    A stable key used to preserve control identity across updates.
+    """
 
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
     """A reference to this control."""
@@ -265,7 +289,7 @@ class BaseControl:
         return parent_ref() if parent_ref else None
 
     @property
-    def page(self) -> "Union[Page, BasePage]":
+    def page(self) -> "Page":
         """
         The page to which this control belongs to.
         """
@@ -361,6 +385,26 @@ class BaseControl:
         """
         controls_log.debug("%s.will_unmount()", self)
         pass
+
+    def get_data_channel(self, channel_id: int):
+        """
+        Resolve the [DataChannel] allocated on the Dart side for this
+        widget. Pattern:
+
+            on_data_channel_open: Optional[ft.EventHandler[DataChannelOpenEvent]] = None
+
+            def init(self):
+                self.on_data_channel_open = self._on_open
+
+            def _on_open(self, e):
+                self._channel = self.get_data_channel(e.channel_id)
+
+        Idempotent — the underlying Connection caches DataChannels by id,
+        so repeated calls return the same instance. No error path: the id
+        always comes from a framework-fired event, so by the time this
+        runs the channel exists on both sides.
+        """
+        return self.page.session.connection.data_channel_for(channel_id)
 
     # public methods
     def update(self) -> None:

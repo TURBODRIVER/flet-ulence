@@ -958,13 +958,6 @@ class Markdown(LayoutControl):
     Defaults to `MarkdownCodeTheme.GITHUB`.
     """
 
-    auto_follow_links: bool = False
-    """
-    Automatically open URLs in the document.
-
-    If registered, `on_tap_link` event is fired after that.
-    """
-
     shrink_wrap: bool = True
     """
     Whether the extent of the scroll view in the scroll direction should be determined \

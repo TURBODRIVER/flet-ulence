@@ -5,40 +5,24 @@ import 'dart:ui';
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:serious_python/serious_python.dart';
-import 'package:window_manager/window_manager.dart';
 
-import 'python.dart';
+import 'native_runtime.dart' as nrt;
 
-{% for dep in cookiecutter.flutter.dependencies %}
-import 'package:{{ dep }}/{{ dep }}.dart' as {{ dep }};
-{% endfor %}
-
-/*
-{% set boot_screen_message = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.boot_screen.message")
-                        or get_pyproject("tool.flet.app.boot_screen.message") %}
-{% set hide_window_on_start = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.hide_window_on_start")
-                        or get_pyproject("tool.flet.app.hide_window_on_start") %}
-
-boot_screen_message: {{ boot_screen_message }}
-hide_window_on_start: {{ hide_window_on_start }}
-*/
+// All build-time (cookiecutter / jinja) declarations — extension imports and
+// list, python module name, boot screen config — live in this generated file
+// so that main.dart stays plain, editable Dart.
+import 'flet_generated.dart';
 
 const bool isRelease = bool.fromEnvironment('dart.vm.product');
 
-const appZipPath = "{{ cookiecutter.app_zip_path }}";
-const pythonModuleName = "{{ cookiecutter.python_module_name }}";
-const appBootScreenMessage = '{{ boot_screen_message | default("Preparing the App...", true) }}';
-final hideWindowOnStart = bool.tryParse("{{ hide_window_on_start }}".toLowerCase()) ?? false;
-
-List<FletExtension> extensions = [
-{% for dep in cookiecutter.flutter.dependencies %}
-{{ dep }}.Extension(),
-{% endfor %}
-];
+// Drives the boot screen before any FletBackend exists. Seeded to `startingUp`
+// so the "preparing" stage never flashes on platforms/launches that don't
+// unpack the app bundle. Only Android's first launch after install/update
+// actually unpacks (see `_boot`), and only then is it switched to `preparing`.
+final ValueNotifier<BootStatus> _bootStatus =
+    ValueNotifier<BootStatus>(const BootStatus(BootStage.startingUp));
 
 String outLogFilename = "";
 
@@ -54,133 +38,258 @@ void main(List<String> args) async {
 
   _args = List<String>.from(args);
 
-  if (_args.contains("debug")) {
-    final outputPath = await path_provider.getApplicationDocumentsDirectory();
-    final outputFile = File(path.join(outputPath.path, 'flutter_logs.txt'));
-    debugPrint = (String? message, {int? wrapWidth}) {
-      outputFile.writeAsStringSync('$message\n', mode: FileMode.append);
-    };
-  } else {
-    debugPrint = (String? message, {int? wrapWidth}) => null;
+  var devPageUrl = const String.fromEnvironment("FLET_PAGE_URL");
+  if (devPageUrl != "") {
+    _args.addAll([devPageUrl, "--debug"]);
   }
 
   for (var ext in extensions) {
     ext.ensureInitialized();
   }
 
-  final ThemeData appBaseTheme = ThemeData(
-    brightness: Brightness.light,
-    scaffoldBackgroundColor: const Color(0xFFFFFFFF),
-    cardColor: const Color(0xFFFFFFFF),
-    colorScheme: const ColorScheme.light(
-      surface: Color(0xFFFFFFFF),
-      onSurface: Color(0xFF797876),
-      primary: Color(0xFF797876),
-    ),
-    progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: Color(0xFF797876),
-    ),
-    textTheme: const TextTheme(
-      bodySmall: TextStyle(color: Color(0xFF797876)),
-      bodyMedium: TextStyle(color: Color(0xFF797876)),
-    ),
-  );
-
-  runApp(Theme(
-    data: appBaseTheme,
-    child: MaterialApp(
-      theme: appBaseTheme,
-      darkTheme: appBaseTheme,
-      themeMode: ThemeMode.light,
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            platformBrightness: Brightness.light,
-          ),
-          child: child!,
-        );
-      },
-      home: FutureBuilder(
-        future: prepareApp(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            return _PythonAppLoader(args: _args.cast<String>());
-          } else if (snapshot.hasError) {
-            return ErrorScreen(
-                title: "Error starting app",
-                text: snapshot.error.toString()
-            );
-          } else {
-            return const BootScreen();
-          }
+  if (const bool.fromEnvironment("FLET_TEST")) {
+    // Under integration test (`flet test`), `BootHost` (a StatefulWidget whose
+    // initState awaits prepareApp() then setState()s) deadlocks the
+    // WidgetTester: `tester.pump()` blocks waiting for a frame that never
+    // arrives during this boot. Use the simpler FutureBuilder boot path (no
+    // animated boot-screen overlay), which the tester drives cleanly. The app
+    // itself — embedded Python over dart_bridge, FletApp — is identical.
+    runApp(FutureBuilder(
+      future: prepareApp(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const SizedBox.shrink();
         }
-      ),
-    ),
-  ));
+        if (_args.isNotEmpty) {
+          return FletApp(
+            pageUrl: pageUrl,
+            assetsDir: assetsDir,
+            bootScreenName: bootScreenName,
+            bootScreenOptions: bootScreenOptions,
+            bootStatus: _bootStatus,
+            extensions: extensions,
+          );
+        }
+        return _ProdApp(args: args);
+      },
+    ));
+    return;
+  }
+
+  runApp(BootHost(args: args));
 }
 
-class _PythonAppLoader extends StatefulWidget {
+/// Hosts the app together with a persistent boot screen overlay.
+///
+/// The boot screen is rendered once, at a fixed position above the app tree, so
+/// its animation runs continuously across both boot phases (preparing → starting
+/// up) instead of restarting when `prepareApp()` completes and the app tree is
+/// built underneath. The overlay fades out once the app reports it is ready.
+class BootHost extends StatefulWidget {
   final List<String> args;
-  const _PythonAppLoader({required this.args});
+
+  const BootHost({super.key, required this.args});
 
   @override
-  State<_PythonAppLoader> createState() => _PythonAppLoaderState();
+  State<BootHost> createState() => _BootHostState();
 }
 
-class _PythonAppLoaderState extends State<_PythonAppLoader> {
-  Future<String?>? _pythonFuture;
-  bool _showFlet = false;
-  bool _isEmbedded = true;
+class _BootHostState extends State<BootHost> {
+  bool _prepared = false;
 
   @override
   void initState() {
     super.initState();
-    _isEmbedded = !widget.args.isNotEmpty;
-    if (_isEmbedded) {
-      _pythonFuture = runPythonApp(widget.args);
+    _boot();
+  }
+
+  Future<void> _boot() async {
+    try {
+      await prepareApp();
+    } catch (e) {
+      _bootStatus.value = BootStatus(BootStage.preparing, error: e.toString());
+      return;
     }
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      if (mounted) setState(() => _showFlet = true);
+    _bootStatus.value = const BootStatus(BootStage.startingUp);
+    if (!mounted) return;
+    setState(() => _prepared = true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Stack(
+        children: [
+          // The app builds underneath the overlay; while preparing it is just
+          // an empty placeholder (the opaque overlay covers it anyway).
+          _prepared ? _buildApp() : const SizedBox.shrink(),
+          _BootOverlay(status: _bootStatus),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildApp() {
+    // In dev modes FletApp connects over its URL-scheme transport (TCP / UDS).
+    // In production prepareApp() created the native FFI bridges and we
+    // additionally run the embedded Python program.
+    if (_args.isNotEmpty) {
+      return FletApp(
+        pageUrl: pageUrl,
+        assetsDir: assetsDir,
+        bootScreenName: bootScreenName,
+        bootScreenOptions: bootScreenOptions,
+        bootStatus: _bootStatus,
+        extensions: extensions,
+      );
+    }
+    return _ProdApp(args: widget.args);
+  }
+}
+
+/// Production host: runs the embedded Python program alongside [FletApp] over
+/// the in-process PythonBridge FFI transport. If the program exits or errors,
+/// the failure is surfaced on the boot screen via [_bootStatus].
+class _ProdApp extends StatefulWidget {
+  final List<String> args;
+
+  const _ProdApp({required this.args});
+
+  @override
+  State<_ProdApp> createState() => _ProdAppState();
+}
+
+class _ProdAppState extends State<_ProdApp> {
+  @override
+  void initState() {
+    super.initState();
+    // A completed future means the Python program returned/exited prematurely
+    // (it normally runs the event loop until the app quits). On process reuse
+    // runPythonApp() returns a never-completing future, so this never fires.
+    runPythonApp(widget.args).then((result) {
+      if (!mounted) return;
+      _bootStatus.value = BootStatus(BootStage.startingUp,
+          error: result ?? "The app exited unexpectedly.");
+    }).catchError((Object e) {
+      if (!mounted) return;
+      _bootStatus.value = BootStatus(BootStage.startingUp, error: e.toString());
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_isEmbedded) {
-      if (_showFlet) {
-        return FletApp(pageUrl: pageUrl, assetsDir: assetsDir, extensions: extensions);
-      } else {
-        return const BootScreen();
-      }
-    }
+    return FletApp(
+      pageUrl: pageUrl,
+      assetsDir: assetsDir,
+      bootScreenName: bootScreenName,
+      bootScreenOptions: bootScreenOptions,
+      bootStatus: _bootStatus,
+      // PythonBridge-backed protocol channel + dedicated byte channels.
+      channelBuilder: nrt.channelBuilder,
+      dataChannelFactory: nrt.dataChannelFactory,
+      extensions: extensions,
+    );
+  }
+}
 
-    return FutureBuilder<String?>(
-      future: _pythonFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasData || snapshot.hasError) {
-          return ErrorScreen(
-            title: "Error running app",
-            text: snapshot.data ?? snapshot.error.toString(),
-          );
-        }
-        if (_showFlet) {
-          return FletApp(pageUrl: pageUrl, assetsDir: assetsDir, extensions: extensions);
-        }
-        return const BootScreen();
-      },
+/// Persistent boot screen overlay. Renders the boot screen once (so its
+/// animation never remounts across boot phases), then fades out when [status]
+/// reports `done`. Once dismissed it stays gone — later reconnects are handled
+/// by the app's own loading UI.
+class _BootOverlay extends StatefulWidget {
+  final ValueNotifier<BootStatus> status;
+
+  const _BootOverlay({required this.status});
+
+  @override
+  State<_BootOverlay> createState() => _BootOverlayState();
+}
+
+class _BootOverlayState extends State<_BootOverlay> {
+  bool _fadingOut = false;
+  bool _removed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.status.addListener(_onStatus);
+    _onStatus();
+  }
+
+  void _onStatus() {
+    if (_fadingOut || !widget.status.value.done) return;
+    // With a zero fade duration the AnimatedOpacity below completes
+    // synchronously, firing onEnd (and its setState) in the middle of this
+    // widget's own rebuild, which trips the framework's `!_dirty` assert in
+    // debug mode. Skip the animation and remove the overlay in one step.
+    final fadeMs = parseInt(bootScreenOptions["fade_out_duration"], 0)!;
+    setState(() {
+      _fadingOut = true;
+      if (fadeMs == 0) _removed = true;
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.status.removeListener(_onStatus);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_removed) return const SizedBox.shrink();
+    // Fade-out duration (ms) when the app becomes ready; 0 (default) = instant.
+    final fadeMs = parseInt(bootScreenOptions["fade_out_duration"], 0)!;
+    return IgnorePointer(
+      ignoring: _fadingOut,
+      child: AnimatedOpacity(
+        opacity: _fadingOut ? 0.0 : 1.0,
+        duration: Duration(milliseconds: fadeMs),
+        onEnd: () {
+          if (_fadingOut && !_removed) setState(() => _removed = true);
+        },
+        // resolveBootScreen is built once here (status changes update the
+        // message via the screen's own ValueListenableBuilder), so the spinner
+        // keeps animating across preparing → starting up.
+        // Use `builder:` rather than `home:` so this MaterialApp creates NO
+        // Navigator. A MaterialApp with `home` builds a Navigator with
+        // `reportsRouteUpdateToEngine: true`, which pushes the home route "/"
+        // to the browser URL on mount — clobbering a cold-start deep link
+        // (e.g. `/gallery`) before FletApp's real router reads it. The boot
+        // overlay never navigates, so it doesn't need a Navigator; this keeps
+        // theme/Directionality while leaving the URL untouched.
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          builder: (context, _) => resolveBootScreen(
+            name: bootScreenName,
+            options: bootScreenOptions,
+            extensions: extensions,
+            status: widget.status,
+          ),
+        ),
+      ),
     );
   }
 }
 
 Future prepareApp() async {
-  if (!_args.contains("debug") && isRelease) {
+  if (!_args.contains("--debug") && isRelease) {
     // ignore: avoid_returning_null_for_void
     debugPrint = (String? message, {int? wrapWidth}) => null;
   } else {
-    _args.remove("debug");
+    _args.remove("--debug");
   }
 
-  await setupDesktop(hideWindowOnStart: hideWindowOnStart);
+  // Linux desktop integration tests run under xvfb; waiting for the native
+  // ready-to-show callback can keep WidgetTester from reaching the remote
+  // tester connection.
+  await setupDesktop(
+    hideWindowOnStart: hideWindowOnStart,
+    waitUntilReadyToShow:
+        !(const bool.fromEnvironment("FLET_TEST") &&
+            defaultTargetPlatform == TargetPlatform.linux),
+  );
 
   if (_args.isNotEmpty) {
     // developer mode
@@ -188,44 +297,59 @@ Future prepareApp() async {
     pageUrl = _args[0];
     if (_args.length > 1) {
       var pidFilePath = _args[1];
-      debugPrint("Args contain a path to PID file: $pidFilePath");
+      debugPrint("Args contain a path to PID file: $pidFilePath}");
       var pidFile = await File(pidFilePath).create();
       await pidFile.writeAsString("$pid");
     }
     if (_args.length > 2) {
       assetsDir = _args[2];
-      debugPrint("Args contain a path assets directory: $assetsDir");
+      debugPrint("Args contain a path assets directory: $assetsDir}");
     }
   } else {
     // production mode
-    // extract app from asset
-    appDir = await extractAssetZip(appZipPath, targetPath: "", checkHash: true);
+    // resolve the app dir from the bundle (Android unpacks app.zip on first launch)
+    appDir = await nrt.getAppDir();
 
-    Directory.current = appDir;
     assetsDir = path.join(appDir, "assets");
 
+    // configure the app's storage directories
     WidgetsFlutterBinding.ensureInitialized();
 
-    // configure apps DATA and TEMP directories
-    var appTempPath = (await path_provider.getApplicationCacheDirectory()).path;
+    // FLET_APP_STORAGE_DATA — durable, app-private; also the cwd. Lives under
+    // the OS application-support dir (NOT the app bundle, which is read-only),
+    // so relative file writes / SQLite work and persist across app updates.
+    var appDataPath = path.join(
+        (await path_provider.getApplicationSupportDirectory()).path, "data");
+    if (!await Directory(appDataPath).exists()) {
+      await Directory(appDataPath).create(recursive: true);
+    }
+    Directory.current = appDataPath;
 
-    environmentVariables.putIfAbsent("FLET_APP_STORAGE_DATA", () => appTempPath);
+    // FLET_APP_STORAGE_CACHE — regenerable; the OS may purge it.
+    var appCachePath = (await path_provider.getApplicationCacheDirectory()).path;
+    // FLET_APP_STORAGE_TEMP — volatile OS temp; may vanish between launches.
+    var appTempPath = (await path_provider.getTemporaryDirectory()).path;
+
+    environmentVariables.putIfAbsent("FLET_APP_STORAGE_DATA", () => appDataPath);
+    environmentVariables.putIfAbsent(
+        "FLET_APP_STORAGE_CACHE", () => appCachePath);
     environmentVariables.putIfAbsent("FLET_APP_STORAGE_TEMP", () => appTempPath);
 
-    outLogFilename = path.join(appDir, "console.log");
+    outLogFilename = path.join(appCachePath, "console.log");
     environmentVariables.putIfAbsent("FLET_APP_CONSOLE", () => outLogFilename);
-    environmentVariables.putIfAbsent("FLET_PLATFORM", () => defaultTargetPlatform.name.toLowerCase());
 
-    if (defaultTargetPlatform == TargetPlatform.windows) {
-      // use TCP on Windows
-      var tcpPort = await getUnusedPort();
-      pageUrl = "tcp://localhost:$tcpPort";
-      environmentVariables.putIfAbsent("FLET_SERVER_PORT", () => tcpPort.toString());
-    } else {
-      // use UDS on other platforms
-      pageUrl = "flet_$pid.sock";
-      environmentVariables.putIfAbsent("FLET_SERVER_UDS_PATH", () => pageUrl);
-    }
+    environmentVariables.putIfAbsent(
+        "FLET_PLATFORM", () => defaultTargetPlatform.name.toLowerCase());
+
+    // In production we use the in-process dart_bridge FFI transport (no UDS,
+    // no TCP — Python and Flutter share the process). Two bridges, both
+    // owned by `native_runtime.dart`:
+    //   protocol bridge — the Flet MsgPack channel (Dart ↔ Python).
+    //   exit bridge     — Python-only outbound channel carrying the exit
+    //                     code when `sys.exit(code)` is called inside the
+    //                     embedded interpreter. Replaces the legacy
+    //                     stdout-callback socket.
+    pageUrl = nrt.initBridges(environmentVariables);
   }
 
   if (assetsDir.isNotEmpty) {
@@ -236,155 +360,25 @@ Future prepareApp() async {
 }
 
 Future<String?> runPythonApp(List<String> args) async {
-  var argvItems = args.map((a) => "\"${a.replaceAll('"', '\\"')}\"");
-  var argv = "[${argvItems.isNotEmpty ? argvItems.join(',') : '""'}]";
-  var script = pythonScript
-      .replaceAll("{outLogFilename}", outLogFilename.replaceAll("\\", "\\\\"))
-      .replaceAll('{module_name}', pythonModuleName)
-      .replaceAll('{argv}', argv);
-
-  var completer = Completer<String>();
-
-  ServerSocket outSocketServer;
-  String socketAddr = "";
-  StringBuffer pythonOut = StringBuffer();
-
-  if (defaultTargetPlatform == TargetPlatform.windows) {
-    var tcpAddr = "127.0.0.1";
-    outSocketServer = await ServerSocket.bind(tcpAddr, 0);
-    debugPrint('Python output TCP Server is listening on port ${outSocketServer.port}');
-    socketAddr = "$tcpAddr:${outSocketServer.port}";
-  } else {
-    socketAddr = "stdout_$pid.sock";
-    if (await File(socketAddr).exists()) {
-      await File(socketAddr).delete();
-    }
-    outSocketServer = await ServerSocket.bind(InternetAddress(socketAddr, type: InternetAddressType.unix), 0);
-    debugPrint('Python output Socket Server is listening on $socketAddr');
-  }
-
-  environmentVariables.putIfAbsent("FLET_PYTHON_CALLBACK_SOCKET_ADDR", () => socketAddr);
-
-  void closeOutServer() async {
-    outSocketServer.close();
-
-    int exitCode = int.tryParse(pythonOut.toString().trim()) ?? 0;
-
-    if (exitCode == errorExitCode) {
-      var out = "";
-      if (await File(outLogFilename).exists()) {
-        out = await File(outLogFilename).readAsString();
-      }
-      completer.complete(out);
-    } else {
-      exit(exitCode);
-    }
-  }
-
-  outSocketServer.listen((client) {
+  // Process-reuse path: Android may keep the OS process alive across a
+  // back-button quit and restart only the Dart VM. libdart_bridge stays
+  // loaded, Python is still up. `initBridges()` already fired
+  // `dart_bridge_signal_dart_session` with the new ports — Python's
+  // session-restart handlers have rewired by now. Don't call into
+  // `SeriousPython.runProgram` again (it would no-op-return immediately
+  // anyway, but the never-completing-future park here keeps the
+  // FletApp's existing FutureBuilder rendering until the OS tears us
+  // down for real).
+  if (nrt.pythonAlreadyRunning) {
     debugPrint(
-        'Connection from: ${client.remoteAddress.address}:${client.remotePort}');
-    client.listen((data) {
-      var s = String.fromCharCodes(data);
-      pythonOut.write(s);
-    }, onError: (error) {
-      client.close();
-      closeOutServer();
-    }, onDone: () {
-      client.close();
-      closeOutServer();
-    });
-  });
-
-  // run python async
-  SeriousPython.runProgram(path.join(appDir, "$pythonModuleName.pyc"),
-      script: script, environmentVariables: environmentVariables);
-
-  // wait for client connection to close
-  return completer.future;
-}
-
-class ErrorScreen extends StatelessWidget {
-  final String title;
-  final String text;
-
-  const ErrorScreen({super.key, required this.title, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-          child: Container(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: text));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Copied to clipboard')),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.copy,
-                    size: 16,
-                  ),
-                  label: const Text("Copy"),
-                )
-              ],
-            ),
-            Expanded(
-                child: SingleChildScrollView(
-              child: SelectableText(text,
-                  style: Theme.of(context).textTheme.bodySmall),
-            ))
-          ],
-        ),
-      )),
-    );
+        "Python already initialized (process reuse) — skipping SeriousPython.runProgram");
+    return Completer<String>().future;
   }
-}
-
-class BootScreen extends StatelessWidget {
-  const BootScreen({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(
-              width: 30,
-              height: 30,
-              child: CircularProgressIndicator(strokeWidth: 3),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(appBootScreenMessage, style: Theme.of(context).textTheme.bodyMedium,)
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-Future<int> getUnusedPort() {
-  return ServerSocket.bind("127.0.0.1", 0).then((socket) {
-    var port = socket.port;
-    socket.close();
-    return port;
-  });
+  return nrt.runPython(
+    moduleName: pythonModuleName,
+    appDir: appDir,
+    outLogFilename: outLogFilename,
+    environmentVariables: environmentVariables,
+    args: args,
+  );
 }
