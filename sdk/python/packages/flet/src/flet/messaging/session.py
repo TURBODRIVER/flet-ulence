@@ -79,6 +79,7 @@ class Session:
     def components_mode(self) -> bool:
         """
         Whether this session's app uses the declarative components API.
+
         Set by `Page.render`/`render_views` and read by
         :meth:`flet.context.auto_update_enabled`. Kept on the session so that
         multiple apps sharing one process do not interfere.
@@ -553,13 +554,15 @@ class Session:
         """
         # call auto-update
         if context.auto_update_enabled() and not context.was_update_called():
-            await self.__auto_update(control)
+            if await self.__auto_update(control):
+                await asyncio.sleep(0) # yield to the event loop so the queued UI update can be sent.
+
         context.reset_update_called()
 
         # unregister unreferenced services
         self.page._services.unregister_services()
 
-    async def __auto_update(self, control: BaseControl | None):
+    async def __auto_update(self, control: BaseControl | None) -> bool:
         """
         Performs auto-update on the nearest eligible isolated ancestor.
 
@@ -568,6 +571,9 @@ class Session:
 
         Args:
             control: Starting control for parent traversal.
+
+        Returns:
+            `True` if a control was updated; otherwise, `False`.
         """
         while control:
             if (
@@ -576,8 +582,10 @@ class Session:
                 and self.__conn
             ):
                 control.update()
-                break
+                return True
             control = control.parent
+
+        return False
 
     def error(self, message: str):
         """

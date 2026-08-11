@@ -127,11 +127,11 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
     if is_windows():
         flet_path = None
         # 1. Try loading Flet client built with the latest run of `flet build`
-        build_windows = os.path.join(os.getcwd(), "build", "windows")
-        if os.path.exists(build_windows):
-            for f in os.listdir(build_windows):
-                if f.endswith(".exe"):
-                    flet_path = os.path.join(build_windows, f)
+        build_windows = Path(os.getcwd()).parent / "build" / "windows"
+        if build_windows.exists():
+            for f in build_windows.iterdir():
+                if f.name.endswith(".exe"):
+                    flet_path = str(f)
 
         # 2. Check FLET_VIEW_PATH (developer mode)
         if not flet_path:
@@ -157,11 +157,11 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
     elif is_macos():
         app_path = None
         # 1. Try loading Flet client built with the latest run of `flet build`
-        build_macos = os.path.join(os.getcwd(), "build", "macos")
-        if os.path.exists(build_macos):
-            for f in os.listdir(build_macos):
-                if f.endswith(".app"):
-                    app_path = os.path.join(build_macos, f)
+        build_macos = Path(os.getcwd()).parent / "build" / "macos"
+        if build_macos.exists():
+            for f in build_macos.iterdir():
+                if f.name.endswith(".app"):
+                    app_path = str(f)
 
         # 2. Check FLET_VIEW_PATH (developer mode)
         if not app_path:
@@ -191,12 +191,13 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
     elif is_linux():
         app_path = None
         # 1. Try loading Flet client built with the latest run of `flet build`
-        build_linux = os.path.join(os.getcwd(), "build", "linux")
-        if os.path.exists(build_linux):
-            for f in os.listdir(build_linux):
-                ef = os.path.join(build_linux, f)
-                if os.path.isfile(ef) and stat.S_IXUSR & os.stat(ef)[stat.ST_MODE]:
-                    app_path = ef
+        build_linux = Path(os.getcwd()).parent / "build" / "linux"
+        if build_linux.exists():
+            for f in build_linux.iterdir():
+                if f.is_file():
+                    ef = str(f)
+                    if stat.S_IXUSR & os.stat(ef)[stat.ST_MODE]:
+                        app_path = ef
 
         # 2. Check FLET_VIEW_PATH (developer mode)
         if not app_path:

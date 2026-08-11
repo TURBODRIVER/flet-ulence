@@ -504,7 +504,6 @@ class BaseControl:
                 else:
                     async for _ in event_handler(e):
                         await session.after_event(session.index.get(self._i))
-                return
 
             elif inspect.isgeneratorfunction(event_handler):
                 if get_param_count(event_handler) == 0:
@@ -513,7 +512,6 @@ class BaseControl:
                 else:
                     for _ in event_handler(e):
                         await session.after_event(session.index.get(self._i))
-                return
 
             elif callable(event_handler):
                 if get_param_count(event_handler) == 0:

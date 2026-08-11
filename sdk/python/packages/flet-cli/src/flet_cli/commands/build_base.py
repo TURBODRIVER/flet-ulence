@@ -1504,6 +1504,15 @@ class BaseBuildCommand(BaseFlutterCommand):
             # at `flutter build` time to place the unpacked app into the bundle.
             env["SERIOUS_PYTHON_APP"] = str(build_dir / "python-app")
 
+        # app bundle id: the CocoaPods `prepare_command` re-runs the darwin sync
+        # at `flutter build` time, so it needs the same value the package step
+        # got or the framework identifiers fall back to `org.python.*`. Read
+        # defensively — this method is documented as safe to call before the
+        # pipeline has populated every attribute.
+        bundle_id = (getattr(self, "template_data", None) or {}).get("bundle_id")
+        if bundle_id:
+            env["SERIOUS_PYTHON_BUNDLE_ID"] = bundle_id
+
         # Swift Package Manager (darwin): export the cache-bust key the package
         # step computed so the plugin's Package.swift re-resolves when the staged
         # native set changes (SwiftPM caches its graph on manifest text + env).
